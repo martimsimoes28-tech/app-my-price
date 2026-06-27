@@ -36,7 +36,16 @@ body.dark .qchip{background:#14532d;color:#86efac;border-color:#166534}
 body.dark .qchip:hover{background:#166534}
 body.dark .prod-card,body.dark .list-item{background:#0f172a;border-color:var(--border)}
 body.dark .prod-icon,body.dark .prod-photo{background:linear-gradient(135deg,#334155,#1e293b)}
-body.dark .camp-banner{filter:saturate(.65) brightness(.82)}
+body.dark .camp-banner{border-left-width:5px}
+body.dark .cb-pd{background:#2d1f04;border-color:#d97706}
+body.dark .cb-cont{background:#0c1a35;border-color:#3b82f6}
+body.dark .cb-auch{background:#1e0a35;border-color:#a855f7}
+body.dark .cb-lidl{background:#2d0a0f;border-color:#f43f5e}
+body.dark .cb-inter{background:#2d1204;border-color:#f97316}
+body.dark .cb-aldi{background:#0a1f0a;border-color:#16a34a}
+body.dark .cb-title{color:var(--text)}
+body.dark .cb-store{color:var(--muted)}
+body.dark .cb-btn{color:#fff}
 body.dark .li-cheaper{background:#3f2d09;border-color:#78350f;color:#fbbf24}
 body.dark .active-camp-alert{background:#3f2d09;border-color:#92400e}
 body.dark .aca-text{color:#fde68a}
@@ -280,6 +289,38 @@ header{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:13p
         <option value="lidl">🔴 Lidl</option>
         <option value="aldi">⚫ Aldi</option>
         <option value="mercadona">🟤 Mercadona</option>
+      </select>
+    </div>
+    <div style="margin-bottom:10px">
+      <div class="card-title" style="margin-bottom:5px">🗂️ Filtrar por categoria</div>
+      <select class="sel" id="search-cat-filter" onchange="doSearchFilter()">
+        <option value="">Todas as categorias</option>
+        <option value="leite">🥛 Leite</option>
+        <option value="manteiga">🧈 Manteiga</option>
+        <option value="iogurte">🥛 Iogurte</option>
+        <option value="laticínio">🥛 Laticínios</option>
+        <option value="ovos">🥚 Ovos</option>
+        <option value="queijo">🧀 Queijo</option>
+        <option value="azeite">🫒 Azeite</option>
+        <option value="arroz">🍚 Arroz</option>
+        <option value="massa">🍝 Massas</option>
+        <option value="café">☕ Café</option>
+        <option value="padaria">🥖 Padaria</option>
+        <option value="snacks">🍪 Snacks</option>
+        <option value="carne">🥩 Carne</option>
+        <option value="peixe">🐟 Peixe</option>
+        <option value="conservas">🥫 Conservas</option>
+        <option value="charcutaria">🥓 Charcutaria</option>
+        <option value="congelados">❄️ Congelados</option>
+        <option value="pronta">🍱 Refeições prontas</option>
+        <option value="fruta">🍌 Fruta</option>
+        <option value="legumes">🥦 Legumes</option>
+        <option value="mercearia">🛒 Mercearia</option>
+        <option value="bebidas">🥤 Bebidas</option>
+        <option value="higiene">🧴 Higiene pessoal</option>
+        <option value="limpeza">🫧 Limpeza casa</option>
+        <option value="bebés">👶 Bebés</option>
+        <option value="animais">🐾 Animais</option>
       </select>
     </div>
     <!-- Autocomplete / sugestões de pesquisa -->
@@ -906,6 +947,59 @@ const CATALOG = [
   {name:'Presunto Fatiado Fontoura 100g',price:2.69,stores:{continente:2.69,pingo_doce:2.59},emoji:'🥓',cat:'charcutaria'},
   {name:'Chouriço de Carne Continente 250g',price:2.19,stores:{continente:2.19},emoji:'🌶️',cat:'charcutaria'},
   {name:'Bacon Fatiado Pingo Doce 150g',price:1.79,stores:{pingo_doce:1.79},emoji:'🥓',cat:'charcutaria'},
+
+  // ── HIGIENE PESSOAL (gillette, barbear, etc.) ──
+  {name:'Gillette Mach3 Recarga 4 lâminas',price:9.99,stores:{continente:9.99,pingo_doce:9.89,auchan:10.29},emoji:'🪒',cat:'higiene'},
+  {name:'Gillette Fusion5 Recarga 4 lâminas',price:13.99,stores:{continente:13.99,pingo_doce:13.79,auchan:14.29},emoji:'🪒',cat:'higiene'},
+  {name:'Gillette Mach3 Aparelho + 2 lâminas',price:8.49,stores:{continente:8.49,pingo_doce:8.29,auchan:8.69},emoji:'🪒',cat:'higiene'},
+  {name:'Gillette Venus Recarga 4 lâminas',price:10.99,stores:{continente:10.99,pingo_doce:10.79,auchan:11.19},emoji:'🪒',cat:'higiene'},
+  {name:'Gillette Gel Barbear Sensitive 200ml',price:3.49,stores:{continente:3.49,pingo_doce:3.39,auchan:3.59},emoji:'🪒',cat:'higiene'},
+  {name:'BIC Sensitive Descartável 3 un.',price:2.29,stores:{continente:2.29,pingo_doce:2.19,lidl:1.99},emoji:'🪒',cat:'higiene'},
+  {name:'Desodorizante Dove Original Roll-on 50ml',price:2.49,stores:{continente:2.49,pingo_doce:2.39,auchan:2.59},emoji:'🧴',cat:'higiene'},
+  {name:'Desodorizante Rexona Men 150ml spray',price:2.99,stores:{continente:2.99,pingo_doce:2.89,auchan:3.09},emoji:'🧴',cat:'higiene'},
+  {name:'Desodorizante Nivea Men 50ml roll-on',price:2.79,stores:{continente:2.79,pingo_doce:2.69},emoji:'🧴',cat:'higiene'},
+  {name:'Champô Pantene Liso 400ml',price:4.49,stores:{continente:4.49,pingo_doce:4.39,auchan:4.59},emoji:'🧴',cat:'higiene'},
+  {name:'Champô Elvive Nutritivo L\'Oréal 400ml',price:4.99,stores:{continente:4.99,pingo_doce:4.89},emoji:'🧴',cat:'higiene'},
+  {name:'Champô Continente 400ml',price:1.39,stores:{continente:1.39},emoji:'🧴',cat:'higiene'},
+  {name:'Gel de Banho Sanex Zero% 600ml',price:3.99,stores:{continente:3.99,pingo_doce:3.89,auchan:4.09},emoji:'🧴',cat:'higiene'},
+  {name:'Gel de Banho Dove Original 400ml',price:2.99,stores:{continente:2.99,pingo_doce:2.89},emoji:'🧴',cat:'higiene'},
+  {name:'Pasta de Dentes Colgate Triple Action 75ml',price:1.99,stores:{continente:1.99,pingo_doce:1.89,auchan:2.09,lidl:1.69},emoji:'🦷',cat:'higiene'},
+  {name:'Escova de Dentes Oral-B Indicator 3 un.',price:3.99,stores:{continente:3.99,pingo_doce:3.89},emoji:'🪥',cat:'higiene'},
+  {name:'Pensos Always Normal 16 un.',price:2.99,stores:{continente:2.99,pingo_doce:2.89,auchan:3.09},emoji:'🩹',cat:'higiene'},
+  {name:'Tampões Tampax Regular 18 un.',price:3.49,stores:{continente:3.49,pingo_doce:3.39},emoji:'🩹',cat:'higiene'},
+  {name:'Fraldas Pampers Active Baby T4 52 un.',price:14.99,stores:{continente:14.99,pingo_doce:14.79,auchan:15.29},emoji:'👶',cat:'bebés'},
+  {name:'Fraldas Dodot Sensitive T3 56 un.',price:13.99,stores:{continente:13.99,pingo_doce:13.79},emoji:'👶',cat:'bebés'},
+  {name:'Lenços Kleenex Original 9 pacotes',price:3.29,stores:{continente:3.29,pingo_doce:3.19,auchan:3.39},emoji:'🧻',cat:'higiene'},
+  {name:'Creme Hidratante Nivea Soft 200ml',price:3.49,stores:{continente:3.49,pingo_doce:3.39,auchan:3.59},emoji:'🧴',cat:'higiene'},
+
+  // ── LIMPEZA CASA ──
+  {name:'Detergente Loiça Máquina Finish Tabs 36 un.',price:7.99,stores:{continente:7.99,pingo_doce:7.79,auchan:8.19},emoji:'🫧',cat:'limpeza'},
+  {name:'Pastilhas Máquina Roupa Ariel 3in1 18 un.',price:8.49,stores:{continente:8.49,pingo_doce:8.29},emoji:'🫧',cat:'limpeza'},
+  {name:'Limpador Flash Multiusos 1L',price:2.49,stores:{continente:2.49,pingo_doce:2.39,auchan:2.59},emoji:'🫧',cat:'limpeza'},
+  {name:'Lixívia Continente 2L',price:0.99,stores:{continente:0.99},emoji:'🫧',cat:'limpeza'},
+  {name:'Saco do Lixo Continente 30L 30 un.',price:1.49,stores:{continente:1.49},emoji:'🗑️',cat:'limpeza'},
+  {name:'Rolo de Cozinha Scottex 2 rolos',price:1.89,stores:{continente:1.89,pingo_doce:1.79,auchan:1.99},emoji:'🧻',cat:'higiene'},
+
+  // ── PADARIA E SNACKS ──
+  {name:'Pão Saloio Cunha 500g',price:1.29,stores:{continente:1.29,pingo_doce:1.25,intermarche:1.29},emoji:'🥖',cat:'padaria'},
+  {name:'Croissant Manteiga Pingo Doce 6 un.',price:1.89,stores:{pingo_doce:1.89},emoji:'🥐',cat:'padaria'},
+  {name:'Tostas Wasa Fibra 275g',price:2.79,stores:{continente:2.79,pingo_doce:2.69},emoji:'🍞',cat:'padaria'},
+  {name:'Bolachas Maria Triunfo 200g',price:0.79,stores:{continente:0.79,pingo_doce:0.75,lidl:0.65},emoji:'🍪',cat:'snacks'},
+  {name:'Batatas Fritas Lay\'s Classic 190g',price:2.99,stores:{continente:2.99,pingo_doce:2.89,auchan:3.09},emoji:'🥔',cat:'snacks'},
+  {name:'Amendoins Torrados s/ Sal 200g',price:1.49,stores:{continente:1.49,pingo_doce:1.39,lidl:1.29},emoji:'🥜',cat:'snacks'},
+  {name:'Cereais Corn Flakes Kellogg\'s 500g',price:3.49,stores:{continente:3.49,pingo_doce:3.39,auchan:3.59},emoji:'🥣',cat:'snacks'},
+
+  // ── CONGELADOS ──
+  {name:'Peixe-Espada Congelado Pingo Doce 1kg',price:5.99,stores:{pingo_doce:5.99},emoji:'🐟',cat:'congelados'},
+  {name:'Gambas Congeladas Continente 500g',price:6.49,stores:{continente:6.49},emoji:'🦐',cat:'congelados'},
+  {name:'Ervilhas Congeladas Continente 1kg',price:1.49,stores:{continente:1.49,pingo_doce:1.39},emoji:'🟢',cat:'congelados'},
+  {name:'Batata Frita Congelada McCain 1kg',price:3.29,stores:{continente:3.29,pingo_doce:3.19,auchan:3.39},emoji:'🍟',cat:'congelados'},
+  {name:'Gelado Magnum Classic 3 un.',price:4.99,stores:{continente:4.99,pingo_doce:4.89,auchan:5.19},emoji:'🍦',cat:'congelados'},
+
+  // ── ANIMAIS ──
+  {name:'Ração Pedigree Adulto 3kg',price:8.99,stores:{continente:8.99,pingo_doce:8.79,auchan:9.19},emoji:'🐶',cat:'animais'},
+  {name:'Ração Whiskas Adulto Frango 1.9kg',price:7.49,stores:{continente:7.49,pingo_doce:7.29},emoji:'🐱',cat:'animais'},
+  {name:'Areão Gato Catsan 10L',price:6.99,stores:{continente:6.99,pingo_doce:6.79},emoji:'🐱',cat:'animais'},
 ];
 
 // ══════════════════════════════════════════════════════
@@ -1429,31 +1523,30 @@ function doSearchQ(q){
 
 async function doSearch(){
   const q = document.getElementById('search-q').value.trim().toLowerCase();
-  if(!q) return;
   const storeFilter = document.getElementById('search-store-filter') ? document.getElementById('search-store-filter').value : '';
+  const catFilter = document.getElementById('search-cat-filter') ? document.getElementById('search-cat-filter').value : '';
+  if(!q && !catFilter) return;
   const btn = document.getElementById('search-btn');
   const el = document.getElementById('search-results');
   const featSec = document.getElementById('featured-section');
   btn.disabled = true;
   document.getElementById('search-suggestions').style.display='none';
-
-  // hide featured when results are showing
   featSec.style.display='none';
 
   // local match — scored fuzzy search
-  const qWords = q.split(/\s+/).filter(w=>w.length>=2);
+  const qWords = q ? q.split(/\s+/).filter(w=>w.length>=2) : [];
   function scoreProduct(p){
     const n = p.name.toLowerCase();
     const c = (p.cat||'').toLowerCase();
+    // category filter hard-gate
+    if(catFilter && c !== catFilter) return 0;
+    // if no text query, all products in category pass
+    if(!q) return 50;
     let score = 0;
-    // exact full query match
     if(n.includes(q)) score += 100;
-    // all words match
     if(qWords.every(w=>n.includes(w)||c.includes(w))) score += 60;
-    // partial: count matching words
     const matched = qWords.filter(w=>n.includes(w)||c.includes(w)).length;
     score += matched * 20;
-    // bonus if category chip matches any word
     if(qWords.some(w=>c.includes(w))) score += 15;
     return score;
   }
@@ -1461,42 +1554,52 @@ async function doSearch(){
     .filter(({score})=>score>0)
     .sort((a,b)=>b.score-a.score)
     .map(({p})=>p);
-  // apply store filter — but do NOT drop products if they exist in other stores
-  // (show them all, just mark the selected store price)
-  let localFiltered = local;
   if(storeFilter){
-    localFiltered = local.filter(p => p.stores && p.stores[storeFilter]!=null);
-    // if filter returns nothing, fall back to all matches (show without that store)
-    if(!localFiltered.length) localFiltered = local;
+    const withStore = local.filter(p => p.stores && p.stores[storeFilter]!=null);
+    if(withStore.length) local = withStore;
   }
-  local = localFiltered.slice(0,8);
+  local = local.slice(0, catFilter && !q ? 20 : 8);
+
+  const sourceLabel = [
+    storeFilter ? storeName(storeFilter) : '',
+    catFilter ? document.querySelector(`#search-cat-filter option[value="${catFilter}"]`)?.textContent || catFilter : '',
+    'Catálogo local'
+  ].filter(Boolean).join(' · ');
 
   if(local.length>0){
-    renderResults(el, local, storeFilter ? `Catálogo local · ${storeName(storeFilter)}` : 'Catálogo local');
-    recordSearch(q, local);
+    renderResults(el, local, sourceLabel);
+    if(q) recordSearch(q, local);
     btn.disabled = false;
     return;
   }
 
-  // AI
+  if(!q){
+    el.innerHTML = '<div class="empty-state"><span class="empty-icon">🔍</span>Sem produtos nesta categoria.</div>';
+    btn.disabled = false;
+    return;
+  }
+
+  // AI fallback (text query only)
   el.innerHTML = '<div class="ai-loader"><div class="ai-dots"><span></span><span></span><span></span></div> A pesquisar com IA...</div>';
   try{
     const storeHint = storeFilter ? ` Filtrar para ${storeName(storeFilter)}.` : '';
+    const catHint = catFilter ? ` Categoria: ${catFilter}.` : '';
     const res = await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         model:'claude-sonnet-4-6',
         max_tokens:1000,
-        system:`Assistente de preços de supermercados em Portugal. Retorna APENAS um JSON array, sem texto extra nem markdown, com resultados realistas em euros (Jun 2026). Formato: [{"name":"Nome completo","price":X.XX,"stores":{"pingo_doce":X.XX,"continente":X.XX},"emoji":"🛒","promo":null}]`,
-        messages:[{role:'user',content:`Pesquisa: "${q}".${storeHint} JSON com preços estimados nos supermercados portugueses (Continente, Pingo Doce, Lidl, Auchan) para junho 2026. Máx 4 produtos.`}]
+        system:`Assistente de preços de supermercados em Portugal. Retorna APENAS um JSON array, sem texto extra nem markdown, com resultados realistas em euros (Jun 2026). Formato: [{"name":"Nome completo","price":X.XX,"stores":{"pingo_doce":X.XX,"continente":X.XX},"emoji":"🛒","cat":"higiene","promo":null}]`,
+        messages:[{role:'user',content:`Pesquisa: "${q}".${storeHint}${catHint} JSON com preços estimados nos supermercados portugueses (Continente, Pingo Doce, Lidl, Auchan) para junho 2026. Máx 4 produtos.`}]
       })
     });
     const data = await res.json();
     const txt = (data.content||[]).find(b=>b.type==='text')?.text||'[]';
     let products = JSON.parse(txt.replace(/```json|```/g,'').trim());
     if(storeFilter) products = products.filter(p=>p.stores&&p.stores[storeFilter]!=null);
-    renderResults(el, products, `Estimativa IA · ${storeFilter?storeName(storeFilter)+' · ':''}confirma na loja`);
+    if(catFilter) products = products.filter(p=>!p.cat||p.cat===catFilter);
+    renderResults(el, products, `Estimativa IA · ${[storeFilter?storeName(storeFilter):'',catFilter||'','confirma na loja'].filter(Boolean).join(' · ')}`);
     recordSearch(q, products);
   }catch(e){
     el.innerHTML = '<div class="empty-state"><span class="empty-icon">😕</span>Não encontrado. Tenta outro nome ou adiciona manualmente na Lista.</div>';
@@ -1626,9 +1729,15 @@ function changeQty(id, delta){
   const item = listItems.find(i=>i.id===id);
   if(!item) return;
   item.qty = Math.max(1, (item.qty||1)+delta);
-  save();
-  renderList();
-  calcTotal();
+  save(); renderList(); calcTotal();
+}
+function setQty(id, val){
+  const item = listItems.find(i=>i.id===id);
+  if(!item) return;
+  const n = parseInt(val);
+  if(!n||n<1) return;
+  item.qty = n;
+  save(); renderList(); calcTotal();
 }
 
 function clearList(){
@@ -1679,10 +1788,10 @@ function renderList(){
         </div>
       </div>
       <div class="li-qty">
-        <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
-        <span class="qty-label">${qty}</span>
-        <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
-        <span style="font-size:.65rem;color:var(--muted)">${fmtEur(item.price)}/un</span>
+        <input type="number" inputmode="numeric" min="1" max="99" value="${qty}"
+          style="width:52px;padding:4px 6px;border:1.5px solid var(--border);border-radius:8px;font-size:.85rem;font-weight:700;text-align:center;background:var(--input-bg);color:var(--text);font-family:inherit;-moz-appearance:textfield"
+          onchange="setQty(${item.id},this.value)" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+        <span style="font-size:.65rem;color:var(--muted)">× ${fmtEur(item.price)}/un</span>
       </div>
       ${cheaperHtml}
     </div>`;
@@ -1763,11 +1872,11 @@ function showNotif(msg){
 // SEARCH STORE FILTER
 // ══════════════════════════════════════════════════════
 function doSearchFilter(){
-  const q = document.getElementById('search-q').value.trim().toLowerCase();
-  if(q){
+  const q = document.getElementById('search-q').value.trim();
+  const catFilter = document.getElementById('search-cat-filter') ? document.getElementById('search-cat-filter').value : '';
+  if(q || catFilter){
     doSearch();
   } else {
-    // just re-render featured with new store filter
     renderFeatured();
   }
 }
@@ -1871,9 +1980,15 @@ function changePredefQty(id, delta){
   const item = predefItems.find(i=>i.id===id);
   if(!item) return;
   item.qty = Math.max(1,(item.qty||1)+delta);
-  savePredef();
-  updatePredefPrices();
-  renderPredefList();
+  savePredef(); updatePredefPrices(); renderPredefList();
+}
+function setPredefQty(id, val){
+  const item = predefItems.find(i=>i.id===id);
+  if(!item) return;
+  const n = parseInt(val);
+  if(!n||n<1) return;
+  item.qty = n;
+  savePredef(); updatePredefPrices(); renderPredefList();
 }
 
 function updatePredefPriceForItem(id, newPrice){
@@ -1963,10 +2078,10 @@ function renderPredefList(){
         </div>
       </div>
       <div class="li-qty">
-        <button class="qty-btn" onclick="changePredefQty(${item.id},-1)">−</button>
-        <span class="qty-label">${qty}</span>
-        <button class="qty-btn" onclick="changePredefQty(${item.id},1)">+</button>
-        <span style="font-size:.65rem;color:var(--muted)">${fmtEur(item.price)}/un</span>
+        <input type="number" inputmode="numeric" min="1" max="99" value="${qty}"
+          style="width:52px;padding:4px 6px;border:1.5px solid var(--border);border-radius:8px;font-size:.85rem;font-weight:700;text-align:center;background:var(--input-bg);color:var(--text);font-family:inherit;-moz-appearance:textfield"
+          onchange="setPredefQty(${item.id},this.value)" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+        <span style="font-size:.65rem;color:var(--muted)">× ${fmtEur(item.price)}/un</span>
         <input type="number" step="0.01" value="${item.price.toFixed(2)}" min="0.01"
           style="width:65px;padding:3px 6px;border:1.5px solid var(--border);border-radius:7px;font-size:.7rem;background:var(--input-bg);color:var(--text);font-family:inherit"
           onchange="updatePredefPriceForItem(${item.id},this.value)" title="Atualizar preço">
@@ -1995,6 +2110,36 @@ function loadPredefToList(){
   showNotif(`✅ ${predefItems.length} produtos carregados para a lista atual!`);
 }
 
+
+// ══════════════════════════════════════════════════════
+// SERVICE WORKER — offline support
+// ══════════════════════════════════════════════════════
+if('serviceWorker' in navigator){
+  // Inline SW as blob so it works no matter o caminho no GitHub Pages
+  const swCode = `
+const CACHE = 'poupa-facil-v1';
+const ASSETS = [self.location.pathname];
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+});
+self.addEventListener('activate', e => {
+  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));
+});
+self.addEventListener('fetch', e => {
+  e.respondWith(caches.match(e.request).then(cached => cached || fetch(e.request).then(res => {
+    if(res && res.status===200 && res.type==='basic'){
+      const clone = res.clone();
+      caches.open(CACHE).then(c => c.put(e.request, clone));
+    }
+    return res;
+  }).catch(() => cached)));
+});`;
+  const blob = new Blob([swCode], {type:'application/javascript'});
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl).then(()=>{
+    console.log('SW registado — lista disponível offline');
+  }).catch(()=>{});
+}
 
 (function init(){
   loadDarkMode();
