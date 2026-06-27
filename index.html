@@ -1,504 +1,2011 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Poupança - IA & Planeamento</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- HTML5-QRCode -->
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-    <style>
-        /* Smooth transitions for tabs */
-        .tab-content { display: none; animation: fadeIn 0.3s; }
-        .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        /* Hide scrollbar for suggestions */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Poupa Fácil 🛒</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<style>
+:root {
+  --green:#16a34a; --green-l:#dcfce7; --green-d:#14532d;
+  --amber:#f59e0b; --amber-l:#fef3c7;
+  --red:#dc2626; --red-l:#fee2e2;
+  --bg:#f0fdf4; --card:#fff; --border:#e2e8f0;
+  --text:#1e293b; --muted:#64748b;
+  --sh:0 1px 3px rgba(0,0,0,.08);
+  --sh-lg:0 10px 15px -3px rgba(0,0,0,.07);
+  --input-bg:#f8fafc; --overlay:rgba(15,23,42,.55);
+}
+body.dark {
+  --green:#22c55e; --green-l:#14532d; --green-d:#86efac;
+  --amber:#fbbf24; --amber-l:#3f2d09;
+  --red:#f87171; --red-l:#450a0a;
+  --bg:#0f172a; --card:#1e293b; --border:#334155;
+  --text:#e2e8f0; --muted:#94a3b8;
+  --sh:0 1px 3px rgba(0,0,0,.4);
+  --sh-lg:0 10px 15px -3px rgba(0,0,0,.5);
+  --input-bg:#0f172a; --overlay:rgba(0,0,0,.7);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:140px;transition:background .25s,color .25s}
+body.dark .inp,body.dark .sel{background:var(--input-bg);color:var(--text);border-color:var(--border)}
+body.dark .inp:focus{background:#1e293b}
+body.dark .qchip{background:#14532d;color:#86efac;border-color:#166534}
+body.dark .qchip:hover{background:#166534}
+body.dark .prod-card,body.dark .list-item{background:#0f172a;border-color:var(--border)}
+body.dark .prod-icon,body.dark .prod-photo{background:linear-gradient(135deg,#334155,#1e293b)}
+body.dark .camp-banner{filter:saturate(.65) brightness(.82)}
+body.dark .li-cheaper{background:#3f2d09;border-color:#78350f;color:#fbbf24}
+body.dark .active-camp-alert{background:#3f2d09;border-color:#92400e}
+body.dark .aca-text{color:#fde68a}
+body.dark .footer-bar,body.dark .tabs{background:var(--card);border-color:var(--border)}
+body.dark .tab-btn{color:var(--muted)}
+body.dark .empty-state{color:var(--muted)}
+body.dark .cb-desc{color:#cbd5e1}
+body.dark .sb-none{background:#1e293b;color:var(--muted)}
+
+/* HEADER */
+header{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:13px 16px 11px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.h-inner{max-width:480px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.h-title{font-size:1.15rem;font-weight:900;letter-spacing:-.5px}
+.h-sub{font-size:.6rem;color:#86efac;margin-top:2px;letter-spacing:.8px;text-transform:uppercase}
+.h-badge{background:var(--amber);color:#78350f;font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:99px}
+
+/* TABS */
+.tabs{background:#fff;border-bottom:2px solid var(--border);position:sticky;top:60px;z-index:90}
+.tabs-inner{max-width:480px;margin:0 auto;display:flex}
+.tab-btn{flex:1;padding:11px 2px;font-size:.72rem;font-weight:700;color:var(--muted);background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:2px}
+.tab-btn .ticon{font-size:1.1rem}
+.tab-btn.active{color:var(--green);border-bottom-color:var(--green)}
+
+/* CONTENT */
+.content{max-width:480px;margin:0 auto;padding:12px 12px 0;display:none}
+.content.active{display:block}
+
+/* CARD */
+.card{background:var(--card);border-radius:14px;padding:13px;border:1px solid var(--border);box-shadow:var(--sh);margin-bottom:11px}
+.card-title{font-size:.6rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:9px}
+
+/* INPUTS */
+.inp{width:100%;padding:9px 11px;border:1.5px solid var(--border);border-radius:10px;font-size:.83rem;font-family:inherit;background:#f8fafc;transition:border .2s}
+.inp:focus{outline:none;border-color:var(--green);background:#fff}
+.sel{width:100%;padding:9px 11px;border:1.5px solid var(--border);border-radius:10px;font-size:.83rem;font-family:inherit;background:#fff;cursor:pointer}
+
+/* BUTTONS */
+.btn-green{background:var(--green);color:#fff;border:none;border-radius:10px;padding:9px 14px;font-size:.83rem;font-weight:700;cursor:pointer;font-family:inherit}
+.btn-green:disabled{opacity:.55;cursor:not-allowed}
+.btn-dark{background:#1e293b;color:#fff;border:none;border-radius:10px;padding:9px;font-size:.83rem;font-weight:700;cursor:pointer;width:100%;font-family:inherit;margin-bottom:8px}
+
+/* ── CAMPANHA BANNERS ── */
+.camp-banner{border-radius:14px;padding:13px;margin-bottom:11px;border-left:5px solid;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.camp-banner:hover{transform:translateY(-2px);box-shadow:var(--sh-lg)}
+.cb-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.cb-logo{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:900;flex-shrink:0;overflow:hidden}
+.cb-logo img{width:100%;height:100%;object-fit:contain;border-radius:10px}
+.cb-store{font-size:.6rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+.cb-title{font-size:.9rem;font-weight:800;color:var(--text);line-height:1.25;margin-top:1px}
+.cb-desc{font-size:.74rem;color:#475569;line-height:1.5;margin-bottom:8px}
+.cb-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.tag{font-size:.63rem;font-weight:700;padding:2px 8px;border-radius:99px}
+.tag-g{background:var(--green-l);color:var(--green-d)}
+.tag-a{background:var(--amber-l);color:#92400e}
+.tag-b{background:#dbeafe;color:#1e3a8a}
+.tag-r{background:var(--red-l);color:#7f1d1d}
+.tag-p{background:#f3e8ff;color:#581c87}
+.cb-btn{font-size:.7rem;font-weight:700;padding:5px 13px;border-radius:8px;border:none;cursor:pointer}
+
+/* Supermercados cores */
+.cb-pd{background:#fffbeb;border-color:#f59e0b}
+.cb-cont{background:#eff6ff;border-color:#3b82f6}
+.cb-auch{background:#fdf4ff;border-color:#a855f7}
+.cb-lidl{background:#fff1f2;border-color:#f43f5e}
+.cb-inter{background:#fff7ed;border-color:#f97316}
+.cb-aldi{background:#f0fdf4;border-color:#16a34a}
+
+/* ── PESQUISA ── */
+.search-row{display:flex;gap:7px;margin-bottom:10px}
+.quick-grid{display:flex;flex-wrap:wrap;gap:6px}
+.qchip{background:var(--green-l);border:1px solid #bbf7d0;color:var(--green-d);font-size:.72rem;font-weight:600;padding:5px 10px;border-radius:8px;cursor:pointer;font-family:inherit}
+.qchip:hover{background:#bbf7d0}
+
+/* Product card */
+.prod-card{background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:10px 11px;display:flex;gap:9px;align-items:center;margin-bottom:7px}
+.prod-icon{width:50px;height:50px;border-radius:8px;background:linear-gradient(135deg,#e2e8f0,#cbd5e1);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+.prod-info{flex:1;min-width:0}
+.prod-name{font-size:.8rem;font-weight:600;color:var(--text);line-height:1.3}
+.prod-store{font-size:.66rem;color:var(--muted);margin-top:1px}
+.prod-promo{font-size:.66rem;color:var(--amber);font-weight:600;margin-top:2px}
+.prod-right{text-align:right;flex-shrink:0}
+.prod-price{font-size:1rem;font-weight:800;color:var(--green)}
+.add-btn-sm{background:var(--green-l);color:var(--green-d);border:none;border-radius:8px;width:30px;height:30px;font-size:1.2rem;cursor:pointer;margin-top:4px;display:flex;align-items:center;justify-content:center;font-family:inherit}
+.chip-best{background:var(--green-l);color:var(--green-d);font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:6px;display:inline-block;margin-top:3px}
+.chip-high{background:var(--red-l);color:#7f1d1d;font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:6px;display:inline-block;margin-top:3px}
+
+/* ── LISTA ── */
+.market-bar{background:linear-gradient(135deg,var(--green-d),var(--green));color:#fff;border-radius:12px;padding:11px 13px;margin-bottom:11px;display:flex;align-items:center;gap:10px}
+.market-logo{width:36px;height:36px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:900;overflow:hidden;flex-shrink:0}
+.market-logo img{width:100%;height:100%;object-fit:contain}
+.active-camp-alert{background:var(--amber-l);border:1.5px solid var(--amber);border-radius:10px;padding:9px 12px;margin-bottom:10px;display:flex;gap:8px;align-items:flex-start}
+.aca-icon{font-size:1.2rem;flex-shrink:0}
+.aca-text{font-size:.74rem;font-weight:600;color:#92400e;line-height:1.4}
+
+.list-item{background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:9px 11px;margin-bottom:7px}
+.li-top{display:flex;justify-content:space-between;align-items:center}
+.li-name{font-size:.82rem;font-weight:600;color:var(--text)}
+.li-price{font-size:.9rem;font-weight:800;color:var(--green)}
+.li-cheaper{background:#fff7ed;border:1px solid #fed7aa;border-radius:7px;padding:4px 8px;margin-top:5px;font-size:.68rem;color:#9a3412;font-weight:600;display:flex;align-items:center;gap:4px}
+.remove-btn{background:none;border:none;color:#cbd5e1;font-size:.9rem;cursor:pointer;padding:1px 5px}
+.remove-btn:hover{color:var(--red)}
+.li-qty{display:flex;align-items:center;gap:5px;margin-top:6px}
+.qty-btn{background:var(--border);border:none;border-radius:6px;width:22px;height:22px;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.qty-label{font-size:.75rem;font-weight:700;min-width:18px;text-align:center}
+
+.add-row{display:grid;grid-template-columns:1fr 80px;gap:7px;margin-bottom:7px}
+
+/* ── PROGRESS / FOOTER ── */
+.footer-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1.5px solid var(--border);padding:10px 14px 18px;z-index:80;box-shadow:0 -4px 15px rgba(0,0,0,.07)}
+.footer-inner{max-width:480px;margin:0 auto}
+.total-row{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:6px}
+.total-lbl{font-size:.58rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.7px}
+.total-amt{font-size:2rem;font-weight:900;color:var(--text);letter-spacing:-1px;line-height:1}
+.status-badge{font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:8px}
+.sb-none{background:#f1f5f9;color:var(--muted)}
+.sb-prog{background:var(--amber-l);color:#92400e}
+.sb-done{background:var(--green-l);color:var(--green-d)}
+.prog-track{height:9px;background:#e2e8f0;border-radius:99px;overflow:hidden}
+.prog-fill{height:100%;border-radius:99px;transition:width .5s}
+.pf-warn{background:linear-gradient(90deg,var(--amber),#fbbf24)}
+.pf-ok{background:linear-gradient(90deg,var(--green),#22c55e)}
+.pf-done{background:linear-gradient(90deg,var(--green),#4ade80);box-shadow:0 0 8px #22c55e44}
+.reward-box{margin-top:7px;background:var(--green-l);border:1.5px solid #86efac;border-radius:9px;padding:8px 12px;text-align:center}
+.reward-box .rw-txt{font-size:.8rem;font-weight:700;color:var(--green-d)}
+
+/* EMPTY */
+.empty-state{text-align:center;padding:22px;color:var(--muted);font-size:.82rem}
+.empty-icon{font-size:2rem;display:block;margin-bottom:5px}
+
+/* LOADER */
+.ai-loader{display:flex;align-items:center;gap:8px;padding:11px;color:var(--muted);font-size:.8rem}
+.ai-dots{display:flex;gap:3px}
+.ai-dots span{width:6px;height:6px;background:var(--green);border-radius:50%;animation:bounce .9s infinite}
+.ai-dots span:nth-child(2){animation-delay:.15s}
+.ai-dots span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,80%,100%{transform:scale(.8);opacity:.5}40%{transform:scale(1.2);opacity:1}}
+
+/* NOTIF */
+.notif{position:fixed;top:68px;left:50%;transform:translateX(-50%) translateY(-120px);background:#1e293b;color:#fff;padding:9px 16px;border-radius:10px;font-size:.8rem;font-weight:600;z-index:200;transition:transform .3s;box-shadow:var(--sh-lg);white-space:nowrap;max-width:90vw;text-align:center}
+.notif.show{transform:translateX(-50%) translateY(0)}
+
+/* SCANNER */
+#reader{width:100%;border-radius:12px;overflow:hidden;margin:8px 0;display:none}
+
+/* ── HEADER ACTIONS ── */
+.h-actions{display:flex;align-items:center;gap:8px}
+.icon-btn{background:rgba(255,255,255,.15);border:none;color:#fff;width:32px;height:32px;border-radius:9px;font-size:1.05rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.icon-btn:hover{background:rgba(255,255,255,.28)}
+
+/* ── PRODUCT PHOTO ── */
+.prod-photo{width:50px;height:50px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.5rem;position:relative;overflow:hidden;border:1px solid var(--border);cursor:pointer}
+.prod-photo.lg{width:84px;height:84px;font-size:2.4rem;border-radius:14px;cursor:default}
+.prod-photo .cat-tag{position:absolute;bottom:1px;right:1px;font-size:.45rem;background:rgba(0,0,0,.35);color:#fff;padding:1px 4px;border-radius:4px;text-transform:uppercase;letter-spacing:.3px}
+
+/* ── STORE BADGE / LOGO ── */
+.store-badge{display:inline-flex;align-items:center;gap:4px;font-size:.64rem;font-weight:700;color:var(--muted)}
+.store-badge .sb-logo{width:15px;height:15px;border-radius:4px;overflow:hidden;flex-shrink:0;display:flex}
+.store-badge .sb-logo svg{width:100%;height:100%}
+.store-pricerow{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.store-pricerow:last-child{border-bottom:none}
+.spr-left{display:flex;align-items:center;gap:8px}
+.spr-logo{width:30px;height:30px;border-radius:8px;overflow:hidden;flex-shrink:0;background:#fff;display:flex;align-items:center;justify-content:center;border:1px solid var(--border)}
+.spr-logo svg{width:100%;height:100%}
+.spr-name{font-size:.78rem;font-weight:700;color:var(--text)}
+.spr-hist{font-size:.62rem;color:var(--muted);margin-top:1px;display:flex;gap:5px;flex-wrap:wrap}
+.spr-price{font-size:.92rem;font-weight:800;color:var(--text)}
+.spr-best{color:var(--green)}
+.spr-row-best{background:var(--green-l);border-radius:9px;padding:6px 8px;margin:0 -8px}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:var(--overlay);z-index:300;display:none;align-items:flex-end;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal-box{background:var(--card);width:100%;max-width:480px;border-radius:18px 18px 0 0;padding:16px 16px 26px;max-height:86vh;overflow-y:auto;animation:slideUp .25s ease-out}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:10px}
+.modal-close{background:var(--input-bg);border:none;color:var(--text);width:30px;height:30px;border-radius:50%;font-size:1rem;cursor:pointer;flex-shrink:0}
+.modal-title{font-size:.95rem;font-weight:800;color:var(--text);line-height:1.3}
+.modal-sub{font-size:.68rem;color:var(--muted);margin-top:2px}
+.modal-prod-head{display:flex;gap:11px;align-items:center;margin-bottom:14px}
+
+/* ── SETTINGS ── */
+.settings-row{display:flex;justify-content:space-between;align-items:center;padding:11px 2px;border-bottom:1px solid var(--border)}
+.settings-row:last-child{border-bottom:none}
+.settings-lbl{font-size:.82rem;font-weight:600;color:var(--text)}
+.settings-desc{font-size:.66rem;color:var(--muted);margin-top:1px}
+.switch{position:relative;width:46px;height:26px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.switch-track{position:absolute;cursor:pointer;inset:0;background:#cbd5e1;border-radius:99px;transition:.25s}
+.switch-track:before{content:'';position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.25s}
+.switch input:checked + .switch-track{background:var(--green)}
+.switch input:checked + .switch-track:before{transform:translateX(20px)}
+.fs-grid{display:flex;gap:6px}
+.fs-btn{flex:1;padding:8px 4px;border-radius:9px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-family:inherit;font-weight:700;cursor:pointer}
+.fs-btn.active{border-color:var(--green);background:var(--green-l);color:var(--green-d)}
+</style>
 </head>
-<body class="bg-gray-50 font-sans min-h-screen pb-32 text-gray-800">
+<body>
 
-    <!-- Header -->
-    <header class="bg-blue-700 text-white p-4 shadow-md text-center sticky top-0 z-50">
-        <h1 class="text-xl font-bold flex items-center justify-center gap-2">
-            🛒 Super Poupança <span class="bg-blue-500 text-xs px-2 py-0.5 rounded-full">v2</span>
-        </h1>
-        <p class="text-xs text-blue-200 mt-1">Planeamento & Inteligência Local</p>
-    </header>
+<div class="notif" id="notif"></div>
 
-    <!-- Navegação por Tabs -->
-    <div class="flex bg-white shadow-sm sticky top-16 z-40 border-b">
-        <button id="btn-tab-plan" onclick="switchTab('plan')" class="flex-1 py-3 text-center font-semibold text-blue-700 border-b-2 border-blue-700 transition">
-            📝 Planeamento
-        </button>
-        <button id="btn-tab-cart" onclick="switchTab('cart')" class="flex-1 py-3 text-center font-semibold text-gray-400 hover:text-gray-600 border-b-2 border-transparent transition">
-            🛍️ Em Loja
-        </button>
+<header>
+  <div class="h-inner">
+    <div>
+      <div class="h-title">🛒 Poupa Fácil</div>
+      <div class="h-sub">Preços reais · Campanhas ativas · Portugal</div>
+    </div>
+    <div class="h-actions">
+      <span class="h-badge">Jun 2026</span>
+      <button class="icon-btn" onclick="openModal('settings-modal')" title="Definições">⚙️</button>
+    </div>
+  </div>
+</header>
+
+<div class="tabs">
+  <div class="tabs-inner">
+    <button class="tab-btn active" onclick="switchTab('pesquisa')"><span class="ticon">🔍</span>Produtos</button>
+    <button class="tab-btn" onclick="switchTab('campanhas')"><span class="ticon">📣</span>Campanhas</button>
+    <button class="tab-btn" onclick="switchTab('lista')"><span class="ticon">📝</span>Lista</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     TAB: PESQUISA
+══════════════════════════════════════ -->
+<div class="content active" id="tab-pesquisa">
+
+  <div class="card">
+    <div class="card-title">🔍 Pesquisar produto</div>
+    <div class="search-row">
+      <input type="text" class="inp" id="search-q" placeholder="Ex: leite milhafre, azeite gallo, skip..." onkeydown="if(event.key==='Enter')doSearch()" oninput="onSearchInput()">
+      <button class="btn-green" onclick="doSearch()" id="search-btn" style="white-space:nowrap">Pesquisar</button>
+    </div>
+    <div style="margin-bottom:10px">
+      <div class="card-title" style="margin-bottom:5px">🏪 Filtrar por supermercado</div>
+      <select class="sel" id="search-store-filter" onchange="doSearchFilter()">
+        <option value="">Todos os supermercados</option>
+        <option value="pingo_doce">🟡 Pingo Doce</option>
+        <option value="continente">🔵 Continente</option>
+        <option value="auchan">🟣 Auchan</option>
+        <option value="intermarche">🟠 Intermarché</option>
+        <option value="lidl">🔴 Lidl</option>
+        <option value="aldi">⚫ Aldi</option>
+        <option value="mercadona">🟤 Mercadona</option>
+      </select>
+    </div>
+    <!-- Autocomplete / sugestões de pesquisa -->
+    <div id="search-suggestions" style="display:none;margin-bottom:8px"></div>
+    <div id="search-results"></div>
+  </div>
+
+  <!-- PRODUTOS EM DESTAQUE (carregados dinamicamente) -->
+  <div id="featured-section">
+    <!-- recomendações e destaques aparecem aqui -->
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     TAB: CAMPANHAS
+══════════════════════════════════════ -->
+<div class="content" id="tab-campanhas">
+
+  <div class="card" style="background:linear-gradient(135deg,#14532d,#16a34a);border:none;color:#fff;padding:14px">
+    <div style="font-size:.62rem;font-weight:700;letter-spacing:.8px;opacity:.75;text-transform:uppercase">Campanhas desta semana</div>
+    <div style="font-size:.88rem;font-weight:600;margin-top:3px;opacity:.9">26 – 29 de Junho 2026 · Atualizado hoje</div>
+  </div>
+
+  <!-- PINGO DOCE hoje -->
+  <div class="camp-banner cb-pd" onclick="activateCampaign('pingo_doce','pd_100_30')">
+    <div class="cb-header">
+      <div class="cb-logo" style="background:#fef3c7;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Pingo_Doce_Logo.svg/200px-Pingo_Doce_Logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><circle cx=&quot;50&quot; cy=&quot;50&quot; r=&quot;50&quot; fill=&quot;#FFD700&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;28&quot; font-weight=&quot;900&quot; fill=&quot;#006400&quot; font-family=&quot;Arial&quot;>PD</text></svg>'" alt="Pingo Doce">
+      </div>
+      <div>
+        <div class="cb-store">Pingo Doce</div>
+        <div class="cb-title">🔥 Ganha 30€ em compras de 100€</div>
+      </div>
+    </div>
+    <div class="cb-desc">15€ em saldo Pingo Doce + 15€ em vale combustível BP. Precisa de <strong>cartão Poupa Mais</strong> ou App O Meu Pingo Doce. Máx. 3 transações por NIF.</div>
+    <div class="cb-tags">
+      <span class="tag tag-a">⚡ Válido HOJE 26-28 Jun</span>
+      <span class="tag tag-g">30€ de prémio</span>
+      <span class="tag tag-g">15€ saldo + 15€ BP</span>
+    </div>
+    <button class="cb-btn" style="background:#f59e0b;color:#78350f" onclick="event.stopPropagation();activateCampaign('pingo_doce','pd_100_30')">Ativar campanha →</button>
+  </div>
+
+  <!-- PINGO DOCE acumulador -->
+  <div class="camp-banner cb-pd" onclick="activateCampaign('pingo_doce','pd_acumulador')">
+    <div class="cb-header">
+      <div class="cb-logo" style="background:#fef3c7;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Pingo_Doce_Logo.svg/200px-Pingo_Doce_Logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><circle cx=&quot;50&quot; cy=&quot;50&quot; r=&quot;50&quot; fill=&quot;#FFD700&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;28&quot; font-weight=&quot;900&quot; fill=&quot;#006400&quot;>PD</text></svg>'" alt="Pingo Doce">
+      </div>
+      <div>
+        <div class="cb-store">Pingo Doce</div>
+        <div class="cb-title">📊 Acumulador semanal: até 25€ em cupão</div>
+      </div>
+    </div>
+    <div class="cb-desc">Acumula compras semanais com a App: entre 80€–150€ ganhas 10€ em cupão; acima de 150€ ganhas 25€. Cupão usável na semana seguinte.</div>
+    <div class="cb-tags">
+      <span class="tag tag-g">80€ → +10€</span>
+      <span class="tag tag-g">150€ → +25€</span>
+      <span class="tag tag-a">App obrigatória</span>
+    </div>
+    <button class="cb-btn" style="background:#f59e0b;color:#78350f" onclick="event.stopPropagation();activateCampaign('pingo_doce','pd_acumulador')">Ativar campanha →</button>
+  </div>
+
+  <!-- PINGO DOCE 50€ -->
+  <div class="camp-banner cb-pd" onclick="activateCampaign('pingo_doce','pd_50_10')">
+    <div class="cb-header">
+      <div class="cb-logo" style="background:#fef3c7;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Pingo_Doce_Logo.svg/200px-Pingo_Doce_Logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><circle cx=&quot;50&quot; cy=&quot;50&quot; r=&quot;50&quot; fill=&quot;#FFD700&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;28&quot; font-weight=&quot;900&quot; fill=&quot;#006400&quot;>PD</text></svg>'" alt="Pingo Doce">
+      </div>
+      <div>
+        <div class="cb-store">Pingo Doce</div>
+        <div class="cb-title">💛 Fim de semana: 10€ desconto em 50€</div>
+      </div>
+    </div>
+    <div class="cb-desc">Poupa 10€ de desconto direto no talão na primeira compra de 50€ ou mais (valor líquido de promoções). Exclusivo fim de semana, cartão Poupa Mais.</div>
+    <div class="cb-tags">
+      <span class="tag tag-g">50€ → −10€ direto</span>
+      <span class="tag tag-a">Sáb–Dom</span>
+    </div>
+    <button class="cb-btn" style="background:#f59e0b;color:#78350f" onclick="event.stopPropagation();activateCampaign('pingo_doce','pd_50_10')">Ativar campanha →</button>
+  </div>
+
+  <!-- CONTINENTE -->
+  <div class="camp-banner cb-cont" onclick="activateCampaign('continente','cont_15pct')">
+    <div class="cb-header">
+      <div class="cb-logo" style="background:#eff6ff;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Continente_logo.svg/200px-Continente_logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#e11d48&quot;/><text x=&quot;50&quot; y=&quot;58&quot; text-anchor=&quot;middle&quot; font-size=&quot;22&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot;>CONT</text></svg>'" alt="Continente">
+      </div>
+      <div>
+        <div class="cb-store">Continente</div>
+        <div class="cb-title">🔵 15% de desconto em Cartão Continente</div>
+      </div>
+    </div>
+    <div class="cb-desc">Cupão disponível na App Cartão Continente ou em cartaocontinente.pt. Saldo acumulado utilizável de <strong>29 Jun a 5 Jul 2026</strong>. Não inclui tabaco, gás, leite infantil, livros.</div>
+    <div class="cb-tags">
+      <span class="tag tag-b">15% em saldo</span>
+      <span class="tag tag-b">29 Jun–5 Jul 2026</span>
+    </div>
+    <button class="cb-btn" style="background:#3b82f6;color:#fff" onclick="event.stopPropagation();activateCampaign('continente','cont_15pct')">Ativar campanha →</button>
+  </div>
+
+  <!-- CONTINENTE 100 -->
+  <div class="camp-banner cb-cont" onclick="activateCampaign('continente','cont_100_15')">
+    <div class="cb-header">
+      <div class="cb-logo" style="background:#eff6ff;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Continente_logo.svg/200px-Continente_logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#e11d48&quot;/><text x=&quot;50&quot; y=&quot;58&quot; text-anchor=&quot;middle&quot; font-size=&quot;22&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot;>CONT</text></svg>'" alt="Continente">
+      </div>
+      <div>
+        <div class="cb-store">Continente</div>
+        <div class="cb-title">🏆 100€ → 15€ Cartão + 15€ Galp</div>
+      </div>
+    </div>
+    <div class="cb-desc">Campanha pontual: em 100€ de compra ganhas 15€ em saldo Cartão Continente e 15€ em vale combustível Galp.</div>
+    <div class="cb-tags">
+      <span class="tag tag-b">100€ → 30€ prémio</span>
+      <span class="tag tag-a">Pontual</span>
+    </div>
+    <button class="cb-btn" style="background:#3b82f6;color:#fff" onclick="event.stopPropagation();activateCampaign('continente','cont_100_15')">Ativar campanha →</button>
+  </div>
+
+  <!-- AUCHAN -->
+  <div class="camp-banner cb-auch" onclick="activateCampaign('auchan','auch_50_10')">
+    <div class="cb-header">
+      <div class="cb-logo" style="background:#f3e8ff;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Auchan_Logo.svg/200px-Auchan_Logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#7c3aed&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;28&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot;>A</text></svg>'" alt="Auchan">
+      </div>
+      <div>
+        <div class="cb-store">Auchan</div>
+        <div class="cb-title">🟣 50€ → 10€ desconto direto</div>
+      </div>
+    </div>
+    <div class="cb-desc">Campanha recorrente de fim de semana. Com cartão A·card: 10€ de desconto direto a partir de 50€ de compra (líquido de promoções).</div>
+    <div class="cb-tags">
+      <span class="tag tag-p">10€ a 50€</span>
+      <span class="tag tag-p">Fim de semana</span>
+      <span class="tag tag-a">Cartão A·card</span>
+    </div>
+    <button class="cb-btn" style="background:#a855f7;color:#fff" onclick="event.stopPropagation();activateCampaign('auchan','auch_50_10')">Ativar campanha →</button>
+  </div>
+
+  <!-- INTERMARCHE -->
+  <div class="camp-banner cb-inter" onclick="activateCampaign('intermarche','inter_80_8')">
+    <div class="cb-header">
+      <div class="cb-logo" style="background:#fff7ed;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Intermarche-Logo.svg/200px-Intermarche-Logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#ea580c&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;36&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot;>I</text></svg>'" alt="Intermarché">
+      </div>
+      <div>
+        <div class="cb-store">Intermarché</div>
+        <div class="cb-title">🟠 80€ → 8€ desconto na próxima compra</div>
+      </div>
+    </div>
+    <div class="cb-desc">Campanha recorrente: acumula compras até 80€ e recebe 8€ de desconto na próxima compra. Verificar validade na loja ou app.</div>
+    <div class="cb-tags">
+      <span class="tag tag-r">80€ → −8€</span>
+      <span class="tag tag-a">Recorrente</span>
+    </div>
+    <button class="cb-btn" style="background:#f97316;color:#fff" onclick="event.stopPropagation();activateCampaign('intermarche','inter_80_8')">Ativar campanha →</button>
+  </div>
+
+  <!-- LIDL -->
+  <div class="camp-banner cb-lidl">
+    <div class="cb-header">
+      <div class="cb-logo" style="background:#fff1f2;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Lidl-Logo.svg/200px-Lidl-Logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#1e3a8a&quot;/><rect x=&quot;0&quot; y=&quot;65&quot; width=&quot;100&quot; height=&quot;35&quot; fill=&quot;#e11d48&quot;/><text x=&quot;50&quot; y=&quot;55&quot; text-anchor=&quot;middle&quot; font-size=&quot;24&quot; font-weight=&quot;900&quot; fill=&quot;#FFD700&quot;>LIDL</text></svg>'" alt="Lidl">
+      </div>
+      <div>
+        <div class="cb-store">Lidl</div>
+        <div class="cb-title">🔴 Descontos diretos + App Lidl Plus</div>
+      </div>
+    </div>
+    <div class="cb-desc">Sem campanha de pontos ativa esta semana, mas há descontos diretos no folheto semanal (churrasco, verão, bebidas até −30%). Usa o app <strong>Lidl Plus</strong> para ofertas personalizadas.</div>
+    <div class="cb-tags">
+      <span class="tag tag-r">Descontos diretos</span>
+      <span class="tag tag-r">App Lidl Plus</span>
+    </div>
+  </div>
+
+  <!-- ALDI -->
+  <div class="camp-banner cb-aldi">
+    <div class="cb-header">
+      <div class="cb-logo" style="background:#f0fdf4;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Logo_Aldi.svg/200px-Logo_Aldi.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#1e40af&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;26&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot;>ALDI</text></svg>'" alt="Aldi">
+      </div>
+      <div>
+        <div class="cb-store">Aldi</div>
+        <div class="cb-title">⚫ Preços baixos fixos + folheto semanal</div>
+      </div>
+    </div>
+    <div class="cb-desc">Sem campanha de pontos. Aldi é conhecido pelos preços fixos baixos e pelos produtos especiais semanais (Aldi Finds). Consulta o folheto na app.</div>
+    <div class="cb-tags">
+      <span class="tag tag-g">Preços baixos fixos</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     TAB: LISTA
+══════════════════════════════════════ -->
+<div class="content" id="tab-lista">
+
+  <!-- Sub-tabs Lista -->
+  <div style="display:flex;gap:6px;margin-bottom:10px;background:var(--card);border-radius:12px;padding:5px;border:1px solid var(--border)">
+    <button class="subtab-btn active" id="subtab-atual-btn" onclick="switchSubTab('atual')" style="flex:1;padding:8px 4px;border-radius:9px;border:none;font-size:.76rem;font-weight:700;cursor:pointer;background:var(--green);color:#fff;font-family:inherit;transition:all .2s">📝 Lista Atual</button>
+    <button class="subtab-btn" id="subtab-predefinida-btn" onclick="switchSubTab('predefinida')" style="flex:1;padding:8px 4px;border-radius:9px;border:none;font-size:.76rem;font-weight:700;cursor:pointer;background:transparent;color:var(--muted);font-family:inherit;transition:all .2s">⭐ Lista Predefinida</button>
+  </div>
+
+  <!-- SUB-TAB: Lista Atual -->
+  <div id="subtab-atual">
+
+  <!-- Seletor supermercado -->
+  <div class="card">
+    <div class="card-title">Supermercado desta visita</div>
+    <select class="sel" id="list-market" onchange="onMarketChange()">
+      <option value="pingo_doce">🟡 Pingo Doce</option>
+      <option value="continente">🔵 Continente</option>
+      <option value="auchan">🟣 Auchan</option>
+      <option value="intermarche">🟠 Intermarché</option>
+      <option value="lidl">🔴 Lidl</option>
+      <option value="aldi">⚫ Aldi</option>
+      <option value="mercadona">🟤 Mercadona</option>
+    </select>
+  </div>
+
+  <!-- Aviso de campanhas ativas -->
+  <div id="camp-alert" class="active-camp-alert" style="display:none">
+    <div class="aca-icon">🔔</div>
+    <div>
+      <div class="aca-text" id="camp-alert-text"></div>
+      <button onclick="switchTab('campanhas')" style="font-size:.65rem;color:#92400e;font-weight:700;background:none;border:none;cursor:pointer;padding:2px 0;text-decoration:underline">Ver campanhas →</button>
+    </div>
+  </div>
+
+  <!-- Adicionar produto -->
+  <div class="card">
+    <div class="card-title">Adicionar produto</div>
+    <div class="search-row" style="margin-bottom:7px">
+      <input type="text" class="inp" id="list-search" placeholder="Pesquisar produto para adicionar..." onkeydown="if(event.key==='Enter')listSearch()">
+      <button class="btn-green" onclick="listSearch()">Buscar</button>
+    </div>
+    <div id="list-search-results"></div>
+    <div style="font-size:.65rem;color:var(--muted);margin-bottom:8px;padding:2px 0">Ou adiciona manualmente:</div>
+    <div class="add-row">
+      <input type="text" class="inp" id="manual-name" placeholder="Nome do produto...">
+      <input type="number" class="inp" id="manual-price" step="0.01" placeholder="€ 0,00" style="text-align:center">
+    </div>
+    <button class="btn-green" style="width:100%" onclick="addManual()">+ Adicionar à lista</button>
+  </div>
+
+  <!-- Lista -->
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px">
+      <div class="card-title" style="margin-bottom:0">Produtos na lista</div>
+      <button onclick="clearList()" style="font-size:.65rem;color:var(--muted);background:none;border:none;cursor:pointer">Limpar</button>
+    </div>
+    <div id="list-items">
+      <div class="empty-state"><span class="empty-icon">📋</span>Lista vazia.<br>Pesquisa ou adiciona produtos acima.</div>
+    </div>
+  </div>
+</div><!-- /subtab-atual -->
+
+  <!-- SUB-TAB: Lista Predefinida -->
+  <div id="subtab-predefinida" style="display:none">
+
+    <!-- Totais e comparação -->
+    <div class="card" id="predef-totals-card">
+      <div class="card-title">📊 Registo de preços</div>
+      <div style="display:flex;gap:10px;margin-bottom:8px">
+        <div style="flex:1;background:var(--green-l);border-radius:10px;padding:10px;text-align:center">
+          <div style="font-size:.6rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Esta semana</div>
+          <div style="font-size:1.5rem;font-weight:900;color:var(--green)" id="predef-total-atual">0,00€</div>
+        </div>
+        <div style="flex:1;background:var(--input-bg);border-radius:10px;padding:10px;text-align:center">
+          <div style="font-size:.6rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Semana anterior</div>
+          <div style="font-size:1.5rem;font-weight:900;color:var(--text)" id="predef-total-anterior">—</div>
+        </div>
+      </div>
+      <div id="predef-diff-banner" style="display:none;border-radius:9px;padding:8px 11px;text-align:center;font-size:.78rem;font-weight:700;margin-bottom:4px"></div>
     </div>
 
-    <!-- ==================== TAB: PLANEAMENTO ==================== -->
-    <main id="tab-plan" class="tab-content active max-w-md mx-auto p-4 space-y-5">
-        
-        <!-- Sugestões "IA" -->
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-            <h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex justify-between items-center">
-                <span>✨ Sugestões para Si</span>
-                <span class="text-[10px] bg-purple-100 text-purple-600 px-2 py-0.5 rounded">Aprende consigo</span>
-            </h2>
-            <div id="suggestions-container" class="flex overflow-x-auto gap-2 pb-2 no-scrollbar">
-                <!-- Injetado via JS -->
-            </div>
+    <!-- Gerir lista predefinida -->
+    <div class="card">
+      <div class="card-title">⭐ Produtos predefinidos</div>
+      <div class="search-row" style="margin-bottom:7px">
+        <input type="text" class="inp" id="predef-search" placeholder="Pesquisar para adicionar à lista predefinida..." onkeydown="if(event.key==='Enter')predefSearch()">
+        <button class="btn-green" onclick="predefSearch()">Buscar</button>
+      </div>
+      <div id="predef-search-results" style="margin-bottom:8px"></div>
+      <div style="font-size:.65rem;color:var(--muted);margin-bottom:8px">Ou adiciona manualmente:</div>
+      <div class="add-row">
+        <input type="text" class="inp" id="predef-manual-name" placeholder="Nome do produto...">
+        <input type="number" class="inp" id="predef-manual-price" step="0.01" placeholder="€ 0,00" style="text-align:center">
+      </div>
+      <button class="btn-green" style="width:100%;margin-bottom:10px" onclick="addToPredef()">+ Adicionar à lista predefinida</button>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+        <div style="font-size:.72rem;font-weight:700;color:var(--text)">Lista predefinida</div>
+        <div style="display:flex;gap:6px">
+          <button onclick="loadPredefToList()" style="font-size:.65rem;background:var(--green);color:#fff;border:none;border-radius:7px;padding:4px 9px;cursor:pointer;font-weight:700;font-family:inherit">▶ Usar na lista atual</button>
+          <button onclick="clearPredef()" style="font-size:.65rem;color:var(--muted);background:none;border:none;cursor:pointer">Limpar</button>
         </div>
+      </div>
+      <div id="predef-items">
+        <div class="empty-state"><span class="empty-icon">⭐</span>Lista predefinida vazia.<br>Adiciona os produtos que compras habitualmente.</div>
+      </div>
+    </div>
+  </div><!-- /subtab-predefinida -->
 
-        <!-- Adicionar à Lista -->
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-            <h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Adicionar ao Plano</h2>
-            <div class="flex gap-2">
-                <input type="text" id="plan-input" placeholder="Ex: Maçãs, Pão..." class="flex-1 p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onkeypress="if(event.key === 'Enter') addPlannedItemFromInput()">
-                <button onclick="addPlannedItemFromInput()" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition">
-                    +
-                </button>
-            </div>
-        </div>
+</div><!-- /tab-lista -->
 
-        <!-- Lista Planeada -->
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-            <div class="flex justify-between items-end mb-3">
-                <h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider">A sua Lista</h2>
-                <div class="text-right">
-                    <p class="text-[10px] text-gray-400">Estimativa Total</p>
-                    <p id="plan-estimate" class="text-lg font-bold text-blue-600">0.00€</p>
-                </div>
-            </div>
-            
-            <div id="planned-list" class="space-y-2">
-                <p class="text-gray-400 text-center text-sm py-6">A lista de planeamento está vazia.</p>
-            </div>
-        </div>
-    </main>
+<!-- FOOTER TOTAL -->
+<div class="footer-bar" id="footer-bar" style="display:none">
+  <div class="footer-inner">
+    <div class="total-row">
+      <div>
+        <div class="total-lbl">Total estimado</div>
+        <div class="total-amt" id="total-amt">0,00€</div>
+      </div>
+      <div style="text-align:right">
+        <span class="status-badge sb-none" id="status-badge">Sem campanha</span>
+      </div>
+    </div>
+    <div id="prog-section" style="display:none">
+      <div style="display:flex;justify-content:space-between;font-size:.68rem;margin-bottom:4px">
+        <span id="prog-left" style="font-weight:700;color:var(--text)"></span>
+        <span id="prog-right" style="color:var(--muted)"></span>
+      </div>
+      <div class="prog-track"><div class="prog-fill pf-warn" id="prog-bar" style="width:0%"></div></div>
+      <div id="reward-box" class="reward-box" style="display:none;margin-top:7px">
+        <div class="rw-txt" id="reward-text">🎉 Meta atingida!</div>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <!-- ==================== TAB: EM LOJA (CARRINHO) ==================== -->
-    <main id="tab-cart" class="tab-content max-w-md mx-auto p-4 space-y-5">
-        
-        <!-- Configuração de Metas (Colapsável) -->
-        <details class="bg-white rounded-xl shadow-sm border border-gray-100 group">
-            <summary class="p-4 cursor-pointer font-medium text-gray-700 flex justify-between items-center list-none">
-                <span class="flex items-center gap-2">⚙️ Configurar Promoção</span>
-                <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
-            </summary>
-            <div class="p-4 border-t border-gray-100 bg-gray-50/50 rounded-b-xl">
-                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Supermercado Atual</label>
-                <select id="supermarket" onchange="updateCampaignAlert()" class="w-full p-2.5 border border-gray-200 rounded-lg bg-white mb-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="continente">Continente</option>
-                    <option value="pingo_doce">Pingo Doce</option>
-                    <option value="auchan">Auchan</option>
-                    <option value="intermarche">Intermarché</option>
-                </select>
-
-                <div class="grid grid-cols-3 gap-3">
-                    <div>
-                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Meta (€)</label>
-                        <input type="number" id="target-value" value="100" class="w-full p-2 border border-gray-200 rounded-lg text-center text-sm font-medium" oninput="calculateTotal()">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Combustível</label>
-                        <input type="number" id="fuel-bonus" value="15" class="w-full p-2 border border-gray-200 rounded-lg text-center text-sm font-medium" oninput="calculateTotal()">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Em Loja</label>
-                        <input type="number" id="store-bonus" value="15" class="w-full p-2 border border-gray-200 rounded-lg text-center text-sm font-medium" oninput="calculateTotal()">
-                    </div>
-                </div>
-            </div>
-        </details>
-
-        <!-- Alerta de Campanha Dinâmico -->
-        <div id="campaign-banner" class="bg-amber-50 border border-amber-200 p-3 rounded-xl flex gap-3 items-center">
-            <span class="text-xl">📢</span>
-            <p id="campaign-text" class="text-xs text-amber-800 font-medium leading-relaxed"></p>
-        </div>
-
-        <!-- Scanner / Adicionar Produto Real -->
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 space-y-4">
-            <button onclick="toggleScanner()" class="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium py-3 px-4 rounded-xl transition flex items-center justify-center gap-2 shadow-sm">
-                📷 <span id="scan-btn-text">Ler Código de Barras</span>
-            </button>
-            
-            <div id="reader" class="w-full hidden overflow-hidden rounded-xl border border-gray-200 bg-black"></div>
-
-            <div class="relative flex py-1 items-center">
-                <div class="flex-grow border-t border-gray-200"></div>
-                <span class="flex-shrink mx-4 text-gray-400 text-[10px] uppercase font-bold tracking-widest">Ou Manualmente</span>
-                <div class="flex-grow border-t border-gray-200"></div>
-            </div>
-
-            <div class="grid grid-cols-3 gap-2">
-                <input type="text" id="manual-name" placeholder="Produto..." class="col-span-2 p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <input type="number" id="manual-price" step="0.01" placeholder="0.00€" class="col-span-1 p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500">
-            </div>
-            <button onclick="addManualItem()" class="w-full bg-blue-100 text-blue-700 hover:bg-blue-200 text-sm font-bold py-2.5 rounded-lg transition">
-                Adicionar ao Carrinho
-            </button>
-        </div>
-
-        <!-- Carrinho Real -->
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-            <h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">No Carrinho</h2>
-            <div id="cart-items" class="space-y-2">
-                <p class="text-gray-400 text-center text-sm py-6">O carrinho está vazio.</p>
-            </div>
-        </div>
-    </main>
-
-    <!-- Dashboard Fixo de Totais -->
-    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] p-4 pt-3 pb-6 rounded-t-2xl z-50">
-        <div class="max-w-md mx-auto">
-            <div class="flex justify-between items-end mb-2">
-                <div>
-                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Total Confirmado</p>
-                    <p id="total-price" class="text-3xl font-black text-gray-900 leading-none">0.00€</p>
-                </div>
-                <div class="text-right">
-                    <p id="promo-status" class="text-xs font-bold text-red-500 bg-red-50 px-2 py-1 rounded">Faltam 100.00€</p>
-                </div>
-            </div>
-
-            <!-- Barra de Progresso -->
-            <div class="w-full bg-gray-100 rounded-full h-3 mb-1 overflow-hidden shadow-inner mt-3">
-                <div id="progress-bar" class="bg-red-500 h-3 rounded-full transition-all duration-500 relative" style="width: 0%">
-                    <div class="absolute inset-0 bg-white/20 w-full h-full" style="background-image: linear-gradient(45deg, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent); background-size: 1rem 1rem;"></div>
-                </div>
-            </div>
-
-            <!-- Quadro de Prémios Alcançados -->
-            <div id="rewards-panel" class="hidden mt-3 bg-green-50 border border-green-200 text-green-800 text-sm p-3 rounded-xl text-center font-semibold shadow-sm animate-[fadeIn_0.5s]">
-                🎉 Parabéns! Tem direito a <span id="reward-fuel-text" class="text-green-900 font-black">15€</span> (Combustível) + <span id="reward-store-text" class="text-green-900 font-black">15€</span> (Loja).
-            </div>
-        </div>
+<!-- ══════════════════════════════════════
+     MODAL: DEFINIÇÕES
+══════════════════════════════════════ -->
+<div class="modal-overlay" id="settings-modal" onclick="closeModalBg(event,'settings-modal')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">⚙️ Definições</div>
+        <div class="modal-sub">Aparência e acessibilidade</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('settings-modal')">✕</button>
     </div>
 
-    <!-- Lógica da Aplicação -->
-    <script>
-        // ================= DATABASES MOCK =================
-        const productDatabase = {
-            "5601234567890": { name: "Leite UHT Meio Gordo", price: 0.89 },
-            "5609876543210": { name: "Arroz Agulha 1kg", price: 1.25 },
-            "5605555555555": { name: "Café Moído 250g", price: 2.49 }
-        };
+    <div class="settings-row">
+      <div>
+        <div class="settings-lbl">🌙 Modo escuro</div>
+        <div class="settings-desc">Reduz o brilho do ecrã</div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="dark-toggle" onchange="toggleDarkMode()">
+        <span class="switch-track"></span>
+      </label>
+    </div>
 
-        // Preços conhecidos para pesquisa por nome (simula uma base de dados maior)
-        const priceDictionary = [
-            { keywords: ["leite"], price: 0.89 },
-            { keywords: ["arroz"], price: 1.25 },
-            { keywords: ["café", "cafe"], price: 2.49 },
-            { keywords: ["pão", "pao"], price: 1.10 },
-            { keywords: ["manteiga"], price: 1.85 },
-            { keywords: ["ovos"], price: 2.20 },
-            { keywords: ["azeite"], price: 7.99 },
-            { keywords: ["atum"], price: 1.15 }
-        ];
+    <div class="settings-row" style="display:block">
+      <div style="margin-bottom:9px">
+        <div class="settings-lbl">🔤 Tamanho da letra</div>
+        <div class="settings-desc">Ajusta o tamanho do texto em toda a app</div>
+      </div>
+      <div class="fs-grid" id="fs-grid">
+        <button class="fs-btn" data-fs="14" onclick="setFontSize(14)" style="font-size:.7rem">A</button>
+        <button class="fs-btn" data-fs="16" onclick="setFontSize(16)" style="font-size:.85rem">A</button>
+        <button class="fs-btn" data-fs="18" onclick="setFontSize(18)" style="font-size:1rem">A</button>
+        <button class="fs-btn" data-fs="20" onclick="setFontSize(20)" style="font-size:1.15rem">A</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-        const campaigns = {
-            continente: "Ganha 15€ em combustível + 15€ em cartão a cada 100€ de compras.",
-            pingo_doce: "Fim de Semana: 20€ de desconto imediato em compras superiores a 100€.",
-            auchan: "Acumula 10% no cartão Auchan em toda a marca própria.",
-            intermarche: "Combustível a preço de custo com talão superior a 50€."
-        };
+<!-- ══════════════════════════════════════
+     MODAL: DETALHE DO PRODUTO / HISTÓRICO
+══════════════════════════════════════ -->
+<div class="modal-overlay" id="product-modal" onclick="closeModalBg(event,'product-modal')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <button class="modal-close" onclick="closeModal('product-modal')" style="order:2">✕</button>
+      <div style="order:1;flex:1">
+        <div class="modal-title" id="pm-title">Produto</div>
+        <div class="modal-sub">Preço atual e histórico por supermercado</div>
+      </div>
+    </div>
+    <div class="modal-prod-head">
+      <div class="prod-photo lg" id="pm-photo"></div>
+      <div>
+        <div style="font-size:.65rem;color:var(--muted)">A poupança certa começa aqui</div>
+        <div style="font-size:.7rem;font-weight:700;color:var(--green);margin-top:2px" id="pm-bestnote"></div>
+      </div>
+    </div>
+    <div id="pm-stores"></div>
+  </div>
+</div>
 
-        // ================= STATE =================
-        let plannedItems = [];
-        let cartItems = [];
-        let html5QrCode = null;
+<script>
+// ══════════════════════════════════════════════════════
+// CATÁLOGO ALARGADO (preços médios Jun 2026 Portugal)
+// ══════════════════════════════════════════════════════
+const CATALOG = [
+  // LEITE
+  {name:'Leite UHT Meio Gordo Mimosa 1L',price:0.99,stores:{pingo_doce:0.97,continente:0.99,auchan:1.01,intermarche:0.99,lidl:0.89},emoji:'🥛',cat:'leite'},
+  {name:'Leite UHT Meio Gordo Milhafre 1L',price:0.92,stores:{pingo_doce:0.89,continente:0.93,auchan:0.92},emoji:'🥛',cat:'leite'},
+  {name:'Leite UHT Gordo Milhafre 1L',price:0.94,stores:{pingo_doce:0.91,continente:0.95},emoji:'🥛',cat:'leite'},
+  {name:'Leite UHT Magro Milhafre 1L',price:0.90,stores:{pingo_doce:0.88,continente:0.91},emoji:'🥛',cat:'leite'},
+  {name:'Leite UHT Meio Gordo Agros 1L',price:0.95,stores:{pingo_doce:0.95,continente:0.97},emoji:'🥛',cat:'leite'},
+  {name:'Leite UHT Meio Gordo Continente 1L',price:0.79,stores:{continente:0.79},emoji:'🥛',cat:'leite'},
+  {name:'Leite UHT Meio Gordo Pingo Doce 1L',price:0.78,stores:{pingo_doce:0.78},emoji:'🥛',cat:'leite'},
+  {name:'Leite UHT Meio Gordo Lidl Pilos 1L',price:0.75,stores:{lidl:0.75},emoji:'🥛',cat:'leite'},
+  {name:'Leite Gordo Pasteurizado Mimosa 1L',price:1.05,stores:{pingo_doce:1.03,continente:1.05},emoji:'🥛',cat:'leite'},
 
-        // ================= INITIALIZATION =================
-        window.onload = () => {
-            updateCampaignAlert();
-            loadSuggestions();
-            renderPlan();
-            renderCart();
-        };
+  // MANTEIGA
+  {name:'Manteiga com Sal Milhafre 250g',price:2.85,stores:{pingo_doce:2.79,continente:2.89,auchan:2.85},emoji:'🧈',cat:'manteiga'},
+  {name:'Manteiga sem Sal Milhafre 250g',price:2.85,stores:{pingo_doce:2.79,continente:2.89},emoji:'🧈',cat:'manteiga'},
+  {name:'Manteiga Anchor com Sal 250g',price:3.19,stores:{continente:3.19,pingo_doce:3.15,auchan:3.22},emoji:'🧈',cat:'manteiga'},
+  {name:'Manteiga Lurpak com Sal 250g',price:3.49,stores:{continente:3.49,pingo_doce:3.45},emoji:'🧈',cat:'manteiga'},
+  {name:'Manteiga Vaqueiro 500g',price:2.99,stores:{continente:2.99,pingo_doce:2.95,intermarche:2.99},emoji:'🧈',cat:'manteiga'},
+  {name:'Manteiga Pingo Doce 250g',price:1.89,stores:{pingo_doce:1.89},emoji:'🧈',cat:'manteiga'},
+  {name:'Manteiga Continente 250g',price:1.85,stores:{continente:1.85},emoji:'🧈',cat:'manteiga'},
 
-        // ================= TABS LOGIC =================
-        function switchTab(tab) {
-            document.getElementById('tab-plan').classList.remove('active');
-            document.getElementById('tab-cart').classList.remove('active');
-            
-            document.getElementById('btn-tab-plan').classList.replace('text-blue-700', 'text-gray-400');
-            document.getElementById('btn-tab-plan').classList.replace('border-blue-700', 'border-transparent');
-            
-            document.getElementById('btn-tab-cart').classList.replace('text-blue-700', 'text-gray-400');
-            document.getElementById('btn-tab-cart').classList.replace('border-blue-700', 'border-transparent');
+  // AZEITE
+  {name:'Azeite Virgem Extra Gallo 75cl',price:8.49,stores:{continente:8.49,pingo_doce:8.45,auchan:8.59,intermarche:8.49},emoji:'🫒',cat:'azeite'},
+  {name:'Azeite Clássico Gallo 75cl',price:6.99,stores:{continente:6.99,pingo_doce:6.95},emoji:'🫒',cat:'azeite'},
+  {name:'Azeite Virgem Extra Oliveira da Serra 75cl',price:7.99,stores:{pingo_doce:7.99,continente:8.19,auchan:8.09},emoji:'🫒',cat:'azeite'},
+  {name:'Azeite Clássico Oliveira da Serra 75cl',price:6.49,stores:{pingo_doce:6.49,continente:6.69},emoji:'🫒',cat:'azeite'},
+  {name:'Azeite Virgem Extra Pingo Doce 75cl',price:5.99,stores:{pingo_doce:5.99},emoji:'🫒',cat:'azeite'},
+  {name:'Azeite Virgem Extra Continente 75cl',price:5.89,stores:{continente:5.89},emoji:'🫒',cat:'azeite'},
+  {name:'Azeite Virgem Extra Fula 75cl',price:7.19,stores:{pingo_doce:7.19,continente:7.29},emoji:'🫒',cat:'azeite'},
 
-            if(tab === 'plan') {
-                document.getElementById('tab-plan').classList.add('active');
-                document.getElementById('btn-tab-plan').classList.replace('text-gray-400', 'text-blue-700');
-                document.getElementById('btn-tab-plan').classList.replace('border-transparent', 'border-blue-700');
-            } else {
-                document.getElementById('tab-cart').classList.add('active');
-                document.getElementById('btn-tab-cart').classList.replace('text-gray-400', 'text-blue-700');
-                document.getElementById('btn-tab-cart').classList.replace('border-transparent', 'border-blue-700');
-            }
+  // ARROZ
+  {name:'Arroz Agulha Cigala 1kg',price:1.59,stores:{continente:1.59,pingo_doce:1.55,auchan:1.62,intermarche:1.59},emoji:'🍚',cat:'arroz'},
+  {name:'Arroz Carolino Caçarola 1kg',price:1.79,stores:{continente:1.79,pingo_doce:1.75,auchan:1.82},emoji:'🍚',cat:'arroz',promo:'⚠️ +28% desde jan 2026'},
+  {name:'Arroz Carolino Pingo Doce 1kg',price:1.49,stores:{pingo_doce:1.49},emoji:'🍚',cat:'arroz',promo:'⚠️ Subida de preço 2026'},
+  {name:'Arroz Carolino Continente 1kg',price:1.45,stores:{continente:1.45},emoji:'🍚',cat:'arroz'},
+  {name:'Arroz Agulha Pingo Doce 1kg',price:1.19,stores:{pingo_doce:1.19},emoji:'🍚',cat:'arroz'},
+  {name:'Arroz Integral Continente 1kg',price:1.29,stores:{continente:1.29},emoji:'🍚',cat:'arroz'},
+  {name:'Arroz Basmati Uncle Bens 500g',price:2.49,stores:{continente:2.49,pingo_doce:2.45},emoji:'🍚',cat:'arroz'},
+
+  // CAFÉ
+  {name:'Café Delta Expresso 250g',price:4.29,stores:{continente:4.29,pingo_doce:4.25,auchan:4.35},emoji:'☕',cat:'café'},
+  {name:'Café Delta Q Qalidus 10 cápsulas',price:4.49,stores:{continente:4.49,pingo_doce:4.45},emoji:'☕',cat:'café'},
+  {name:'Café Delta Q Intenso 10 cápsulas',price:4.49,stores:{continente:4.49,pingo_doce:4.45},emoji:'☕',cat:'café'},
+  {name:'Café Nescafé Classic 200g',price:5.29,stores:{continente:5.29,pingo_doce:5.25,auchan:5.39},emoji:'☕',cat:'café'},
+  {name:'Café Nescafé Gold 200g',price:7.99,stores:{continente:7.99,pingo_doce:7.89},emoji:'☕',cat:'café'},
+  {name:'Café Nicola Modo Mio 10 cápsulas',price:3.99,stores:{continente:3.99,pingo_doce:3.95},emoji:'☕',cat:'café'},
+  {name:'Café Melitta BioRoyal 250g',price:4.99,stores:{continente:4.99,auchan:4.95},emoji:'☕',cat:'café'},
+  {name:'Café Continente 250g',price:2.69,stores:{continente:2.69},emoji:'☕',cat:'café'},
+  {name:'Café Pingo Doce 250g',price:2.59,stores:{pingo_doce:2.59},emoji:'☕',cat:'café'},
+
+  // MASSAS
+  {name:'Massa Esparguete Milaneza 500g',price:0.89,stores:{continente:0.89,pingo_doce:0.85,auchan:0.92,intermarche:0.89},emoji:'🍝',cat:'massa'},
+  {name:'Massa Penne Milaneza 500g',price:0.89,stores:{continente:0.89,pingo_doce:0.85},emoji:'🍝',cat:'massa'},
+  {name:'Massa Espiral Milaneza 500g',price:0.89,stores:{continente:0.89,pingo_doce:0.85},emoji:'🍝',cat:'massa'},
+  {name:'Massa Esparguete Continente 500g',price:0.65,stores:{continente:0.65},emoji:'🍝',cat:'massa'},
+  {name:'Massa Lasanha Barilla 500g',price:1.79,stores:{continente:1.79,pingo_doce:1.75},emoji:'🍝',cat:'massa'},
+
+  // QUEIJO E LACTICÍNIOS
+  {name:'Queijo Flamengo Fatiado Serra da Cangalha 250g',price:2.49,stores:{continente:2.49,pingo_doce:2.45,auchan:2.55},emoji:'🧀',cat:'queijo'},
+  {name:'Queijo Flamengo Inteiro 1kg',price:7.99,stores:{continente:7.99,pingo_doce:7.89},emoji:'🧀',cat:'queijo'},
+  {name:'Queijo Mozarela Galbani 125g',price:1.59,stores:{continente:1.59,pingo_doce:1.55},emoji:'🧀',cat:'queijo'},
+  {name:'Queijo Bola Pingo Doce 1kg',price:7.49,stores:{pingo_doce:7.49},emoji:'🧀',cat:'queijo'},
+  {name:'Iogurte Natural Activia 4x120g',price:1.89,stores:{continente:1.89,pingo_doce:1.85,auchan:1.95},emoji:'🥛',cat:'iogurte'},
+  {name:'Iogurte Líquido Activia 4x150g',price:2.09,stores:{continente:2.09,pingo_doce:2.05},emoji:'🥛',cat:'iogurte'},
+  {name:'Iogurte Natural Mimosa 4x125g',price:1.49,stores:{continente:1.49,pingo_doce:1.45},emoji:'🥛',cat:'iogurte'},
+  {name:'Natas UHT Mimosa 200ml',price:0.99,stores:{continente:0.99,pingo_doce:0.95},emoji:'🥛',cat:'laticínio'},
+  {name:'Ovos M Pingo Doce 10 unid.',price:2.19,stores:{pingo_doce:2.19},emoji:'🥚',cat:'ovos'},
+  {name:'Ovos M Continente 10 unid.',price:2.09,stores:{continente:2.09},emoji:'🥚',cat:'ovos'},
+  {name:'Ovos Campestres M Mimosa 10 unid.',price:2.89,stores:{continente:2.89,pingo_doce:2.85},emoji:'🥚',cat:'ovos'},
+
+  // CARNE E PEIXE
+  {name:'Frango Inteiro 1kg (aprox.)',price:3.59,stores:{continente:3.59,pingo_doce:3.49,auchan:3.65},emoji:'🍗',cat:'carne'},
+  {name:'Peito de Frango s/ Osso 1kg',price:6.99,stores:{continente:6.99,pingo_doce:6.89,auchan:7.19},emoji:'🍗',cat:'carne'},
+  {name:'Entrecosto de Porco 1kg',price:4.79,stores:{continente:4.79,pingo_doce:4.69},emoji:'🥩',cat:'carne',promo:'Em promoção Continente Jun'},
+  {name:'Lombo de Porco s/ Osso 1kg',price:4.49,stores:{continente:4.49,pingo_doce:4.39},emoji:'🥩',cat:'carne'},
+  {name:'Bacalhau Crescido Noruega 1kg',price:16.99,stores:{continente:16.99,pingo_doce:17.49},emoji:'🐟',cat:'peixe',promo:'Promoção Continente esta semana!'},
+  {name:'Atum em Óleo Vegetal Bom Petisco 80g',price:1.39,stores:{continente:1.39,pingo_doce:1.35,auchan:1.42,intermarche:1.39,lidl:1.25},emoji:'🐟',cat:'conservas'},
+  {name:'Atum ao Natural Pingo Doce 3x80g',price:2.89,stores:{pingo_doce:2.89},emoji:'🐟',cat:'conservas'},
+
+  // AÇÚCAR e CONDIMENTOS
+  {name:'Açúcar Branco Sidul 1kg',price:1.09,stores:{continente:1.09,pingo_doce:1.05,auchan:1.09,intermarche:1.09,lidl:0.99},emoji:'🍬',cat:'mercearia'},
+  {name:'Açúcar Amarelo Sidul 1kg',price:1.29,stores:{continente:1.29,pingo_doce:1.25},emoji:'🍬',cat:'mercearia'},
+  {name:'Sal Marinho Vatel 1kg',price:0.55,stores:{continente:0.55,pingo_doce:0.52,lidl:0.49},emoji:'🧂',cat:'mercearia'},
+  {name:'Óleo de Girassol Continente 1L',price:1.49,stores:{continente:1.49},emoji:'🫙',cat:'mercearia'},
+  {name:'Óleo de Girassol Fula 1L',price:1.69,stores:{continente:1.69,pingo_doce:1.65},emoji:'🫙',cat:'mercearia'},
+
+  // BEBIDAS
+  {name:'Água das Pedras 1.5L',price:0.75,stores:{continente:0.75,pingo_doce:0.72,auchan:0.79},emoji:'💧',cat:'bebidas'},
+  {name:'Água Luso 1.5L',price:0.69,stores:{continente:0.69,pingo_doce:0.65,auchan:0.72,lidl:0.59},emoji:'💧',cat:'bebidas'},
+  {name:'Água Continente 1.5L',price:0.35,stores:{continente:0.35},emoji:'💧',cat:'bebidas'},
+  {name:'Sumo Compal Laranja 1L',price:1.59,stores:{continente:1.59,pingo_doce:1.55,auchan:1.65},emoji:'🍊',cat:'bebidas'},
+  {name:'Coca-Cola 1.5L',price:1.89,stores:{continente:1.89,pingo_doce:1.85,auchan:1.95,lidl:1.69},emoji:'🥤',cat:'bebidas'},
+  {name:'Sumol Laranja 33cl (pack 6)',price:3.49,stores:{continente:3.49,pingo_doce:3.39},emoji:'🍊',cat:'bebidas'},
+
+  // HIGIENE E LIMPEZA
+  {name:'Papel Higiénico Renova 3 Folhas 12 rolos',price:6.49,stores:{continente:6.49,pingo_doce:6.39,auchan:6.59},emoji:'🧻',cat:'higiene'},
+  {name:'Papel Higiénico Pingo Doce 16 rolos',price:4.99,stores:{pingo_doce:4.99},emoji:'🧻',cat:'higiene'},
+  {name:'Papel Higiénico Continente 16 rolos',price:4.79,stores:{continente:4.79},emoji:'🧻',cat:'higiene'},
+  {name:'Detergente Skip Active Clean 2kg',price:8.99,stores:{continente:8.99,pingo_doce:8.79,auchan:9.19},emoji:'🫧',cat:'limpeza'},
+  {name:'Detergente Ariel Original 2.2kg',price:9.49,stores:{continente:9.49,pingo_doce:9.39},emoji:'🫧',cat:'limpeza'},
+  {name:'Detergente Loiça Fairy Original 800ml',price:2.99,stores:{continente:2.99,pingo_doce:2.89,auchan:3.09},emoji:'🫧',cat:'limpeza'},
+  {name:'Amaciador Comfort Azul 1.5L',price:4.49,stores:{continente:4.49,pingo_doce:4.39},emoji:'🫧',cat:'limpeza'},
+  {name:'Champô Head & Shoulders 400ml',price:4.99,stores:{continente:4.99,pingo_doce:4.89},emoji:'🧴',cat:'higiene'},
+  {name:'Pasta de Dentes Signal 75ml',price:1.49,stores:{continente:1.49,pingo_doce:1.45,lidl:1.25},emoji:'🦷',cat:'higiene'},
+
+  // SNACKS E OUTROS
+  {name:'Bolachas Digestivas McVitie\'s 400g',price:1.99,stores:{continente:1.99,pingo_doce:1.89,auchan:2.09},emoji:'🍪',cat:'snacks'},
+  {name:'Chocolate Milka Leite 300g',price:2.99,stores:{continente:2.99,pingo_doce:2.89,auchan:3.09},emoji:'🍫',cat:'snacks'},
+  {name:'Pão de Forma Bimbo 660g',price:2.19,stores:{continente:2.19,pingo_doce:2.09,auchan:2.25},emoji:'🍞',cat:'padaria'},
+
+  // ── PRODUTOS EXCLUSIVOS PINGO DOCE (comida fresca/pronta) ──
+  {name:'Panados de Frango Pingo Doce 400g',price:3.49,stores:{pingo_doce:3.49},emoji:'🍗',cat:'pronta'},
+  {name:'Panados de Peru Pingo Doce 350g',price:3.29,stores:{pingo_doce:3.29},emoji:'🍗',cat:'pronta'},
+  {name:'Croquetes de Carne Pingo Doce 400g',price:2.99,stores:{pingo_doce:2.99},emoji:'🧆',cat:'pronta'},
+  {name:'Rissóis de Camarão Pingo Doce 360g',price:3.79,stores:{pingo_doce:3.79},emoji:'🥟',cat:'pronta'},
+  {name:'Almôndegas Pingo Doce 400g',price:2.89,stores:{pingo_doce:2.89},emoji:'🍖',cat:'pronta'},
+  {name:'Lasanha Bolonhesa Pingo Doce 400g',price:3.99,stores:{pingo_doce:3.99},emoji:'🍝',cat:'pronta'},
+  {name:'Frango Assado Pingo Doce (unid.)',price:5.49,stores:{pingo_doce:5.49},emoji:'🍗',cat:'pronta'},
+  {name:'Sopa Legumes Pingo Doce 1L',price:1.79,stores:{pingo_doce:1.79},emoji:'🍲',cat:'pronta'},
+  {name:'Pizza Fiambre e Queijo Pingo Doce 400g',price:3.19,stores:{pingo_doce:3.19},emoji:'🍕',cat:'pronta'},
+  {name:'Bifanas Marinadas Pingo Doce 500g',price:4.29,stores:{pingo_doce:4.29},emoji:'🥩',cat:'pronta'},
+
+  // ── PRODUTOS EXCLUSIVOS CONTINENTE ──
+  {name:'Panados de Frango Continente 400g',price:3.39,stores:{continente:3.39},emoji:'🍗',cat:'pronta'},
+  {name:'Rissóis de Carne Continente 360g',price:2.69,stores:{continente:2.69},emoji:'🥟',cat:'pronta'},
+  {name:'Lasanha Continente Equilíbrio 400g',price:3.79,stores:{continente:3.79},emoji:'🍝',cat:'pronta'},
+  {name:'Pizza Fiambre Continente 410g',price:2.99,stores:{continente:2.99},emoji:'🍕',cat:'pronta'},
+  {name:'Sopa Creme Legumes Continente 1L',price:1.59,stores:{continente:1.59},emoji:'🍲',cat:'pronta'},
+  {name:'Frango Assado Continente (unid.)',price:5.29,stores:{continente:5.29},emoji:'🍗',cat:'pronta'},
+
+  // ── PRODUTOS EXCLUSIVOS AUCHAN ──
+  {name:'Panados de Frango Auchan 400g',price:3.29,stores:{auchan:3.29},emoji:'🍗',cat:'pronta'},
+  {name:'Bifanas Auchan 500g',price:4.09,stores:{auchan:4.09},emoji:'🥩',cat:'pronta'},
+  {name:'Croquetes Auchan 400g',price:2.79,stores:{auchan:2.79},emoji:'🧆',cat:'pronta'},
+  {name:'Pizza Mozzarella Auchan 420g',price:2.89,stores:{auchan:2.89},emoji:'🍕',cat:'pronta'},
+
+  // ── PRODUTOS EXCLUSIVOS LIDL (marcas próprias) ──
+  {name:'Leite Meio Gordo Milbona 1L',price:0.79,stores:{lidl:0.79},emoji:'🥛',cat:'leite'},
+  {name:'Iogurte Natural Milbona 4x125g',price:1.19,stores:{lidl:1.19},emoji:'🥛',cat:'iogurte'},
+  {name:'Queijo Flamengo Milbona 400g',price:2.49,stores:{lidl:2.49},emoji:'🧀',cat:'queijo'},
+  {name:'Manteiga com Sal Lovilio 250g',price:2.19,stores:{lidl:2.19},emoji:'🧈',cat:'manteiga'},
+  {name:'Pizza Quattro Formaggi Vitasia 380g',price:2.49,stores:{lidl:2.49},emoji:'🍕',cat:'pronta'},
+  {name:'Panados de Frango Lidl 400g',price:3.09,stores:{lidl:3.09},emoji:'🍗',cat:'pronta'},
+  {name:'Café Moído Bellarom 250g',price:2.49,stores:{lidl:2.49},emoji:'☕',cat:'café'},
+  {name:'Sumo Multifrutos Solevita 1L',price:0.99,stores:{lidl:0.99},emoji:'🧃',cat:'bebidas'},
+  {name:'Bolachas Recheadas Crownfield 200g',price:0.89,stores:{lidl:0.89},emoji:'🍪',cat:'snacks'},
+  {name:'Cereais Chocolate Crownfield 375g',price:1.49,stores:{lidl:1.49},emoji:'🥣',cat:'mercearia'},
+  {name:'Papel Higiénico Floralys 16 rolos',price:4.49,stores:{lidl:4.49},emoji:'🧻',cat:'higiene'},
+  {name:'Detergente Roupa W5 1.5L',price:3.49,stores:{lidl:3.49},emoji:'🫧',cat:'limpeza'},
+
+  // ── PRODUTOS EXCLUSIVOS ALDI (marcas próprias) ──
+  {name:'Leite Meio Gordo Milfina 1L',price:0.77,stores:{aldi:0.77},emoji:'🥛',cat:'leite'},
+  {name:'Manteiga Milfina com Sal 250g',price:2.15,stores:{aldi:2.15},emoji:'🧈',cat:'manteiga'},
+  {name:'Iogurte Natural Milfina 4x125g',price:1.15,stores:{aldi:1.15},emoji:'🥛',cat:'iogurte'},
+  {name:'Café Moído Quarta Roma 250g',price:2.39,stores:{aldi:2.39},emoji:'☕',cat:'café'},
+  {name:'Sumo Laranja Vitalis 1L',price:1.09,stores:{aldi:1.09},emoji:'🍊',cat:'bebidas'},
+  {name:'Bolachas Maria Tastino 250g',price:0.69,stores:{aldi:0.69},emoji:'🍪',cat:'snacks'},
+  {name:'Panados de Frango Aldi 400g',price:3.05,stores:{aldi:3.05},emoji:'🍗',cat:'pronta'},
+  {name:'Pizza Quattro Stagioni Trattoria Alfredo 380g',price:2.39,stores:{aldi:2.39},emoji:'🍕',cat:'pronta'},
+  {name:'Massa Esparguete Combino 500g',price:0.59,stores:{aldi:0.59},emoji:'🍝',cat:'massa'},
+  {name:'Arroz Agulha Excellent 1kg',price:1.09,stores:{aldi:1.09},emoji:'🍚',cat:'arroz'},
+
+  // ── PRODUTOS EXCLUSIVOS MERCADONA (marca Hacendado) ──
+  {name:'Leite Meio Gordo Hacendado 1L',price:0.84,stores:{mercadona:0.84},emoji:'🥛',cat:'leite'},
+  {name:'Azeite Virgem Extra Hacendado 1L',price:6.95,stores:{mercadona:6.95},emoji:'🫒',cat:'azeite'},
+  {name:'Iogurte Natural Hacendado 6x125g',price:1.65,stores:{mercadona:1.65},emoji:'🥛',cat:'iogurte'},
+  {name:'Manteiga Hacendado com Sal 250g',price:2.25,stores:{mercadona:2.25},emoji:'🧈',cat:'manteiga'},
+  {name:'Café Moído Hacendado 250g',price:2.29,stores:{mercadona:2.29},emoji:'☕',cat:'café'},
+  {name:'Bolachas Digestive Hacendado 400g',price:1.35,stores:{mercadona:1.35},emoji:'🍪',cat:'snacks'},
+  {name:'Arroz Redondo Hacendado 1kg',price:1.15,stores:{mercadona:1.15},emoji:'🍚',cat:'arroz'},
+  {name:'Panados de Frango Hacendado 400g',price:3.15,stores:{mercadona:3.15},emoji:'🍗',cat:'pronta'},
+  {name:'Pizza Margherita Hacendado 400g',price:2.55,stores:{mercadona:2.55},emoji:'🍕',cat:'pronta'},
+  {name:'Papel Higiénico Hacendado 12 rolos',price:5.45,stores:{mercadona:5.45},emoji:'🧻',cat:'higiene'},
+
+  // ── PRODUTOS EXCLUSIVOS INTERMARCHÉ ──
+  {name:'Panados de Frango Pâtissier 400g',price:3.25,stores:{intermarche:3.25},emoji:'🍗',cat:'pronta'},
+  {name:'Croissant Pâtissier (pack 4)',price:1.79,stores:{intermarche:1.79},emoji:'🥐',cat:'padaria'},
+  {name:'Leite Meio Gordo Pâturages 1L',price:0.85,stores:{intermarche:0.85},emoji:'🥛',cat:'leite'},
+  {name:'Vinho Tinto Regional Itinéraires des Vignes 75cl',price:3.49,stores:{intermarche:3.49},emoji:'🍷',cat:'bebidas'},
+
+  // ── FRUTA E LEGUMES FRESCOS ──
+  {name:'Banana 1kg',price:1.29,stores:{continente:1.29,pingo_doce:1.19,auchan:1.35,lidl:1.09,aldi:1.05,mercadona:1.15},emoji:'🍌',cat:'fruta'},
+  {name:'Maçã Royal Gala 1kg',price:1.59,stores:{continente:1.59,pingo_doce:1.49,auchan:1.65,lidl:1.39},emoji:'🍎',cat:'fruta'},
+  {name:'Laranja para Sumo 1kg',price:0.99,stores:{continente:0.99,pingo_doce:0.95,auchan:1.05,lidl:0.89},emoji:'🍊',cat:'fruta'},
+  {name:'Tomate Salada 1kg',price:1.49,stores:{continente:1.49,pingo_doce:1.39,auchan:1.55,lidl:1.29,aldi:1.25},emoji:'🍅',cat:'legumes'},
+  {name:'Cebola 1kg',price:0.89,stores:{continente:0.89,pingo_doce:0.85,auchan:0.95,lidl:0.79},emoji:'🧅',cat:'legumes'},
+  {name:'Batata Lavada 2.5kg',price:2.49,stores:{continente:2.49,pingo_doce:2.39,auchan:2.59,lidl:2.19,aldi:2.15},emoji:'🥔',cat:'legumes'},
+  {name:'Alface Frisada (unid.)',price:0.79,stores:{continente:0.79,pingo_doce:0.75,auchan:0.85},emoji:'🥬',cat:'legumes'},
+  {name:'Cenoura 1kg',price:0.79,stores:{continente:0.79,pingo_doce:0.75,lidl:0.69},emoji:'🥕',cat:'legumes'},
+
+  // ── PADARIA E PASTELARIA ──
+  {name:'Pão Saloio (unid. aprox 350g)',price:1.19,stores:{continente:1.19,pingo_doce:1.15,auchan:1.25,intermarche:1.19},emoji:'🍞',cat:'padaria'},
+  {name:'Carcaças (saco 4 unid.)',price:0.99,stores:{continente:0.99,pingo_doce:0.95,auchan:1.05},emoji:'🥖',cat:'padaria'},
+  {name:'Bolos de Arroz Pingo Doce (pack 4)',price:1.49,stores:{pingo_doce:1.49},emoji:'🧁',cat:'padaria'},
+  {name:'Pastel de Nata Continente (unid.)',price:1.09,stores:{continente:1.09},emoji:'🥮',cat:'padaria'},
+  {name:'Pastel de Nata Pingo Doce (unid.)',price:1.05,stores:{pingo_doce:1.05},emoji:'🥮',cat:'padaria'},
+
+  // ── CONGELADOS ──
+  {name:'Ervilhas Congeladas Iglo 750g',price:2.69,stores:{continente:2.69,pingo_doce:2.59,auchan:2.79},emoji:'🧊',cat:'congelados'},
+  {name:'Filetes de Pescada Congelados Pescanova 600g',price:4.99,stores:{continente:4.99,pingo_doce:4.89,auchan:5.09},emoji:'🐟',cat:'congelados'},
+  {name:'Gelado Magnum Clássico (pack 4)',price:4.49,stores:{continente:4.49,pingo_doce:4.39,auchan:4.59,lidl:3.99},emoji:'🍦',cat:'congelados'},
+  {name:'Batata Frita Congelada McCain 1kg',price:2.49,stores:{continente:2.49,pingo_doce:2.39,auchan:2.59,lidl:2.09},emoji:'🍟',cat:'congelados'},
+  {name:'Espinafres Congelados Continente 600g',price:1.39,stores:{continente:1.39},emoji:'🧊',cat:'congelados'},
+
+  // ── BEBÉS ──
+  {name:'Fraldas Pampers Baby Dry T4 (pack 50)',price:11.99,stores:{continente:11.99,pingo_doce:12.49,auchan:12.29},emoji:'🍼',cat:'bebés'},
+  {name:'Leite Infantil Aptamil 3 800g',price:14.99,stores:{continente:14.99,pingo_doce:15.49},emoji:'🍼',cat:'bebés'},
+  {name:'Toalhitas Bebé Huggies (pack 56)',price:2.29,stores:{continente:2.29,pingo_doce:2.19,auchan:2.39},emoji:'🧴',cat:'bebés'},
+
+  // ── ANIMAIS DE ESTIMAÇÃO ──
+  {name:'Ração Cão Adulto Pedigree 3kg',price:8.99,stores:{continente:8.99,pingo_doce:8.79,auchan:9.19},emoji:'🐶',cat:'animais'},
+  {name:'Ração Gato Whiskas 3kg',price:9.49,stores:{continente:9.49,pingo_doce:9.29},emoji:'🐱',cat:'animais'},
+  {name:'Areia para Gatos Catsan 5L',price:5.99,stores:{continente:5.99,pingo_doce:5.89},emoji:'🐱',cat:'animais'},
+
+  // ── BEBIDAS ALCOÓLICAS ──
+  {name:'Cerveja Super Bock 6x33cl',price:3.49,stores:{continente:3.49,pingo_doce:3.39,auchan:3.59,lidl:2.99},emoji:'🍺',cat:'bebidas'},
+  {name:'Cerveja Sagres 6x33cl',price:3.39,stores:{continente:3.39,pingo_doce:3.29,auchan:3.49},emoji:'🍺',cat:'bebidas'},
+  {name:'Vinho Verde Casal Garcia 75cl',price:3.99,stores:{continente:3.99,pingo_doce:3.89,auchan:4.09,intermarche:3.95},emoji:'🍷',cat:'bebidas'},
+  {name:'Vinho Tinto Periquita 75cl',price:4.49,stores:{continente:4.49,pingo_doce:4.39},emoji:'🍷',cat:'bebidas'},
+
+  // ── CHARCUTARIA ──
+  {name:'Fiambre da Perna Fatiado Primor 150g',price:1.99,stores:{continente:1.99,pingo_doce:1.89,auchan:2.09},emoji:'🥓',cat:'charcutaria'},
+  {name:'Presunto Fatiado Fontoura 100g',price:2.69,stores:{continente:2.69,pingo_doce:2.59},emoji:'🥓',cat:'charcutaria'},
+  {name:'Chouriço de Carne Continente 250g',price:2.19,stores:{continente:2.19},emoji:'🌶️',cat:'charcutaria'},
+  {name:'Bacon Fatiado Pingo Doce 150g',price:1.79,stores:{pingo_doce:1.79},emoji:'🥓',cat:'charcutaria'},
+];
+
+// ══════════════════════════════════════════════════════
+// CAMPANHAS
+// ══════════════════════════════════════════════════════
+const CAMPAIGNS = {
+  pingo_doce:[
+    {id:'none',name:'Sem campanha ativa'},
+    {id:'pd_100_30',name:'🔥 100€ → Ganha 30€ (15€ saldo+15€ BP) · HOJE!',target:100,reward:'15€ saldo Pingo Doce + 15€ vale BP',valid:'26-28 Jun 2026'},
+    {id:'pd_acumulador',name:'📊 Acumulador: 80€→10€ / 150€→25€',target:80,reward:'10€ cupão (acima de 80€) ou 25€ (acima de 150€)',valid:'12-18 Jul 2026',multi:true,t2:150,r2:'25€ em cupão'},
+    {id:'pd_50_10',name:'💛 Fim de semana: 50€ → −10€ direto',target:50,reward:'10€ desconto direto no talão',valid:'Fim de semana'},
+  ],
+  continente:[
+    {id:'none',name:'Sem campanha ativa'},
+    {id:'cont_15pct',name:'💳 15% em Cartão Continente',pct:0.15,reward:'15% acumulado em saldo Cartão',valid:'29 Jun–5 Jul 2026',pctOnly:true},
+    {id:'cont_50_5',name:'🔵 50€ → 5€ em Cartão Continente',target:50,reward:'5€ em saldo Cartão Continente',valid:'Recorrente'},
+    {id:'cont_100_15',name:'🏆 100€ → 15€ Cartão + 15€ Galp',target:100,reward:'15€ Cartão + 15€ vale Galp',valid:'Pontual'},
+  ],
+  auchan:[
+    {id:'none',name:'Sem campanha ativa'},
+    {id:'auch_50_10',name:'🟣 50€ → 10€ desconto direto',target:50,reward:'10€ desconto direto',valid:'Fim de semana'},
+    {id:'auch_100_20',name:'🟣 100€ → 20€ em cartão A·card',target:100,reward:'20€ em cartão A·card',valid:'Pontual'},
+  ],
+  intermarche:[
+    {id:'none',name:'Sem campanha ativa'},
+    {id:'inter_80_8',name:'🟠 80€ → 8€ desconto próx. compra',target:80,reward:'8€ desconto na próxima compra',valid:'Recorrente'},
+  ],
+  lidl:[{id:'none',name:'Descontos diretos no folheto (sem campanha de pontos)'}],
+  aldi:[{id:'none',name:'Preços baixos fixos (sem campanha de pontos)'}],
+  mercadona:[{id:'none',name:'Sem campanha ativa'}],
+};
+
+const CAMP_ALERTS = {
+  pingo_doce:'🔥 Pingo Doce: Campanha ativa! Ganha 30€ em compras de 100€ (válida HOJE 26-28 Jun). Verifica as campanhas!',
+  continente:'💳 Continente: Tens 15% de desconto em Cartão Continente (utilizável 29 Jun–5 Jul). Verifica as campanhas!',
+  auchan:'🟣 Auchan: Fim de semana com 10€ desconto em 50€ (cartão A·card). Verifica as campanhas!',
+  intermarche:'🟠 Intermarché: Campanha 80€ → 8€ desconto recorrente. Verifica as campanhas!',
+  lidl:null, aldi:null, mercadona:null,
+};
+
+// ══════════════════════════════════════════════════════
+// LOJAS: nomes, cores e logotipos (SVG simplificado)
+// ══════════════════════════════════════════════════════
+const STORE_META = {
+  pingo_doce:{name:'Pingo Doce',color:'#f59e0b',bg:'#fef3c7',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Pingo_Doce_Logo.svg/200px-Pingo_Doce_Logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><circle cx=&quot;50&quot; cy=&quot;50&quot; r=&quot;50&quot; fill=&quot;#FFD700&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;28&quot; font-weight=&quot;900&quot; fill=&quot;#006400&quot; font-family=&quot;Arial&quot;>PD</text></svg>\'" alt="Pingo Doce">'},
+  continente:{name:'Continente',color:'#3b82f6',bg:'#eff6ff',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Continente_logo.svg/200px-Continente_logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#e11d48&quot;/><text x=&quot;50&quot; y=&quot;58&quot; text-anchor=&quot;middle&quot; font-size=&quot;22&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot; font-family=&quot;Arial&quot;>CONT</text></svg>\'" alt="Continente">'},
+  auchan:{name:'Auchan',color:'#a855f7',bg:'#f3e8ff',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Auchan_Logo.svg/200px-Auchan_Logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#7c3aed&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;28&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot; font-family=&quot;Arial&quot;>A</text></svg>\'" alt="Auchan">'},
+  intermarche:{name:'Intermarché',color:'#f97316',bg:'#fff7ed',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Intermarche-Logo.svg/200px-Intermarche-Logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#ea580c&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;36&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot; font-family=&quot;Arial&quot;>I</text></svg>\'" alt="Intermarché">'},
+  lidl:{name:'Lidl',color:'#f43f5e',bg:'#fff1f2',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Lidl-Logo.svg/200px-Lidl-Logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#1e3a8a&quot;/><rect x=&quot;0&quot; y=&quot;65&quot; width=&quot;100&quot; height=&quot;35&quot; fill=&quot;#e11d48&quot;/><text x=&quot;50&quot; y=&quot;55&quot; text-anchor=&quot;middle&quot; font-size=&quot;24&quot; font-weight=&quot;900&quot; fill=&quot;#FFD700&quot; font-family=&quot;Arial&quot;>LIDL</text></svg>\'" alt="Lidl">'},
+  aldi:{name:'Aldi',color:'#16a34a',bg:'#f0fdf4',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Logo_Aldi.svg/200px-Logo_Aldi.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#1e40af&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;26&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot; font-family=&quot;Arial&quot;>ALDI</text></svg>\'" alt="Aldi">'},
+  mercadona:{name:'Mercadona',color:'#059669',bg:'#ecfdf5',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Mercadona_logo.svg/200px-Mercadona_logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#047857&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;20&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot; font-family=&quot;Arial&quot;>MERC</text></svg>\'" alt="Mercadona">'},
+};
+function storeName(k){return (STORE_META[k]&&STORE_META[k].name)||k;}
+function storeLogoSvg(k){return (STORE_META[k]&&STORE_META[k].logo)||'<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" rx="12" fill="#94a3b8"/></svg>';}
+function storeBadgeHtml(k){return `<span class="store-badge"><span class="sb-logo">${storeLogoSvg(k)}</span>${storeName(k)}</span>`;}
+
+// ══════════════════════════════════════════════════════
+// "FOTO" DO PRODUTO (ilustração por categoria — sem usar
+// fotografias reais/protegidas por direitos de autor)
+// ══════════════════════════════════════════════════════
+const CAT_GRADIENT = {
+  leite:'linear-gradient(135deg,#dbeafe,#bfdbfe)', manteiga:'linear-gradient(135deg,#fef9c3,#fde68a)',
+  azeite:'linear-gradient(135deg,#d9f99d,#bef264)', arroz:'linear-gradient(135deg,#fef3c7,#fde68a)',
+  café:'linear-gradient(135deg,#e7d4c0,#c9a679)', massa:'linear-gradient(135deg,#fef9c3,#fef08a)',
+  queijo:'linear-gradient(135deg,#fef3c7,#fcd34d)', iogurte:'linear-gradient(135deg,#dbeafe,#e0f2fe)',
+  laticínio:'linear-gradient(135deg,#f0f9ff,#e0f2fe)', ovos:'linear-gradient(135deg,#fff7ed,#fed7aa)',
+  carne:'linear-gradient(135deg,#fee2e2,#fecaca)', peixe:'linear-gradient(135deg,#cffafe,#a5f3fc)',
+  conservas:'linear-gradient(135deg,#e0e7ff,#c7d2fe)', mercearia:'linear-gradient(135deg,#fef3c7,#fef9c3)',
+  bebidas:'linear-gradient(135deg,#cffafe,#a5f3fc)', higiene:'linear-gradient(135deg,#e0f2fe,#bae6fd)',
+  limpeza:'linear-gradient(135deg,#ede9fe,#ddd6fe)', snacks:'linear-gradient(135deg,#fed7aa,#fdba74)',
+  padaria:'linear-gradient(135deg,#fde68a,#fcd34d)', pronta:'linear-gradient(135deg,#fecaca,#fca5a5)',
+  fruta:'linear-gradient(135deg,#fef08a,#fde047)', legumes:'linear-gradient(135deg,#bbf7d0,#86efac)',
+  congelados:'linear-gradient(135deg,#cffafe,#7dd3fc)', bebés:'linear-gradient(135deg,#fbcfe8,#f9a8d4)',
+  animais:'linear-gradient(135deg,#e7e5e4,#d6d3d1)', charcutaria:'linear-gradient(135deg,#fecaca,#fda4af)',
+};
+function productPhotoHtml(p, big){
+  const grad = CAT_GRADIENT[p.cat]||'linear-gradient(135deg,#e2e8f0,#cbd5e1)';
+  return `<div class="prod-photo${big?' lg':''}" style="background:${grad}" title="Imagem ilustrativa (sem fotos protegidas)">${p.emoji||'🛒'}${p.cat?`<span class="cat-tag">${p.cat}</span>`:''}</div>`;
+}
+
+// ══════════════════════════════════════════════════════
+// HISTÓRICO DE PREÇOS (estimativa determinística — não
+// é dado oficial, serve para mostrar tendência)
+// ══════════════════════════════════════════════════════
+const MONTHS = ['Jan','Fev','Mar','Abr','Mai','Jun'];
+function seedFromStr(s){let h=0;for(let i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))&0xffffffff;}return Math.abs(h);}
+function priceHistory(productName, store, currentPrice){
+  const seed = seedFromStr(productName+'|'+store);
+  const hist = [];
+  for(let i=0;i<MONTHS.length;i++){
+    if(i===MONTHS.length-1){ hist.push({m:MONTHS[i],v:currentPrice}); continue; }
+    const wobble = (((seed>>(i*3))%9)-4)/100; // -4%..+4%
+    const drift = (MONTHS.length-1-i)*0.003; // ligeira tendência de inflação ao recuar no tempo (era +barato)
+    let v = currentPrice*(1-drift+wobble);
+    v = Math.max(0.10, Math.round(v*100)/100);
+    hist.push({m:MONTHS[i],v});
+  }
+  return hist;
+}
+
+// ══════════════════════════════════════════════════════
+// MODAL: produto / histórico de preços
+// ══════════════════════════════════════════════════════
+function openModal(id){ document.getElementById(id).classList.add('show'); }
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+function closeModalBg(ev,id){ if(ev.target.id===id) closeModal(id); }
+
+function openProductModal(product){
+  if(!product) return;
+  document.getElementById('pm-title').textContent = product.name;
+  // Rebuild photo element safely
+  const photoEl = document.getElementById('pm-photo');
+  const grad = CAT_GRADIENT[product.cat]||'linear-gradient(135deg,#e2e8f0,#cbd5e1)';
+  photoEl.style.background = grad;
+  photoEl.innerHTML = (product.emoji||'🛒')+(product.cat?`<span class="cat-tag">${product.cat}</span>`:'');
+
+  const stores = product.stores||{};
+  const entries = Object.entries(stores);
+  if(!entries.length){
+    document.getElementById('pm-bestnote').textContent = 'Sem preços por loja disponíveis.';
+    document.getElementById('pm-stores').innerHTML = `<div class="empty-state"><span class="empty-icon">🏷️</span>Preço único: ${fmtEur(product.price)}</div>`;
+    openModal('product-modal');
+    return;
+  }
+
+  const minPrice = Math.min(...entries.map(e=>e[1]));
+  const maxPrice = Math.max(...entries.map(e=>e[1]));
+  const cheapStore = entries.find(e=>e[1]===minPrice)[0];
+  const saving = entries.length>1 ? maxPrice - minPrice : 0;
+  document.getElementById('pm-bestnote').textContent = `💰 Mais barato em ${storeName(cheapStore)}: ${fmtEur(minPrice)}${saving>0.01?' · Poupa até '+fmtEur(saving):''}`;
+
+  const sel = document.getElementById('list-market') ? document.getElementById('list-market').value : null;
+
+  // Build HTML: store comparison + history chart per store
+  let html = '';
+
+  // ── Comparação de preços entre lojas ──
+  html += `<div style="margin-bottom:14px">
+    <div class="card-title" style="margin-bottom:8px">🏪 Preço por supermercado</div>`;
+
+  const sorted = [...entries].sort((a,b)=>a[1]-b[1]);
+  sorted.forEach(([store,price])=>{
+    const isBest = price===minPrice;
+    const isSelected = store===sel;
+    const barPct = maxPrice>minPrice ? Math.round(((price-minPrice)/(maxPrice-minPrice))*100) : 0;
+    const barW = 100 - barPct; // wider bar = cheaper
+    html += `<div class="store-pricerow${isBest?' spr-row-best':''}">
+      <div class="spr-left">
+        <div class="spr-logo">${storeLogoSvg(store)}</div>
+        <div style="flex:1;min-width:0">
+          <div class="spr-name">${storeName(store)}${isSelected?' <span style="color:var(--green);font-weight:700">· tua loja</span>':''}${isBest?' <span style="font-size:.58rem;background:var(--green-l);color:var(--green-d);padding:1px 5px;border-radius:5px;margin-left:3px">✓ Melhor</span>':''}</div>
+          <div style="margin-top:4px;height:5px;background:var(--border);border-radius:99px;overflow:hidden">
+            <div style="height:100%;width:${barW}%;background:${isBest?'var(--green)':'var(--amber)'};border-radius:99px;transition:width .4s"></div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+        <div class="spr-price${isBest?' spr-best':''}">${fmtEur(price)}</div>
+        <button class="add-btn-sm" onclick="addToList({name:${JSON.stringify(product.name)},price:${price},stores:${JSON.stringify(stores)},emoji:${JSON.stringify(product.emoji||'\u{1F6D2}')},promo:${JSON.stringify(product.promo||null)}});closeModal('product-modal')" title="Adicionar à lista com este preço">+</button>
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+
+  // ── Histórico de preços por loja (mini chart) ──
+  html += `<div>
+    <div class="card-title" style="margin-bottom:10px">📈 Histórico de preços (Jan–Jun 2026)</div>
+    <div id="pm-hist-tabs" style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px">`;
+
+  sorted.forEach(([store],i)=>{
+    html += `<button onclick="showHistTab('${store}',this)" 
+      style="font-size:.65rem;font-weight:700;padding:4px 10px;border-radius:7px;border:1.5px solid ${i===0?'var(--green)':'var(--border)'};background:${i===0?'var(--green-l)':'var(--input-bg)'};color:${i===0?'var(--green-d)':'var(--muted)'};cursor:pointer;font-family:inherit;transition:all .15s">${storeName(store)}</button>`;
+  });
+  html += `</div>`;
+
+  // Pre-render all history charts (one per store, show first)
+  sorted.forEach(([store,price],i)=>{
+    const hist = priceHistory(product.name, store, price);
+    const vals = hist.map(h=>h.v);
+    const hMin = Math.min(...vals);
+    const hMax = Math.max(...vals);
+    const range = hMax-hMin || 0.05;
+    const chartH = 70;
+    const chartW = 260;
+    const barW2 = Math.floor((chartW - (vals.length-1)*4) / vals.length);
+
+    // SVG mini bar chart
+    let svgBars = '';
+    vals.forEach((v,j)=>{
+      const barH = Math.round(((v-hMin)/range)*(chartH-20))+12;
+      const x = j*(barW2+4);
+      const y = chartH - barH;
+      const isLast = j===vals.length-1;
+      svgBars += `<rect x="${x}" y="${y}" width="${barW2}" height="${barH}" rx="3" fill="${isLast?'var(--green)':'#86efac'}" opacity="${isLast?1:0.65}"/>
+        <text x="${x+barW2/2}" y="${chartH+12}" text-anchor="middle" font-size="9" fill="var(--muted)" font-family="Inter,sans-serif">${hist[j].m}</text>
+        <text x="${x+barW2/2}" y="${y-3}" text-anchor="middle" font-size="8.5" fill="${isLast?'var(--green-d)':'var(--muted)'}" font-family="Inter,sans-serif" font-weight="${isLast?700:400}">${fmtEur(v)}</text>`;
+    });
+
+    const trend = vals[vals.length-1]-vals[0];
+    const trendIcon = trend>0.005?'▲ subiu':'▼ desceu';
+    const trendColor = trend>0.005?'var(--red)':'var(--green)';
+
+    html += `<div class="pm-hist-panel" data-store="${store}" style="display:${i===0?'block':'none'}">
+      <div style="overflow-x:auto;padding-bottom:4px">
+        <svg viewBox="0 0 ${chartW} ${chartH+18}" width="100%" height="${chartH+18}" xmlns="http://www.w3.org/2000/svg" style="min-width:220px">
+          ${svgBars}
+        </svg>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:.66rem;margin-top:4px;padding:0 2px">
+        <span style="color:var(--muted)">Mín: <strong>${fmtEur(hMin)}</strong>  Máx: <strong>${fmtEur(hMax)}</strong></span>
+        <span style="color:${trendColor};font-weight:700">${trendIcon} ${fmtEur(Math.abs(trend))}</span>
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+
+  document.getElementById('pm-stores').innerHTML = html;
+  openModal('product-modal');
+}
+
+function showHistTab(store, btn){
+  // update tab buttons
+  const tabs = document.querySelectorAll('#pm-hist-tabs button');
+  tabs.forEach(b=>{
+    b.style.borderColor='var(--border)';b.style.background='var(--input-bg)';b.style.color='var(--muted)';
+  });
+  btn.style.borderColor='var(--green)';btn.style.background='var(--green-l)';btn.style.color='var(--green-d)';
+  // show correct panel
+  document.querySelectorAll('.pm-hist-panel').forEach(p=>{
+    p.style.display = p.dataset.store===store?'block':'none';
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// MODO ESCURO
+// ══════════════════════════════════════════════════════
+function toggleDarkMode(){
+  const isDark = document.getElementById('dark-toggle').checked;
+  document.body.classList.toggle('dark', isDark);
+  localStorage.setItem('pf_dark', isDark ? '1' : '0');
+}
+function loadDarkMode(){
+  const isDark = localStorage.getItem('pf_dark')==='1';
+  document.body.classList.toggle('dark', isDark);
+  const t = document.getElementById('dark-toggle');
+  if(t) t.checked = isDark;
+}
+
+// ══════════════════════════════════════════════════════
+// TAMANHO DA LETRA
+// ══════════════════════════════════════════════════════
+function setFontSize(px){
+  document.documentElement.style.fontSize = px+'px';
+  localStorage.setItem('pf_fontsize', px);
+  document.querySelectorAll('#fs-grid .fs-btn').forEach(b=>{
+    b.classList.toggle('active', parseInt(b.dataset.fs)===px);
+  });
+}
+function loadFontSize(){
+  const px = parseInt(localStorage.getItem('pf_fontsize'))||16;
+  setFontSize(px);
+}
+
+// ══════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════
+let listItems = JSON.parse(localStorage.getItem('pf_list')||'[]');
+let activeCampaign = JSON.parse(localStorage.getItem('pf_camp')||'null');
+let currentTab = 'pesquisa';
+
+function save(){localStorage.setItem('pf_list',JSON.stringify(listItems))}
+function fmtEur(v){return v.toFixed(2).replace('.',',')+'\u20AC'}
+
+// ══════════════════════════════════════════════════════
+// TABS
+// ══════════════════════════════════════════════════════
+function switchTab(t){
+  currentTab = t;
+  document.querySelectorAll('.content').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  const idx = {pesquisa:0,campanhas:1,lista:2}[t];
+  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  document.getElementById('footer-bar').style.display = t==='lista' ? 'block' : 'none';
+  if(t==='pesquisa') renderFeatured();
+}
+
+// ══════════════════════════════════════════════════════
+// HISTÓRICO DE PESQUISAS & RECOMENDAÇÕES
+// ══════════════════════════════════════════════════════
+
+// Estrutura: [{query, productName, cat, emoji, count, lastTs}]
+let searchHistory = JSON.parse(localStorage.getItem('pf_search_hist')||'[]');
+
+function saveSearchHistory(){ localStorage.setItem('pf_search_hist', JSON.stringify(searchHistory)); }
+
+function recordSearch(q, products){
+  if(!q||!products||!products.length) return;
+  products.forEach(p=>{
+    const key = p.name;
+    const existing = searchHistory.find(h=>h.productName===key);
+    if(existing){
+      existing.count = (existing.count||1)+1;
+      existing.lastTs = Date.now();
+      existing.query = q;
+    } else {
+      searchHistory.push({query:q, productName:p.name, cat:p.cat||'', emoji:p.emoji||'🛒', price:p.price, stores:p.stores||{}, promo:p.promo||null, count:1, lastTs:Date.now()});
+    }
+  });
+  // keep last 60 entries max
+  searchHistory.sort((a,b)=>b.lastTs-a.lastTs);
+  if(searchHistory.length>60) searchHistory=searchHistory.slice(0,60);
+  saveSearchHistory();
+}
+
+function getTopSearched(n=6){
+  // sort by count desc then recent
+  return [...searchHistory].sort((a,b)=>(b.count-a.count)||b.lastTs-a.lastTs).slice(0,n);
+}
+
+function getRecentSearched(n=4){
+  return [...searchHistory].sort((a,b)=>b.lastTs-a.lastTs).slice(0,n);
+}
+
+// Autocomplete enquanto escreve
+let _acTimer=null;
+function onSearchInput(){
+  clearTimeout(_acTimer);
+  const q = document.getElementById('search-q').value.trim();
+  const featSec = document.getElementById('featured-section');
+  const resultsEl = document.getElementById('search-results');
+  if(!q){
+    // restore featured section when field is cleared
+    featSec.style.display='';
+    resultsEl.innerHTML='';
+    document.getElementById('search-suggestions').style.display='none';
+    return;
+  }
+  _acTimer = setTimeout(()=>{
+    const q = document.getElementById('search-q').value.trim().toLowerCase();
+    const el = document.getElementById('search-suggestions');
+    if(q.length<2){ el.style.display='none'; return; }
+    // match catalog names
+    const qAcWords = q.split(/\s+/).filter(w=>w.length>=2);
+    const matches = CATALOG.filter(p=>{
+      const n=p.name.toLowerCase(); const c=(p.cat||'').toLowerCase();
+      return n.includes(q)||(qAcWords.length>1&&qAcWords.some(w=>n.includes(w)||c.includes(w)));
+    }).sort((a,b)=>{
+      const an=a.name.toLowerCase(),bn=b.name.toLowerCase();
+      const as=qAcWords.filter(w=>an.includes(w)).length, bs=qAcWords.filter(w=>bn.includes(w)).length;
+      return bs-as;
+    }).slice(0,5);
+    // also match from history
+    const histMatches = searchHistory.filter(h=>h.productName.toLowerCase().includes(q)||h.query.toLowerCase().includes(q)).slice(0,3);
+    const seen = new Set();
+    const allNames = [];
+    [...matches.map(p=>({name:p.name,emoji:p.emoji||'🛒',fromHist:false})), ...histMatches.map(h=>({name:h.productName,emoji:h.emoji||'🛒',fromHist:true}))].forEach(item=>{
+      if(!seen.has(item.name)){ seen.add(item.name); allNames.push(item); }
+    });
+    allNames.splice(6);
+    if(!allNames.length){ el.style.display='none'; return; }
+    el.style.display='block';
+    window.__acSuggestions = allNames;
+    el.innerHTML = allNames.map((item,i)=>`
+      <div onclick="doSearchQ(window.__acSuggestions[${i}].name.toLowerCase())" style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;cursor:pointer;font-size:.8rem;color:var(--text);background:var(--input-bg);margin-bottom:3px;border:1px solid var(--border)" onmouseover="this.style.background='var(--green-l)'" onmouseout="this.style.background='var(--input-bg)'">
+        <span style="font-size:1rem">${item.emoji}</span>
+        <span style="flex:1">${item.name}</span>
+        ${item.fromHist?'<span style="font-size:.58rem;color:var(--muted)">pesquisado</span>':'<span style="font-size:.58rem;color:var(--muted)">catálogo</span>'}
+      </div>`).join('');
+  }, 180);
+}
+
+// ── Featured section: mostrar logo quando abres a aba ──
+const FEATURED_CATALOG_PICKS = [
+  // Mix de categorias populares para o destaque padrão
+  'Leite UHT Meio Gordo Mimosa 1L','Azeite Virgem Extra Gallo 75cl','Arroz Agulha Cigala 1kg',
+  'Café Delta Expresso 250g','Ovos Campestres M Mimosa 10 unid.','Banana 1kg',
+  'Frango Inteiro 1kg (aprox.)','Detergente Skip Active Clean 2kg','Coca-Cola 1.5L',
+  'Massa Esparguete Milaneza 500g','Queijo Flamengo Fatiado Serra da Cangalha 250g','Atum em Óleo Vegetal Bom Petisco 80g',
+];
+
+function renderFeatured(){
+  const sec = document.getElementById('featured-section');
+  const storeFilter = document.getElementById('search-store-filter') ? document.getElementById('search-store-filter').value : '';
+  const top = getTopSearched(6);
+  const recent = getRecentSearched(4);
+  let html = '';
+
+  // ── Bloco 1: Recomendações personalizadas (se houver histórico) ──
+  if(top.length>=2){
+    // find catalog products for these
+    const recProducts = top.map(h=>{
+      const found = CATALOG.find(p=>p.name===h.productName);
+      return found || {name:h.productName,price:h.price,stores:h.stores,emoji:h.emoji,cat:h.cat,promo:h.promo};
+    }).filter(p=>!storeFilter || (p.stores&&p.stores[storeFilter]!=null));
+
+    if(recProducts.length){
+      html += `<div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px">
+          <div class="card-title" style="margin-bottom:0">⭐ Os teus habituais</div>
+          <button onclick="clearSearchHistory()" style="font-size:.6rem;color:var(--muted);background:none;border:none;cursor:pointer">Limpar</button>
+        </div>`;
+      window.__featuredRec = recProducts;
+      html += recProducts.map((p,idx)=>{
+        const dPrice = (storeFilter&&p.stores&&p.stores[storeFilter]!=null)?p.stores[storeFilter]:p.price;
+        return `<div class="prod-card">
+          <div onclick="openProductModal(window.__featuredRec[${idx}])">${productPhotoHtml(p,false)}</div>
+          <div class="prod-info">
+            <div class="prod-name">${p.name}</div>
+            <div class="prod-store">${formatStores(p.stores)}</div>
+            ${p.promo?`<div class="prod-promo">ℹ️ ${p.promo}</div>`:''}
+          </div>
+          <div class="prod-right">
+            <div class="prod-price">${fmtEur(dPrice)}</div>
+            <button class="add-btn-sm" onclick='addToList(${JSON.stringify({name:p.name,price:dPrice,stores:p.stores||{},emoji:p.emoji||"🛒",promo:p.promo||null})})' title="Adicionar à lista">+</button>
+          </div>
+        </div>`;
+      }).join('');
+      html += '</div>';
+    }
+  }
+
+  // ── Bloco 2: Pesquisas recentes (chips) ──
+  if(recent.length){
+    const recentQueries = [...new Set(recent.map(h=>h.query))].filter(Boolean).slice(0,5);
+    if(recentQueries.length){
+      html += `<div class="card" style="padding:11px 13px">
+        <div class="card-title" style="margin-bottom:7px">🕐 Recentes</div>
+        <div class="quick-grid">
+          ${recentQueries.map((q,i)=>`<button class="qchip" onclick="doSearchQ(window.__recentQ[${i}])" style="display:flex;align-items:center;gap:4px"><span style="font-size:.8rem">🔍</span> ${q}</button>`).join('')}
+        </div>
+      </div>`;
+      window.__recentQ = recentQueries;
+    }
+  }
+
+  // ── Bloco 3: Produtos em destaque do catálogo ──
+  let featuredProds = FEATURED_CATALOG_PICKS.map(name=>CATALOG.find(p=>p.name===name)).filter(Boolean);
+  if(storeFilter) featuredProds = featuredProds.filter(p=>p.stores&&p.stores[storeFilter]!=null);
+  // shuffle a bit so it feels fresh (deterministic by day)
+  const dayKey = new Date().toDateString();
+  const seed = Array.from(dayKey).reduce((h,c)=>((h*31)+c.charCodeAt(0))&0xffff,0);
+  featuredProds = featuredProds.slice(seed%3, (seed%3)+9);
+
+  if(featuredProds.length){
+    html += `<div class="card">
+      <div class="card-title" style="margin-bottom:9px">🛒 Produtos em destaque</div>`;
+    window.__featuredProds = featuredProds;
+    html += featuredProds.map((p,idx)=>{
+      const dPrice = (storeFilter&&p.stores&&p.stores[storeFilter]!=null)?p.stores[storeFilter]:p.price;
+      const prices = Object.values(p.stores||{p:p.price});
+      const minP = Math.min(...prices);
+      const isBest = dPrice===minP && Object.keys(p.stores||{}).length>1;
+      return `<div class="prod-card">
+        <div onclick="openProductModal(window.__featuredProds[${idx}])">${productPhotoHtml(p,false)}</div>
+        <div class="prod-info">
+          <div class="prod-name">${p.name}</div>
+          <div class="prod-store">${formatStores(p.stores)}</div>
+          ${p.promo?`<div class="prod-promo">ℹ️ ${p.promo}</div>`:''}
+          ${isBest?'<span class="chip-best">✓ Melhor preço</span>':''}
+        </div>
+        <div class="prod-right">
+          <div class="prod-price">${fmtEur(dPrice)}</div>
+          <button class="add-btn-sm" onclick='addToList(${JSON.stringify({name:p.name,price:dPrice,stores:p.stores||{},emoji:p.emoji||"🛒",promo:p.promo||null})})' title="Adicionar à lista">+</button>
+        </div>
+      </div>`;
+    }).join('');
+    html += '</div>';
+  }
+
+  // ── Bloco 4: Explorar categorias (chips) — sempre visível ──
+  const CAT_CHIPS = [
+    {label:'🥛 Leite',q:'leite meio gordo'},{label:'🧈 Manteiga',q:'manteiga milhafre'},
+    {label:'🫒 Azeite',q:'azeite gallo'},{label:'🍚 Arroz',q:'arroz cigala agulha'},
+    {label:'☕ Café',q:'café delta'},{label:'🍝 Massas',q:'massa esparguete milaneza'},
+    {label:'🧀 Queijo',q:'queijo flamengo'},{label:'🥚 Ovos',q:'ovos'},
+    {label:'🍗 Frango',q:'frango inteiro'},{label:'🐟 Peixe',q:'bacalhau noruega'},
+    {label:'🍌 Fruta',q:'banana'},{label:'🍅 Legumes',q:'tomate'},
+    {label:'💧 Água',q:'água luso'},{label:'🥤 Refrigerantes',q:'coca-cola'},
+    {label:'🍺 Cerveja',q:'cerveja super bock'},{label:'🍷 Vinho',q:'vinho verde casal garcia'},
+    {label:'🧻 Papel hig.',q:'papel higiénico renova'},{label:'🫧 Detergente',q:'detergente skip'},
+    {label:'🍦 Gelados',q:'gelado magnum'},{label:'🍪 Snacks',q:'chocolate milka'},
+    {label:'🍼 Bebés',q:'fraldas pampers'},{label:'🐶 Animais',q:'ração pedigree'},
+    {label:'🥓 Charcutaria',q:'fiambre primor'},{label:'🥖 Padaria',q:'pão saloio'},
+  ];
+  window.__catChips = CAT_CHIPS;
+  html += `<div class="card" style="padding:11px 13px">
+    <div class="card-title" style="margin-bottom:7px">Explorar por categoria</div>
+    <div class="quick-grid">
+      ${CAT_CHIPS.map((c,i)=>`<button class="qchip" onclick="doSearchQ(window.__catChips[${i}].q)">${c.label}</button>`).join('')}
+    </div>
+  </div>`;
+
+  sec.innerHTML = html;
+}
+
+function clearSearchHistory(){
+  searchHistory=[];
+  saveSearchHistory();
+  renderFeatured();
+  showNotif('🗑️ Histórico de pesquisas limpo.');
+}
+
+// ══════════════════════════════════════════════════════
+// PESQUISA
+// ══════════════════════════════════════════════════════
+function doSearchQ(q){
+  document.getElementById('search-q').value = q;
+  document.getElementById('search-suggestions').style.display='none';
+  // Switch to pesquisa tab WITHOUT calling renderFeatured (which would clear results)
+  if(currentTab !== 'pesquisa'){
+    currentTab = 'pesquisa';
+    document.querySelectorAll('.content').forEach(c=>c.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.getElementById('tab-pesquisa').classList.add('active');
+    document.querySelectorAll('.tab-btn')[0].classList.add('active');
+    document.getElementById('footer-bar').style.display='none';
+  }
+  doSearch();
+}
+
+async function doSearch(){
+  const q = document.getElementById('search-q').value.trim().toLowerCase();
+  if(!q) return;
+  const storeFilter = document.getElementById('search-store-filter') ? document.getElementById('search-store-filter').value : '';
+  const btn = document.getElementById('search-btn');
+  const el = document.getElementById('search-results');
+  const featSec = document.getElementById('featured-section');
+  btn.disabled = true;
+  document.getElementById('search-suggestions').style.display='none';
+
+  // hide featured when results are showing
+  featSec.style.display='none';
+
+  // local match — scored fuzzy search
+  const qWords = q.split(/\s+/).filter(w=>w.length>=2);
+  function scoreProduct(p){
+    const n = p.name.toLowerCase();
+    const c = (p.cat||'').toLowerCase();
+    let score = 0;
+    // exact full query match
+    if(n.includes(q)) score += 100;
+    // all words match
+    if(qWords.every(w=>n.includes(w)||c.includes(w))) score += 60;
+    // partial: count matching words
+    const matched = qWords.filter(w=>n.includes(w)||c.includes(w)).length;
+    score += matched * 20;
+    // bonus if category chip matches any word
+    if(qWords.some(w=>c.includes(w))) score += 15;
+    return score;
+  }
+  let local = CATALOG.map(p=>({p, score:scoreProduct(p)}))
+    .filter(({score})=>score>0)
+    .sort((a,b)=>b.score-a.score)
+    .map(({p})=>p);
+  // apply store filter — but do NOT drop products if they exist in other stores
+  // (show them all, just mark the selected store price)
+  let localFiltered = local;
+  if(storeFilter){
+    localFiltered = local.filter(p => p.stores && p.stores[storeFilter]!=null);
+    // if filter returns nothing, fall back to all matches (show without that store)
+    if(!localFiltered.length) localFiltered = local;
+  }
+  local = localFiltered.slice(0,8);
+
+  if(local.length>0){
+    renderResults(el, local, storeFilter ? `Catálogo local · ${storeName(storeFilter)}` : 'Catálogo local');
+    recordSearch(q, local);
+    btn.disabled = false;
+    return;
+  }
+
+  // AI
+  el.innerHTML = '<div class="ai-loader"><div class="ai-dots"><span></span><span></span><span></span></div> A pesquisar com IA...</div>';
+  try{
+    const storeHint = storeFilter ? ` Filtrar para ${storeName(storeFilter)}.` : '';
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:1000,
+        system:`Assistente de preços de supermercados em Portugal. Retorna APENAS um JSON array, sem texto extra nem markdown, com resultados realistas em euros (Jun 2026). Formato: [{"name":"Nome completo","price":X.XX,"stores":{"pingo_doce":X.XX,"continente":X.XX},"emoji":"🛒","promo":null}]`,
+        messages:[{role:'user',content:`Pesquisa: "${q}".${storeHint} JSON com preços estimados nos supermercados portugueses (Continente, Pingo Doce, Lidl, Auchan) para junho 2026. Máx 4 produtos.`}]
+      })
+    });
+    const data = await res.json();
+    const txt = (data.content||[]).find(b=>b.type==='text')?.text||'[]';
+    let products = JSON.parse(txt.replace(/```json|```/g,'').trim());
+    if(storeFilter) products = products.filter(p=>p.stores&&p.stores[storeFilter]!=null);
+    renderResults(el, products, `Estimativa IA · ${storeFilter?storeName(storeFilter)+' · ':''}confirma na loja`);
+    recordSearch(q, products);
+  }catch(e){
+    el.innerHTML = '<div class="empty-state"><span class="empty-icon">😕</span>Não encontrado. Tenta outro nome ou adiciona manualmente na Lista.</div>';
+  }
+  btn.disabled = false;
+}
+
+function renderResults(el, products, source){
+  if(!products||!products.length){
+    el.innerHTML='<div class="empty-state"><span class="empty-icon">🔍</span>Sem resultados.</div>';
+    return;
+  }
+  window.__searchResults = products;
+  const prices = products.map(p=>p.price);
+  const min = Math.min(...prices), max = Math.max(...prices);
+  const storeFilter = document.getElementById('search-store-filter') ? document.getElementById('search-store-filter').value : '';
+  const sel = storeFilter || (document.getElementById('list-market') ? document.getElementById('list-market').value : null);
+  el.innerHTML = `<div style="font-size:.63rem;color:var(--muted);margin-bottom:6px;padding:0 1px">Fonte: ${source} · toca na imagem para ver histórico de preços</div>`+
+    products.map((p,idx)=>{
+      const dPrice = (sel && p.stores && p.stores[sel]!=null) ? p.stores[sel] : p.price;
+      return `
+    <div class="prod-card">
+      <div onclick="openProductModal(window.__searchResults[${idx}])">${productPhotoHtml(p,false)}</div>
+      <div class="prod-info">
+        <div class="prod-name">${p.name}</div>
+        <div class="prod-store">${formatStores(p.stores)}</div>
+        ${p.promo?`<div class="prod-promo">ℹ️ ${p.promo}</div>`:''}
+        ${sel && p.stores && p.stores[sel]!=null?`<div class="prod-store" style="color:var(--green);font-weight:700">🛒 Preço em ${storeName(sel)} pré-selecionado</div>`:''}
+        ${p.price===min&&prices.length>1?'<span class="chip-best">✓ Mais barato</span>':''}
+        ${p.price===max&&prices.length>1?'<span class="chip-high">▲ Mais caro</span>':''}
+      </div>
+      <div class="prod-right">
+        <div class="prod-price">${fmtEur(dPrice)}</div>
+        <button class="add-btn-sm" onclick='addToList(${JSON.stringify({name:p.name,price:dPrice,stores:p.stores||{},emoji:p.emoji||"🛒",promo:p.promo||null})})' title="Adicionar à lista">+</button>
+      </div>
+    </div>`;}).join('');
+}
+
+function formatStores(stores){
+  if(!stores) return '';
+  return Object.entries(stores).map(([k,v])=>`${storeName(k)}: ${fmtEur(v)}`).join(' · ');
+}
+
+// ══════════════════════════════════════════════════════
+// LISTA
+// ══════════════════════════════════════════════════════
+function onMarketChange(){
+  renderList();
+  showCampAlert();
+  calcTotal();
+}
+
+function showCampAlert(){
+  const market = document.getElementById('list-market').value;
+  const msg = CAMP_ALERTS[market];
+  const el = document.getElementById('camp-alert');
+  if(msg){
+    el.style.display='flex';
+    document.getElementById('camp-alert-text').textContent = msg;
+  } else {
+    el.style.display='none';
+  }
+}
+
+function addToList(product){
+  listItems.push({id:Date.now(), name:product.name, price:product.price, stores:product.stores||{}, emoji:product.emoji||'🛒', qty:1, promo:product.promo||null});
+  save();
+  renderList();
+  calcTotal();
+  showNotif(`✅ ${product.name.split(' ').slice(0,3).join(' ')} adicionado!`);
+  switchTab('lista');
+}
+
+async function listSearch(){
+  const q = document.getElementById('list-search').value.trim().toLowerCase();
+  if(!q) return;
+  const el = document.getElementById('list-search-results');
+  const local = CATALOG.filter(p =>
+    q.split(' ').every(w => p.name.toLowerCase().includes(w)) ||
+    p.name.toLowerCase().includes(q)
+  ).slice(0,4);
+  if(local.length>0){
+    renderListResults(el, local);
+  } else {
+    el.innerHTML='<div style="font-size:.75rem;color:var(--muted);padding:6px 0">Sem resultado local. Adiciona manualmente.</div>';
+  }
+}
+
+function renderListResults(el, products){
+  window.__listSearchResults = products;
+  const sel = document.getElementById('list-market') ? document.getElementById('list-market').value : null;
+  el.innerHTML = products.map((p,idx)=>{
+    const dPrice = (sel && p.stores && p.stores[sel]!=null) ? p.stores[sel] : p.price;
+    return `
+    <div class="prod-card" style="margin-bottom:5px">
+      <div onclick="openProductModal(window.__listSearchResults[${idx}])">${productPhotoHtml(p,false)}</div>
+      <div class="prod-info">
+        <div class="prod-name" style="font-size:.76rem">${p.name}</div>
+        <div class="prod-store" style="font-size:.62rem">${sel && p.stores && p.stores[sel]!=null ? `${storeName(sel)}: ${fmtEur(dPrice)}` : `${fmtEur(p.price)} (preço médio)`}</div>
+      </div>
+      <button class="add-btn-sm" onclick='addToList(${JSON.stringify({name:p.name,price:dPrice,stores:p.stores||{},emoji:p.emoji||"🛒",promo:p.promo||null})})'>+</button>
+    </div>`;
+  }).join('');
+}
+
+function addManual(){
+  const name = document.getElementById('manual-name').value.trim()||'Item';
+  const price = parseFloat(document.getElementById('manual-price').value.replace(',','.'));
+  if(isNaN(price)||price<=0){showNotif('⚠️ Preço inválido.');return;}
+  listItems.push({id:Date.now(),name,price,stores:{},emoji:'🛒',qty:1,promo:null});
+  document.getElementById('manual-name').value='';
+  document.getElementById('manual-price').value='';
+  save();
+  renderList();
+  calcTotal();
+  showNotif(`✅ ${name.split(' ').slice(0,3).join(' ')} adicionado!`);
+}
+
+function removeItem(id){
+  listItems = listItems.filter(i=>i.id!==id);
+  save();
+  renderList();
+  calcTotal();
+}
+
+function changeQty(id, delta){
+  const item = listItems.find(i=>i.id===id);
+  if(!item) return;
+  item.qty = Math.max(1, (item.qty||1)+delta);
+  save();
+  renderList();
+  calcTotal();
+}
+
+function clearList(){
+  if(!listItems.length) return;
+  listItems=[];
+  save();
+  renderList();
+  calcTotal();
+}
+
+function renderList(){
+  const el = document.getElementById('list-items');
+  const market = document.getElementById('list-market').value;
+  if(!listItems.length){
+    el.innerHTML='<div class="empty-state"><span class="empty-icon">📋</span>Lista vazia.</div>';
+    return;
+  }
+  window.__listItemsCache = listItems;
+  el.innerHTML = listItems.map((item,idx)=>{
+    const qty = item.qty||1;
+    const linePrice = item.price * qty;
+    // cheaper elsewhere?
+    let cheaperHtml = '';
+    if(item.stores && Object.keys(item.stores).length>1){
+      const others = Object.entries(item.stores).filter(([k])=>k!==market);
+      if(others.length){
+        const [cheapStore, cheapPrice] = others.reduce((a,b)=>b[1]<a[1]?b:a);
+        if(cheapPrice < (item.stores[market]||item.price) - 0.01){
+          cheaperHtml = `<div class="li-cheaper">💡 Mais barato no <strong>${storeName(cheapStore)}</strong>: ${fmtEur(cheapPrice)}/un (poupa ${fmtEur((item.stores[market]||item.price)-cheapPrice)}/un)</div>`;
         }
+      }
+    }
+    const hasStores = item.stores && Object.keys(item.stores).length>0;
+    return `
+    <div class="list-item">
+      <div class="li-top">
+        <div style="display:flex;gap:8px;align-items:flex-start">
+          <div ${hasStores?`onclick="openProductModal(window.__listItemsCache[${idx}])"`:''} style="${hasStores?'cursor:pointer':''}">${productPhotoHtml(item,false)}</div>
+          <div>
+            <div class="li-name">${item.name}</div>
+            ${item.promo?`<div style="font-size:.63rem;color:var(--amber);font-weight:600;margin-top:1px">ℹ️ ${item.promo}</div>`:''}
+            ${hasStores?`<div style="font-size:.62rem;color:var(--muted);margin-top:1px">${storeBadgeHtml(market)} · toca na imagem p/ comparar</div>`:''}
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div class="li-price">${fmtEur(linePrice)}</div>
+          <button class="remove-btn" onclick="removeItem(${item.id})">✕</button>
+        </div>
+      </div>
+      <div class="li-qty">
+        <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
+        <span class="qty-label">${qty}</span>
+        <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
+        <span style="font-size:.65rem;color:var(--muted)">${fmtEur(item.price)}/un</span>
+      </div>
+      ${cheaperHtml}
+    </div>`;
+  }).join('');
+}
 
-        // ================= INTELLIGENCE & SUGGESTIONS =================
-        function getEstimatedPrice(name) {
-            const lowerName = name.toLowerCase();
-            for(let item of priceDictionary) {
-                if(item.keywords.some(k => lowerName.includes(k))) {
-                    return item.price;
-                }
-            }
-            return 0; // Preço desconhecido
-        }
+function calcTotal(){
+  const total = listItems.reduce((s,i)=>s+(i.price*(i.qty||1)),0);
+  document.getElementById('total-amt').textContent = fmtEur(total);
 
-        function recordPurchaseForAI(name) {
-            let history = JSON.parse(localStorage.getItem('smartPantryHistory')) || {};
-            let cleanName = name.trim();
-            history[cleanName] = (history[cleanName] || 0) + 1;
-            localStorage.setItem('smartPantryHistory', JSON.stringify(history));
-            loadSuggestions(); 
-        }
+  const c = activeCampaign;
+  const sb = document.getElementById('status-badge');
+  const ps = document.getElementById('prog-section');
+  const rb = document.getElementById('reward-box');
+  const pb = document.getElementById('prog-bar');
 
-        function loadSuggestions() {
-            let history = JSON.parse(localStorage.getItem('smartPantryHistory')) || {};
-            let sorted = Object.keys(history).sort((a,b) => history[b] - history[a]).slice(0, 8);
-            
-            if (sorted.length === 0) {
-                sorted = ["Leite", "Arroz", "Ovos", "Pão", "Azeite", "Café"];
-            }
+  if(!c||c.id==='none'){
+    sb.textContent='Sem campanha'; sb.className='status-badge sb-none';
+    ps.style.display='none'; return;
+  }
+  if(c.pctOnly){
+    const disc = total*c.pct;
+    sb.textContent=`💳 Poupas ${fmtEur(disc)}`; sb.className='status-badge sb-done';
+    ps.style.display='none'; return;
+  }
+  ps.style.display='block';
+  const pct = Math.min((total/c.target)*100,100);
+  pb.style.width=pct+'%';
+  if(total>=c.target){
+    let rw = c.reward;
+    if(c.multi&&total>=c.t2) rw=c.r2;
+    pb.className='prog-fill pf-done';
+    sb.textContent='🎉 Meta atingida!'; sb.className='status-badge sb-done';
+    rb.style.display='block';
+    document.getElementById('reward-text').textContent=`🏆 ${rw}  ·  ${c.valid||''}`;
+    document.getElementById('prog-left').textContent='Meta atingida ✔️';
+    document.getElementById('prog-right').textContent='Meta: '+fmtEur(c.target);
+  } else {
+    const miss = c.target-total;
+    pb.className='prog-fill '+(pct>=70?'pf-ok':'pf-warn');
+    sb.textContent=`Faltam ${fmtEur(miss)}`; sb.className='status-badge sb-prog';
+    rb.style.display='none';
+    document.getElementById('prog-left').textContent=`Faltam ${fmtEur(miss)} para o prémio`;
+    document.getElementById('prog-right').textContent='Meta: '+fmtEur(c.target);
+  }
+}
 
-            const container = document.getElementById('suggestions-container');
-            container.innerHTML = sorted.map(item => `
-                <button onclick="addPlannedItem('${item}')" class="shrink-0 bg-white border border-purple-200 text-purple-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-purple-50 hover:shadow-sm transition flex items-center gap-1">
-                    <span class="text-purple-400">+</span> ${item}
-                </button>
-            `).join('');
-        }
+// ══════════════════════════════════════════════════════
+// ACTIVATE CAMPAIGN
+// ══════════════════════════════════════════════════════
+function activateCampaign(market, campId){
+  const camps = CAMPAIGNS[market]||[];
+  const c = camps.find(x=>x.id===campId);
+  if(!c) return;
+  activeCampaign = c;
+  localStorage.setItem('pf_camp', JSON.stringify(c));
+  // set market in lista tab
+  const sel = document.getElementById('list-market');
+  if(sel) sel.value = market;
+  showCampAlert();
+  renderList();
+  calcTotal();
+  switchTab('lista');
+  showNotif(`✅ Campanha ativada! ${c.name.substring(0,40)}...`);
+}
 
-        // ================= PLANEAMENTO LOGIC =================
-        function addPlannedItemFromInput() {
-            const input = document.getElementById('plan-input');
-            const name = input.value.trim();
-            if (!name) return;
-            addPlannedItem(name);
-            input.value = '';
-        }
+// ══════════════════════════════════════════════════════
+// NOTIF
+// ══════════════════════════════════════════════════════
+function showNotif(msg){
+  const el=document.getElementById('notif');
+  el.textContent=msg;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2800);
+}
 
-        function addPlannedItem(name) {
-            const estimate = getEstimatedPrice(name);
-            plannedItems.push({ id: Date.now(), name, estimate });
-            renderPlan();
-        }
+// ══════════════════════════════════════════════════════
+// SEARCH STORE FILTER
+// ══════════════════════════════════════════════════════
+function doSearchFilter(){
+  const q = document.getElementById('search-q').value.trim().toLowerCase();
+  if(q){
+    doSearch();
+  } else {
+    // just re-render featured with new store filter
+    renderFeatured();
+  }
+}
 
-        function removePlannedItem(id) {
-            plannedItems = plannedItems.filter(item => item.id !== id);
-            renderPlan();
-        }
+// ══════════════════════════════════════════════════════
+// SUB-TABS DA LISTA
+// ══════════════════════════════════════════════════════
+function switchSubTab(t){
+  const isAtual = t==='atual';
+  document.getElementById('subtab-atual').style.display = isAtual ? 'block' : 'none';
+  document.getElementById('subtab-predefinida').style.display = isAtual ? 'none' : 'block';
+  document.getElementById('subtab-atual-btn').style.background = isAtual ? 'var(--green)' : 'transparent';
+  document.getElementById('subtab-atual-btn').style.color = isAtual ? '#fff' : 'var(--muted)';
+  document.getElementById('subtab-predefinida-btn').style.background = !isAtual ? 'var(--green)' : 'transparent';
+  document.getElementById('subtab-predefinida-btn').style.color = !isAtual ? '#fff' : 'var(--muted)';
+  if(!isAtual) renderPredefList();
+}
 
-        function moveToCart(id) {
-            const idx = plannedItems.findIndex(i => i.id === id);
-            if (idx === -1) return;
-            const item = plannedItems[idx];
+// ══════════════════════════════════════════════════════
+// LISTA PREDEFINIDA
+// ══════════════════════════════════════════════════════
+let predefItems = JSON.parse(localStorage.getItem('pf_predef')||'[]');
+// price history: {weekKey: total}
+let predefPriceHistory = JSON.parse(localStorage.getItem('pf_predef_prices')||'{}');
 
-            let finalPrice = item.estimate;
-            
-            if (finalPrice === 0) {
-                let input = prompt(`Qual o preço de "${item.name}" na prateleira? (€)`, "0.00");
-                if (input === null) return; 
-                finalPrice = parseFloat(input.replace(',', '.'));
-                if (isNaN(finalPrice) || finalPrice < 0) {
-                    alert("Preço inválido.");
-                    return;
-                }
-            } else {
-                let input = prompt(`Confirme o preço para "${item.name}" (€):`, finalPrice.toFixed(2));
-                if (input === null) return;
-                finalPrice = parseFloat(input.replace(',', '.'));
-                if (isNaN(finalPrice) || finalPrice < 0) return;
-            }
+function savePredef(){
+  localStorage.setItem('pf_predef', JSON.stringify(predefItems));
+}
+function getWeekKey(){
+  const d = new Date();
+  const jan1 = new Date(d.getFullYear(),0,1);
+  const week = Math.ceil(((d-jan1)/86400000+jan1.getDay()+1)/7);
+  return `${d.getFullYear()}-W${week}`;
+}
+function getPrevWeekKey(){
+  const d = new Date();
+  d.setDate(d.getDate()-7);
+  const jan1 = new Date(d.getFullYear(),0,1);
+  const week = Math.ceil(((d-jan1)/86400000+jan1.getDay()+1)/7);
+  return `${d.getFullYear()}-W${week}`;
+}
 
-            cartItems.push({ id: Date.now(), name: item.name, price: finalPrice });
-            recordPurchaseForAI(item.name);
-            
-            plannedItems.splice(idx, 1);
-            
-            renderPlan();
-            renderCart();
-            calculateTotal();
-            
-            switchTab('cart');
-        }
+function predefSearch(){
+  const q = document.getElementById('predef-search').value.trim().toLowerCase();
+  if(!q) return;
+  const el = document.getElementById('predef-search-results');
+  const local = CATALOG.filter(p =>
+    q.split(' ').every(w => p.name.toLowerCase().includes(w)) ||
+    p.name.toLowerCase().includes(q)
+  ).slice(0,4);
+  if(!local.length){
+    el.innerHTML='<div style="font-size:.75rem;color:var(--muted);padding:5px 0">Sem resultado. Adiciona manualmente.</div>';
+    return;
+  }
+  window.__predefSearchResults = local;
+  el.innerHTML = local.map((p,idx)=>{
+    return `<div class="prod-card" style="margin-bottom:5px">
+      <div>${productPhotoHtml(p,false)}</div>
+      <div class="prod-info">
+        <div class="prod-name" style="font-size:.76rem">${p.name}</div>
+        <div class="prod-store" style="font-size:.62rem">${fmtEur(p.price)} (preço médio)</div>
+      </div>
+      <button class="add-btn-sm" onclick="addToPredefFromSearch(${idx})">+</button>
+    </div>`;
+  }).join('');
+}
 
-        function renderPlan() {
-            const container = document.getElementById('planned-list');
-            const estContainer = document.getElementById('plan-estimate');
-            
-            let totalEst = 0;
-            
-            if (plannedItems.length === 0) {
-                container.innerHTML = `<p class="text-gray-400 text-center text-sm py-6 bg-gray-50 rounded-lg">A lista está vazia.</p>`;
-                estContainer.innerText = "0.00€";
-                return;
-            }
+function addToPredefFromSearch(idx){
+  const p = window.__predefSearchResults[idx];
+  if(!p) return;
+  predefItems.push({id:Date.now(),name:p.name,price:p.price,stores:p.stores||{},emoji:p.emoji||'🛒',promo:p.promo||null,qty:1});
+  savePredef();
+  updatePredefPrices();
+  renderPredefList();
+  document.getElementById('predef-search-results').innerHTML='';
+  document.getElementById('predef-search').value='';
+  showNotif(`⭐ ${p.name.split(' ').slice(0,3).join(' ')} adicionado à lista predefinida!`);
+}
 
-            container.innerHTML = plannedItems.map(item => {
-                totalEst += item.estimate;
-                const priceBadge = item.estimate > 0 
-                    ? `<span class="bg-blue-100 text-blue-700 text-[10px] px-2 py-0.5 rounded-full font-bold">Est. ${item.estimate.toFixed(2)}€</span>`
-                    : `<span class="bg-gray-200 text-gray-500 text-[10px] px-2 py-0.5 rounded-full font-bold">Preço Desconhecido</span>`;
+function addToPredef(){
+  const name = document.getElementById('predef-manual-name').value.trim()||'Item';
+  const price = parseFloat(document.getElementById('predef-manual-price').value.replace(',','.'));
+  if(isNaN(price)||price<=0){showNotif('⚠️ Preço inválido.');return;}
+  predefItems.push({id:Date.now(),name,price,stores:{},emoji:'🛒',qty:1,promo:null});
+  document.getElementById('predef-manual-name').value='';
+  document.getElementById('predef-manual-price').value='';
+  savePredef();
+  updatePredefPrices();
+  renderPredefList();
+  showNotif(`⭐ ${name.split(' ').slice(0,3).join(' ')} adicionado!`);
+}
 
-                return `
-                <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
-                    <div class="truncate pr-2">
-                        <p class="text-sm font-bold text-gray-800 truncate">${item.name}</p>
-                        ${priceBadge}
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="removePlannedItem(${item.id})" class="text-gray-300 hover:text-red-500 transition px-2">✕</button>
-                        <button onclick="moveToCart(${item.id})" class="bg-green-100 text-green-700 hover:bg-green-200 px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1">
-                            <span>Comprar</span> ➔
-                        </button>
-                    </div>
-                </div>`;
-            }).join('');
+function removePredefItem(id){
+  predefItems = predefItems.filter(i=>i.id!==id);
+  savePredef();
+  updatePredefPrices();
+  renderPredefList();
+}
 
-            estContainer.innerText = `~${totalEst.toFixed(2)}€`;
-        }
+function changePredefQty(id, delta){
+  const item = predefItems.find(i=>i.id===id);
+  if(!item) return;
+  item.qty = Math.max(1,(item.qty||1)+delta);
+  savePredef();
+  updatePredefPrices();
+  renderPredefList();
+}
 
-        // ================= CARRINHO & SCANNER LOGIC =================
-        function updateCampaignAlert() {
-            const selected = document.getElementById('supermarket').value;
-            document.getElementById('campaign-text').innerText = campaigns[selected];
-        }
+function updatePredefPriceForItem(id, newPrice){
+  const item = predefItems.find(i=>i.id===id);
+  if(!item) return;
+  item.price = parseFloat(newPrice)||item.price;
+  savePredef();
+  updatePredefPrices();
+  renderPredefList();
+}
 
-        function toggleScanner() {
-            const scannerDiv = document.getElementById('reader');
-            const btnText = document.getElementById('scan-btn-text');
+function updatePredefPrices(){
+  const weekKey = getWeekKey();
+  const total = predefItems.reduce((s,i)=>s+(i.price*(i.qty||1)),0);
+  predefPriceHistory[weekKey] = {total, items: predefItems.map(i=>({id:i.id,name:i.name,price:i.price,qty:i.qty||1}))};
+  localStorage.setItem('pf_predef_prices', JSON.stringify(predefPriceHistory));
+  renderPredefTotals();
+}
 
-            if (scannerDiv.classList.contains('hidden')) {
-                scannerDiv.classList.remove('hidden');
-                btnText.innerText = "Fechar Câmara";
-                startScanner();
-            } else {
-                stopScanner();
-            }
-        }
+function renderPredefTotals(){
+  const weekKey = getWeekKey();
+  const prevKey = getPrevWeekKey();
+  const thisWeek = predefPriceHistory[weekKey];
+  const prevWeek = predefPriceHistory[prevKey];
+  const total = predefItems.reduce((s,i)=>s+(i.price*(i.qty||1)),0);
+  document.getElementById('predef-total-atual').textContent = fmtEur(total);
+  const banner = document.getElementById('predef-diff-banner');
+  if(prevWeek && prevWeek.total){
+    document.getElementById('predef-total-anterior').textContent = fmtEur(prevWeek.total);
+    const diff = total - prevWeek.total;
+    banner.style.display='block';
+    if(diff>0.005){
+      banner.style.background='#fee2e2';banner.style.color='#7f1d1d';banner.style.border='1px solid #fca5a5';
+      banner.textContent=`▲ Subiu ${fmtEur(diff)} face à semana anterior`;
+    } else if(diff<-0.005){
+      banner.style.background='#dcfce7';banner.style.color='#14532d';banner.style.border='1px solid #86efac';
+      banner.textContent=`▼ Desceu ${fmtEur(Math.abs(diff))} face à semana anterior`;
+    } else {
+      banner.style.background='#f1f5f9';banner.style.color='var(--muted)';banner.style.border='1px solid var(--border)';
+      banner.textContent='= Preço total igual à semana anterior';
+    }
+  } else {
+    document.getElementById('predef-total-anterior').textContent='—';
+    banner.style.display='none';
+  }
+}
 
-        function startScanner() {
-            html5QrCode = new Html5Qrcode("reader");
-            const config = { fps: 10, qrbox: { width: 250, height: 150 } };
+function renderPredefList(){
+  const el = document.getElementById('predef-items');
+  if(!predefItems.length){
+    el.innerHTML='<div class="empty-state"><span class="empty-icon">⭐</span>Lista predefinida vazia.<br>Adiciona os produtos que compras habitualmente.</div>';
+    renderPredefTotals();
+    return;
+  }
+  const prevKey = getPrevWeekKey();
+  const prevWeek = predefPriceHistory[prevKey];
+  const prevItems = prevWeek ? prevWeek.items : [];
+  el.innerHTML = predefItems.map(item=>{
+    const qty = item.qty||1;
+    const linePrice = item.price*qty;
+    // Compare with previous week
+    const prev = prevItems.find(p=>p.name===item.name);
+    let priceClass='';let priceNote='';
+    if(prev){
+      const diff = item.price - prev.price;
+      if(diff<-0.005){
+        priceClass='style="background:#dcfce7;border-radius:9px;padding:2px 6px;color:#14532d"';
+        priceNote=`<div style="font-size:.62rem;color:#14532d;margin-top:2px">▼ ${fmtEur(prev.price)} → <strong>${fmtEur(item.price)}</strong>/un</div>`;
+      } else if(diff>0.005){
+        priceClass='style="background:#fee2e2;border-radius:9px;padding:2px 6px;color:#7f1d1d"';
+        priceNote=`<div style="font-size:.62rem;color:#7f1d1d;margin-top:2px">▲ ${fmtEur(prev.price)} → <strong>${fmtEur(item.price)}</strong>/un</div>`;
+      }
+    }
+    return `<div class="list-item">
+      <div class="li-top">
+        <div style="display:flex;gap:8px;align-items:flex-start">
+          ${productPhotoHtml(item,false)}
+          <div>
+            <div class="li-name" ${priceClass}>${item.name}</div>
+            ${priceNote}
+            ${item.promo?`<div style="font-size:.63rem;color:var(--amber);font-weight:600;margin-top:1px">ℹ️ ${item.promo}</div>`:''}
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div class="li-price">${fmtEur(linePrice)}</div>
+          <button class="remove-btn" onclick="removePredefItem(${item.id})">✕</button>
+        </div>
+      </div>
+      <div class="li-qty">
+        <button class="qty-btn" onclick="changePredefQty(${item.id},-1)">−</button>
+        <span class="qty-label">${qty}</span>
+        <button class="qty-btn" onclick="changePredefQty(${item.id},1)">+</button>
+        <span style="font-size:.65rem;color:var(--muted)">${fmtEur(item.price)}/un</span>
+        <input type="number" step="0.01" value="${item.price.toFixed(2)}" min="0.01"
+          style="width:65px;padding:3px 6px;border:1.5px solid var(--border);border-radius:7px;font-size:.7rem;background:var(--input-bg);color:var(--text);font-family:inherit"
+          onchange="updatePredefPriceForItem(${item.id},this.value)" title="Atualizar preço">
+      </div>
+    </div>`;
+  }).join('');
+  renderPredefTotals();
+}
 
-            html5QrCode.start(
-                { facingMode: "environment" }, config,
-                (decodedText) => {
-                    stopScanner();
-                    handleBarcodeScanned(decodedText);
-                },
-                (err) => {}
-            ).catch(err => alert("Erro câmara: " + err));
-        }
+function clearPredef(){
+  if(!predefItems.length) return;
+  predefItems=[];
+  savePredef();
+  renderPredefList();
+}
 
-        function stopScanner() {
-            const scannerDiv = document.getElementById('reader');
-            const btnText = document.getElementById('scan-btn-text');
-            scannerDiv.classList.add('hidden');
-            btnText.innerText = "Ler Código de Barras";
-            if (html5QrCode) {
-                html5QrCode.stop().then(() => { html5QrCode = null; }).catch(e => console.error(e));
-            }
-        }
+function loadPredefToList(){
+  if(!predefItems.length){showNotif('⚠️ Lista predefinida vazia.');return;}
+  predefItems.forEach(item=>{
+    listItems.push({id:Date.now()+Math.random(),name:item.name,price:item.price,stores:item.stores||{},emoji:item.emoji||'🛒',qty:item.qty||1,promo:item.promo||null});
+  });
+  save();
+  renderList();
+  calcTotal();
+  switchSubTab('atual');
+  showNotif(`✅ ${predefItems.length} produtos carregados para a lista atual!`);
+}
 
-        function handleBarcodeScanned(barcode) {
-            if (productDatabase[barcode]) {
-                const p = productDatabase[barcode];
-                addToCart(p.name, p.price);
-            } else {
-                document.getElementById('manual-name').value = `Prod. #${barcode.slice(-4)}`;
-                document.getElementById('manual-price').focus();
-                alert("Produto não reconhecido. Insira o preço manualmente.");
-            }
-        }
 
-        function addManualItem() {
-            const name = document.getElementById('manual-name').value.trim() || "Item sem nome";
-            const price = parseFloat(document.getElementById('manual-price').value);
-
-            if (isNaN(price) || price <= 0) {
-                alert("Preço inválido.");
-                return;
-            }
-
-            addToCart(name, price);
-            document.getElementById('manual-name').value = '';
-            document.getElementById('manual-price').value = '';
-        }
-
-        function addToCart(name, price) {
-            cartItems.push({ id: Date.now(), name, price });
-            recordPurchaseForAI(name);
-            renderCart();
-            calculateTotal();
-        }
-
-        function removeFromCart(id) {
-            cartItems = cartItems.filter(item => item.id !== id);
-            renderCart();
-            calculateTotal();
-        }
-
-        function renderCart() {
-            const container = document.getElementById('cart-items');
-            if (cartItems.length === 0) {
-                container.innerHTML = `<p class="text-gray-400 text-center text-sm py-6 bg-gray-50 rounded-lg">Carrinho vazio.</p>`;
-                return;
-            }
-
-            container.innerHTML = cartItems.map(item => `
-                <div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl border border-gray-100">
-                    <div class="truncate pr-2">
-                        <p class="text-sm font-bold text-gray-800 truncate">${item.name}</p>
-                        <p class="text-xs text-blue-600 font-bold">${item.price.toFixed(2)}€</p>
-                    </div>
-                    <button onclick="removeFromCart(${item.id})" class="text-red-400 hover:text-red-600 bg-white shadow-sm border border-gray-200 rounded-full w-8 h-8 flex items-center justify-center transition">
-                        ✕
-                    </button>
-                </div>
-            `).join('');
-        }
-
-        function calculateTotal() {
-            const total = cartItems.reduce((sum, item) => sum + item.price, 0);
-            const target = parseFloat(document.getElementById('target-value').value) || 100;
-            const fuelBonus = document.getElementById('fuel-bonus').value;
-            const storeBonus = document.getElementById('store-bonus').value;
-
-            document.getElementById('total-price').innerText = `${total.toFixed(2)}€`;
-
-            const promoStatusEl = document.getElementById('promo-status');
-            const progressBarEl = document.getElementById('progress-bar');
-            const rewardsPanel = document.getElementById('rewards-panel');
-
-            const percentage = Math.min((total / target) * 100, 100);
-            progressBarEl.style.width = `${percentage}%`;
-
-            if (total >= target) {
-                promoStatusEl.innerText = "Meta Alcançada! 🎉";
-                promoStatusEl.className = "text-xs font-bold text-green-700 bg-green-100 px-2 py-1 rounded";
-                progressBarEl.className = "bg-green-500 h-3 rounded-full transition-all duration-500 relative";
-                
-                document.getElementById('reward-fuel-text').innerText = `${fuelBonus}€`;
-                document.getElementById('reward-store-text').innerText = `${storeBonus}€`;
-                rewardsPanel.classList.remove('hidden');
-            } else {
-                const missing = target - total;
-                promoStatusEl.innerText = `Faltam ${missing.toFixed(2)}€`;
-                promoStatusEl.className = "text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded";
-                progressBarEl.className = "bg-red-500 h-3 rounded-full transition-all duration-500 relative";
-                rewardsPanel.classList.add('hidden');
-            }
-        }
-    </script>
+(function init(){
+  loadDarkMode();
+  loadFontSize();
+  renderList();
+  showCampAlert();
+  calcTotal();
+  updatePredefPrices();
+  renderFeatured();
+  document.getElementById('footer-bar').style.display='none';
+})();
+</script>
 </body>
 </html>
