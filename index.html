@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Poupança - IA & Planeamento</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- HTML5-QRCode -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <style>
+        /* Smooth transitions for tabs */
+        .tab-content { display: none; animation: fadeIn 0.3s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* Hide scrollbar for suggestions */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans min-h-screen pb-32 text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-blue-700 text-white p-4 shadow-md text-center sticky top-0 z-50">
+        <h1 class="text-xl font-bold flex items-center justify-center gap-2">
+            🛒 Super Poupança <span class="bg-blue-500 text-xs px-2 py-0.5 rounded-full">v2</span>
+        </h1>
+        <p class="text-xs text-blue-200 mt-1">Planeamento & Inteligência Local</p>
+    </header>
+
+    <!-- Navegação por Tabs -->
+    <div class="flex bg-white shadow-sm sticky top-16 z-40 border-b">
+        <button id="btn-tab-plan" onclick="switchTab('plan')" class="flex-1 py-3 text-center font-semibold text-blue-700 border-b-2 border-blue-700 transition">
+            📝 Planeamento
+        </button>
+        <button id="btn-tab-cart" onclick="switchTab('cart')" class="flex-1 py-3 text-center font-semibold text-gray-400 hover:text-gray-600 border-b-2 border-transparent transition">
+            🛍️ Em Loja
+        </button>
+    </div>
+
+    <!-- ==================== TAB: PLANEAMENTO ==================== -->
+    <main id="tab-plan" class="tab-content active max-w-md mx-auto p-4 space-y-5">
+        
+        <!-- Sugestões "IA" -->
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+            <h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex justify-between items-center">
+                <span>✨ Sugestões para Si</span>
+                <span class="text-[10px] bg-purple-100 text-purple-600 px-2 py-0.5 rounded">Aprende consigo</span>
+            </h2>
+            <div id="suggestions-container" class="flex overflow-x-auto gap-2 pb-2 no-scrollbar">
+                <!-- Injetado via JS -->
+            </div>
+        </div>
+
+        <!-- Adicionar à Lista -->
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+            <h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Adicionar ao Plano</h2>
+            <div class="flex gap-2">
+                <input type="text" id="plan-input" placeholder="Ex: Maçãs, Pão..." class="flex-1 p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onkeypress="if(event.key === 'Enter') addPlannedItemFromInput()">
+                <button onclick="addPlannedItemFromInput()" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition">
+                    +
+                </button>
+            </div>
+        </div>
+
+        <!-- Lista Planeada -->
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+            <div class="flex justify-between items-end mb-3">
+                <h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider">A sua Lista</h2>
+                <div class="text-right">
+                    <p class="text-[10px] text-gray-400">Estimativa Total</p>
+                    <p id="plan-estimate" class="text-lg font-bold text-blue-600">0.00€</p>
+                </div>
+            </div>
+            
+            <div id="planned-list" class="space-y-2">
+                <p class="text-gray-400 text-center text-sm py-6">A lista de planeamento está vazia.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- ==================== TAB: EM LOJA (CARRINHO) ==================== -->
+    <main id="tab-cart" class="tab-content max-w-md mx-auto p-4 space-y-5">
+        
+        <!-- Configuração de Metas (Colapsável) -->
+        <details class="bg-white rounded-xl shadow-sm border border-gray-100 group">
+            <summary class="p-4 cursor-pointer font-medium text-gray-700 flex justify-between items-center list-none">
+                <span class="flex items-center gap-2">⚙️ Configurar Promoção</span>
+                <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-4 border-t border-gray-100 bg-gray-50/50 rounded-b-xl">
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Supermercado Atual</label>
+                <select id="supermarket" onchange="updateCampaignAlert()" class="w-full p-2.5 border border-gray-200 rounded-lg bg-white mb-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="continente">Continente</option>
+                    <option value="pingo_doce">Pingo Doce</option>
+                    <option value="auchan">Auchan</option>
+                    <option value="intermarche">Intermarché</option>
+                </select>
+
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Meta (€)</label>
+                        <input type="number" id="target-value" value="100" class="w-full p-2 border border-gray-200 rounded-lg text-center text-sm font-medium" oninput="calculateTotal()">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Combustível</label>
+                        <input type="number" id="fuel-bonus" value="15" class="w-full p-2 border border-gray-200 rounded-lg text-center text-sm font-medium" oninput="calculateTotal()">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Em Loja</label>
+                        <input type="number" id="store-bonus" value="15" class="w-full p-2 border border-gray-200 rounded-lg text-center text-sm font-medium" oninput="calculateTotal()">
+                    </div>
+                </div>
+            </div>
+        </details>
+
+        <!-- Alerta de Campanha Dinâmico -->
+        <div id="campaign-banner" class="bg-amber-50 border border-amber-200 p-3 rounded-xl flex gap-3 items-center">
+            <span class="text-xl">📢</span>
+            <p id="campaign-text" class="text-xs text-amber-800 font-medium leading-relaxed"></p>
+        </div>
+
+        <!-- Scanner / Adicionar Produto Real -->
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 space-y-4">
+            <button onclick="toggleScanner()" class="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium py-3 px-4 rounded-xl transition flex items-center justify-center gap-2 shadow-sm">
+                📷 <span id="scan-btn-text">Ler Código de Barras</span>
+            </button>
+            
+            <div id="reader" class="w-full hidden overflow-hidden rounded-xl border border-gray-200 bg-black"></div>
+
+            <div class="relative flex py-1 items-center">
+                <div class="flex-grow border-t border-gray-200"></div>
+                <span class="flex-shrink mx-4 text-gray-400 text-[10px] uppercase font-bold tracking-widest">Ou Manualmente</span>
+                <div class="flex-grow border-t border-gray-200"></div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2">
+                <input type="text" id="manual-name" placeholder="Produto..." class="col-span-2 p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="number" id="manual-price" step="0.01" placeholder="0.00€" class="col-span-1 p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <button onclick="addManualItem()" class="w-full bg-blue-100 text-blue-700 hover:bg-blue-200 text-sm font-bold py-2.5 rounded-lg transition">
+                Adicionar ao Carrinho
+            </button>
+        </div>
+
+        <!-- Carrinho Real -->
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+            <h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">No Carrinho</h2>
+            <div id="cart-items" class="space-y-2">
+                <p class="text-gray-400 text-center text-sm py-6">O carrinho está vazio.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Dashboard Fixo de Totais -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] p-4 pt-3 pb-6 rounded-t-2xl z-50">
+        <div class="max-w-md mx-auto">
+            <div class="flex justify-between items-end mb-2">
+                <div>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Total Confirmado</p>
+                    <p id="total-price" class="text-3xl font-black text-gray-900 leading-none">0.00€</p>
+                </div>
+                <div class="text-right">
+                    <p id="promo-status" class="text-xs font-bold text-red-500 bg-red-50 px-2 py-1 rounded">Faltam 100.00€</p>
+                </div>
+            </div>
+
+            <!-- Barra de Progresso -->
+            <div class="w-full bg-gray-100 rounded-full h-3 mb-1 overflow-hidden shadow-inner mt-3">
+                <div id="progress-bar" class="bg-red-500 h-3 rounded-full transition-all duration-500 relative" style="width: 0%">
+                    <div class="absolute inset-0 bg-white/20 w-full h-full" style="background-image: linear-gradient(45deg, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent); background-size: 1rem 1rem;"></div>
+                </div>
+            </div>
+
+            <!-- Quadro de Prémios Alcançados -->
+            <div id="rewards-panel" class="hidden mt-3 bg-green-50 border border-green-200 text-green-800 text-sm p-3 rounded-xl text-center font-semibold shadow-sm animate-[fadeIn_0.5s]">
+                🎉 Parabéns! Tem direito a <span id="reward-fuel-text" class="text-green-900 font-black">15€</span> (Combustível) + <span id="reward-store-text" class="text-green-900 font-black">15€</span> (Loja).
+            </div>
+        </div>
+    </div>
+
+    <!-- Lógica da Aplicação -->
+    <script>
+        // ================= DATABASES MOCK =================
+        const productDatabase = {
+            "5601234567890": { name: "Leite UHT Meio Gordo", price: 0.89 },
+            "5609876543210": { name: "Arroz Agulha 1kg", price: 1.25 },
+            "5605555555555": { name: "Café Moído 250g", price: 2.49 }
+        };
+
+        // Preços conhecidos para pesquisa por nome (simula uma base de dados maior)
+        const priceDictionary = [
+            { keywords: ["leite"], price: 0.89 },
+            { keywords: ["arroz"], price: 1.25 },
+            { keywords: ["café", "cafe"], price: 2.49 },
+            { keywords: ["pão", "pao"], price: 1.10 },
+            { keywords: ["manteiga"], price: 1.85 },
+            { keywords: ["ovos"], price: 2.20 },
+            { keywords: ["azeite"], price: 7.99 },
+            { keywords: ["atum"], price: 1.15 }
+        ];
+
+        const campaigns = {
+            continente: "Ganha 15€ em combustível + 15€ em cartão a cada 100€ de compras.",
+            pingo_doce: "Fim de Semana: 20€ de desconto imediato em compras superiores a 100€.",
+            auchan: "Acumula 10% no cartão Auchan em toda a marca própria.",
+            intermarche: "Combustível a preço de custo com talão superior a 50€."
+        };
+
+        // ================= STATE =================
+        let plannedItems = [];
+        let cartItems = [];
+        let html5QrCode = null;
+
+        // ================= INITIALIZATION =================
+        window.onload = () => {
+            updateCampaignAlert();
+            loadSuggestions();
+            renderPlan();
+            renderCart();
+        };
+
+        // ================= TABS LOGIC =================
+        function switchTab(tab) {
+            document.getElementById('tab-plan').classList.remove('active');
+            document.getElementById('tab-cart').classList.remove('active');
+            
+            document.getElementById('btn-tab-plan').classList.replace('text-blue-700', 'text-gray-400');
+            document.getElementById('btn-tab-plan').classList.replace('border-blue-700', 'border-transparent');
+            
+            document.getElementById('btn-tab-cart').classList.replace('text-blue-700', 'text-gray-400');
+            document.getElementById('btn-tab-cart').classList.replace('border-blue-700', 'border-transparent');
+
+            if(tab === 'plan') {
+                document.getElementById('tab-plan').classList.add('active');
+                document.getElementById('btn-tab-plan').classList.replace('text-gray-400', 'text-blue-700');
+                document.getElementById('btn-tab-plan').classList.replace('border-transparent', 'border-blue-700');
+            } else {
+                document.getElementById('tab-cart').classList.add('active');
+                document.getElementById('btn-tab-cart').classList.replace('text-gray-400', 'text-blue-700');
+                document.getElementById('btn-tab-cart').classList.replace('border-transparent', 'border-blue-700');
+            }
+        }
+
+        // ================= INTELLIGENCE & SUGGESTIONS =================
+        function getEstimatedPrice(name) {
+            const lowerName = name.toLowerCase();
+            for(let item of priceDictionary) {
+                if(item.keywords.some(k => lowerName.includes(k))) {
+                    return item.price;
+                }
+            }
+            return 0; // Preço desconhecido
+        }
+
+        function recordPurchaseForAI(name) {
+            let history = JSON.parse(localStorage.getItem('smartPantryHistory')) || {};
+            let cleanName = name.trim();
+            history[cleanName] = (history[cleanName] || 0) + 1;
+            localStorage.setItem('smartPantryHistory', JSON.stringify(history));
+            loadSuggestions(); 
+        }
+
+        function loadSuggestions() {
+            let history = JSON.parse(localStorage.getItem('smartPantryHistory')) || {};
+            let sorted = Object.keys(history).sort((a,b) => history[b] - history[a]).slice(0, 8);
+            
+            if (sorted.length === 0) {
+                sorted = ["Leite", "Arroz", "Ovos", "Pão", "Azeite", "Café"];
+            }
+
+            const container = document.getElementById('suggestions-container');
+            container.innerHTML = sorted.map(item => `
+                <button onclick="addPlannedItem('${item}')" class="shrink-0 bg-white border border-purple-200 text-purple-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-purple-50 hover:shadow-sm transition flex items-center gap-1">
+                    <span class="text-purple-400">+</span> ${item}
+                </button>
+            `).join('');
+        }
+
+        // ================= PLANEAMENTO LOGIC =================
+        function addPlannedItemFromInput() {
+            const input = document.getElementById('plan-input');
+            const name = input.value.trim();
+            if (!name) return;
+            addPlannedItem(name);
+            input.value = '';
+        }
+
+        function addPlannedItem(name) {
+            const estimate = getEstimatedPrice(name);
+            plannedItems.push({ id: Date.now(), name, estimate });
+            renderPlan();
+        }
+
+        function removePlannedItem(id) {
+            plannedItems = plannedItems.filter(item => item.id !== id);
+            renderPlan();
+        }
+
+        function moveToCart(id) {
+            const idx = plannedItems.findIndex(i => i.id === id);
+            if (idx === -1) return;
+            const item = plannedItems[idx];
+
+            let finalPrice = item.estimate;
+            
+            if (finalPrice === 0) {
+                let input = prompt(`Qual o preço de "${item.name}" na prateleira? (€)`, "0.00");
+                if (input === null) return; 
+                finalPrice = parseFloat(input.replace(',', '.'));
+                if (isNaN(finalPrice) || finalPrice < 0) {
+                    alert("Preço inválido.");
+                    return;
+                }
+            } else {
+                let input = prompt(`Confirme o preço para "${item.name}" (€):`, finalPrice.toFixed(2));
+                if (input === null) return;
+                finalPrice = parseFloat(input.replace(',', '.'));
+                if (isNaN(finalPrice) || finalPrice < 0) return;
+            }
+
+            cartItems.push({ id: Date.now(), name: item.name, price: finalPrice });
+            recordPurchaseForAI(item.name);
+            
+            plannedItems.splice(idx, 1);
+            
+            renderPlan();
+            renderCart();
+            calculateTotal();
+            
+            switchTab('cart');
+        }
+
+        function renderPlan() {
+            const container = document.getElementById('planned-list');
+            const estContainer = document.getElementById('plan-estimate');
+            
+            let totalEst = 0;
+            
+            if (plannedItems.length === 0) {
+                container.innerHTML = `<p class="text-gray-400 text-center text-sm py-6 bg-gray-50 rounded-lg">A lista está vazia.</p>`;
+                estContainer.innerText = "0.00€";
+                return;
+            }
+
+            container.innerHTML = plannedItems.map(item => {
+                totalEst += item.estimate;
+                const priceBadge = item.estimate > 0 
+                    ? `<span class="bg-blue-100 text-blue-700 text-[10px] px-2 py-0.5 rounded-full font-bold">Est. ${item.estimate.toFixed(2)}€</span>`
+                    : `<span class="bg-gray-200 text-gray-500 text-[10px] px-2 py-0.5 rounded-full font-bold">Preço Desconhecido</span>`;
+
+                return `
+                <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+                    <div class="truncate pr-2">
+                        <p class="text-sm font-bold text-gray-800 truncate">${item.name}</p>
+                        ${priceBadge}
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="removePlannedItem(${item.id})" class="text-gray-300 hover:text-red-500 transition px-2">✕</button>
+                        <button onclick="moveToCart(${item.id})" class="bg-green-100 text-green-700 hover:bg-green-200 px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1">
+                            <span>Comprar</span> ➔
+                        </button>
+                    </div>
+                </div>`;
+            }).join('');
+
+            estContainer.innerText = `~${totalEst.toFixed(2)}€`;
+        }
+
+        // ================= CARRINHO & SCANNER LOGIC =================
+        function updateCampaignAlert() {
+            const selected = document.getElementById('supermarket').value;
+            document.getElementById('campaign-text').innerText = campaigns[selected];
+        }
+
+        function toggleScanner() {
+            const scannerDiv = document.getElementById('reader');
+            const btnText = document.getElementById('scan-btn-text');
+
+            if (scannerDiv.classList.contains('hidden')) {
+                scannerDiv.classList.remove('hidden');
+                btnText.innerText = "Fechar Câmara";
+                startScanner();
+            } else {
+                stopScanner();
+            }
+        }
+
+        function startScanner() {
+            html5QrCode = new Html5Qrcode("reader");
+            const config = { fps: 10, qrbox: { width: 250, height: 150 } };
+
+            html5QrCode.start(
+                { facingMode: "environment" }, config,
+                (decodedText) => {
+                    stopScanner();
+                    handleBarcodeScanned(decodedText);
+                },
+                (err) => {}
+            ).catch(err => alert("Erro câmara: " + err));
+        }
+
+        function stopScanner() {
+            const scannerDiv = document.getElementById('reader');
+            const btnText = document.getElementById('scan-btn-text');
+            scannerDiv.classList.add('hidden');
+            btnText.innerText = "Ler Código de Barras";
+            if (html5QrCode) {
+                html5QrCode.stop().then(() => { html5QrCode = null; }).catch(e => console.error(e));
+            }
+        }
+
+        function handleBarcodeScanned(barcode) {
+            if (productDatabase[barcode]) {
+                const p = productDatabase[barcode];
+                addToCart(p.name, p.price);
+            } else {
+                document.getElementById('manual-name').value = `Prod. #${barcode.slice(-4)}`;
+                document.getElementById('manual-price').focus();
+                alert("Produto não reconhecido. Insira o preço manualmente.");
+            }
+        }
+
+        function addManualItem() {
+            const name = document.getElementById('manual-name').value.trim() || "Item sem nome";
+            const price = parseFloat(document.getElementById('manual-price').value);
+
+            if (isNaN(price) || price <= 0) {
+                alert("Preço inválido.");
+                return;
+            }
+
+            addToCart(name, price);
+            document.getElementById('manual-name').value = '';
+            document.getElementById('manual-price').value = '';
+        }
+
+        function addToCart(name, price) {
+            cartItems.push({ id: Date.now(), name, price });
+            recordPurchaseForAI(name);
+            renderCart();
+            calculateTotal();
+        }
+
+        function removeFromCart(id) {
+            cartItems = cartItems.filter(item => item.id !== id);
+            renderCart();
+            calculateTotal();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            if (cartItems.length === 0) {
+                container.innerHTML = `<p class="text-gray-400 text-center text-sm py-6 bg-gray-50 rounded-lg">Carrinho vazio.</p>`;
+                return;
+            }
+
+            container.innerHTML = cartItems.map(item => `
+                <div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl border border-gray-100">
+                    <div class="truncate pr-2">
+                        <p class="text-sm font-bold text-gray-800 truncate">${item.name}</p>
+                        <p class="text-xs text-blue-600 font-bold">${item.price.toFixed(2)}€</p>
+                    </div>
+                    <button onclick="removeFromCart(${item.id})" class="text-red-400 hover:text-red-600 bg-white shadow-sm border border-gray-200 rounded-full w-8 h-8 flex items-center justify-center transition">
+                        ✕
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function calculateTotal() {
+            const total = cartItems.reduce((sum, item) => sum + item.price, 0);
+            const target = parseFloat(document.getElementById('target-value').value) || 100;
+            const fuelBonus = document.getElementById('fuel-bonus').value;
+            const storeBonus = document.getElementById('store-bonus').value;
+
+            document.getElementById('total-price').innerText = `${total.toFixed(2)}€`;
+
+            const promoStatusEl = document.getElementById('promo-status');
+            const progressBarEl = document.getElementById('progress-bar');
+            const rewardsPanel = document.getElementById('rewards-panel');
+
+            const percentage = Math.min((total / target) * 100, 100);
+            progressBarEl.style.width = `${percentage}%`;
+
+            if (total >= target) {
+                promoStatusEl.innerText = "Meta Alcançada! 🎉";
+                promoStatusEl.className = "text-xs font-bold text-green-700 bg-green-100 px-2 py-1 rounded";
+                progressBarEl.className = "bg-green-500 h-3 rounded-full transition-all duration-500 relative";
+                
+                document.getElementById('reward-fuel-text').innerText = `${fuelBonus}€`;
+                document.getElementById('reward-store-text').innerText = `${storeBonus}€`;
+                rewardsPanel.classList.remove('hidden');
+            } else {
+                const missing = target - total;
+                promoStatusEl.innerText = `Faltam ${missing.toFixed(2)}€`;
+                promoStatusEl.className = "text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded";
+                progressBarEl.className = "bg-red-500 h-3 rounded-full transition-all duration-500 relative";
+                rewardsPanel.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
