@@ -199,6 +199,8 @@ header{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:13p
 .prod-photo{width:50px;height:50px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.5rem;position:relative;overflow:hidden;border:1px solid var(--border);cursor:pointer}
 .prod-photo.lg{width:84px;height:84px;font-size:2.4rem;border-radius:14px;cursor:default}
 .prod-photo .cat-tag{position:absolute;bottom:1px;right:1px;font-size:.45rem;background:rgba(0,0,0,.35);color:#fff;padding:1px 4px;border-radius:4px;text-transform:uppercase;letter-spacing:.3px}
+.prod-photo .prod-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:8px;background:var(--card)}
+.prod-photo.lg .prod-img{border-radius:14px}
 
 /* ── STORE BADGE / LOGO ── */
 .store-badge{display:inline-flex;align-items:center;gap:4px;font-size:.64rem;font-weight:700;color:var(--muted)}
@@ -251,6 +253,7 @@ header{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:13p
     <div>
       <div class="h-title">🛒 Poupa Fácil</div>
       <div class="h-sub">Preços reais · Campanhas ativas · Portugal</div>
+      <div class="h-sub" id="live-clock" style="font-size:.58rem;color:#dcfce7;margin-top:2px">⏱ Preços a flutuar em tempo real</div>
     </div>
     <div class="h-actions">
       <span class="h-badge">Jun 2026</span>
@@ -1002,6 +1005,222 @@ const CATALOG = [
   {name:'Areão Gato Catsan 10L',price:6.99,stores:{continente:6.99,pingo_doce:6.79},emoji:'🐱',cat:'animais'},
 ];
 
+const EXTRA_CATALOG = [
+  // LEITE (mais)
+  {name:'Leite Meio Gordo Sem Lactose Mimosa 1L',price:1.19,stores:{pingo_doce:1.15,continente:1.19},emoji:'🥛',cat:'leite'},
+  {name:'Leite Gordo Pingo Doce 1L',price:0.80,stores:{pingo_doce:0.80},emoji:'🥛',cat:'leite'},
+  {name:'Leite Magro Continente 1L',price:0.75,stores:{continente:0.75},emoji:'🥛',cat:'leite'},
+  {name:'Leite Chocolate Mimosa 1L',price:1.45,stores:{continente:1.45,pingo_doce:1.39},emoji:'🥛',cat:'leite'},
+  {name:'Leite Meio Gordo Sem Lactose Auchan 1L',price:1.09,stores:{auchan:1.09},emoji:'🥛',cat:'leite'},
+  {name:'Leite UHT Meio Gordo LactoNova 1L',price:1.02,stores:{continente:1.02,pingo_doce:0.99},emoji:'🥛',cat:'leite'},
+
+  // MANTEIGA (mais)
+  {name:'Margarina Vaqueiro 500g',price:2.49,stores:{continente:2.49,pingo_doce:2.39},emoji:'🧈',cat:'manteiga'},
+  {name:'Manteiga com Sal Terra Nostra 250g',price:2.25,stores:{continente:2.25,pingo_doce:2.19},emoji:'🧈',cat:'manteiga'},
+  {name:'Margarina Delicia 250g',price:1.29,stores:{continente:1.29,pingo_doce:1.19,lidl:1.09},emoji:'🧈',cat:'manteiga'},
+  {name:'Manteiga sem Sal Auchan 250g',price:1.95,stores:{auchan:1.95},emoji:'🧈',cat:'manteiga'},
+
+  // IOgURTES (mais)
+  {name:'Iogurte Grego FAGE Total 2x150g',price:2.29,stores:{continente:2.29,pingo_doce:2.19},emoji:'🥛',cat:'iogurte'},
+  {name:'Iogurte Skyr Arla 4x150g',price:2.19,stores:{continente:2.19,pingo_doce:2.09},emoji:'🥛',cat:'iogurte'},
+  {name:'Iogurte Grego Liquido Mimosa 4x150g',price:1.99,stores:{pingo_doce:1.99,continente:2.09},emoji:'🥛',cat:'iogurte'},
+  {name:'Iogurte sem Lactose Mimosa 4x125g',price:1.79,stores:{continente:1.79,pingo_doce:1.75},emoji:'🥛',cat:'iogurte'},
+  {name:'Iogurte Morango Danone 4x125g',price:1.69,stores:{continente:1.69,pingo_doce:1.65},emoji:'🍓',cat:'iogurte'},
+
+  // QUEIJO (mais)
+  {name:'Queijo Mozzarella Fatiada Continente 150g',price:1.19,stores:{continente:1.19},emoji:'🧀',cat:'queijo'},
+  {name:'Queijo Feta Dodoni 200g',price:2.49,stores:{continente:2.49,pingo_doce:2.39},emoji:'🧀',cat:'queijo'},
+  {name:'Queijo Parmesão Grana Padano 150g',price:3.29,stores:{continente:3.29,pingo_doce:3.19},emoji:'🧀',cat:'queijo'},
+  {name:'Queijo Ricotta Galbani 250g',price:2.19,stores:{continente:2.19,pingo_doce:2.09},emoji:'🧀',cat:'queijo'},
+  {name:'Queijo Cheddar Fatiado 200g',price:2.29,stores:{continente:2.29,pingo_doce:2.19},emoji:'🧀',cat:'queijo'},
+  {name:'Queijo Flamengo Fatiado Pingo Doce 250g',price:2.29,stores:{pingo_doce:2.29},emoji:'🧀',cat:'queijo'},
+
+  // OVOS (mais)
+  {name:'Ovos M LactoNova 10 unid.',price:2.39,stores:{continente:2.39,pingo_doce:2.29},emoji:'🥚',cat:'ovos'},
+  {name:'Ovos XL Pingo Doce 6 unid.',price:1.49,stores:{pingo_doce:1.49},emoji:'🥚',cat:'ovos'},
+  {name:'Ovos M Caipira Intermarché 10 unid.',price:2.29,stores:{intermarche:2.29},emoji:'🥚',cat:'ovos'},
+
+  // AZEITE (mais)
+  {name:'Azeite Virgem Extra Andorinha 75cl',price:7.49,stores:{continente:7.49,pingo_doce:7.39},emoji:'🫒',cat:'azeite'},
+  {name:'Azeite Virgem Extra Monini 75cl',price:8.99,stores:{continente:8.99,auchan:8.79},emoji:'🫒',cat:'azeite'},
+  {name:'Azeite Virgem Extra Continente 1L',price:7.49,stores:{continente:7.49},emoji:'🫒',cat:'azeite'},
+  {name:'Azeite Virgem Extra Lidl 1L',price:5.99,stores:{lidl:5.99},emoji:'🫒',cat:'azeite'},
+  {name:'Azeite Virgem Extra Aldi 1L',price:5.79,stores:{aldi:5.79},emoji:'🫒',cat:'azeite'},
+
+  // ARROZ (mais)
+  {name:'Arroz Basmati Continente 1kg',price:1.99,stores:{continente:1.99,pingo_doce:1.89},emoji:'🍚',cat:'arroz'},
+  {name:'Arroz Agulha Lidl 1kg',price:1.09,stores:{lidl:1.09},emoji:'🍚',cat:'arroz'},
+  {name:'Arroz Agulha Aldi 1kg',price:1.05,stores:{aldi:1.05},emoji:'🍚',cat:'arroz'},
+  {name:'Arroz Agulha Auchan 1kg',price:1.15,stores:{auchan:1.15},emoji:'🍚',cat:'arroz'},
+  {name:'Arroz Basmati Hacendado 1kg',price:1.79,stores:{mercadona:1.79},emoji:'🍚',cat:'arroz'},
+
+  // MASSAS (mais)
+  {name:'Massa Penne Continente 500g',price:0.62,stores:{continente:0.62},emoji:'🍝',cat:'massa'},
+  {name:'Massa Fusilli Barilla 500g',price:1.29,stores:{continente:1.29,pingo_doce:1.25},emoji:'🍝',cat:'massa'},
+  {name:'Massa Esparguete Lidl 500g',price:0.55,stores:{lidl:0.55},emoji:'🍝',cat:'massa'},
+  {name:'Massa Tagliatelle Continente 500g',price:1.15,stores:{continente:1.15,pingo_doce:1.09},emoji:'🍝',cat:'massa'},
+
+  // CAFÉ (mais)
+  {name:'Café Delta Q Decaf 10 cápsulas',price:4.29,stores:{continente:4.29,pingo_doce:4.25},emoji:'☕',cat:'café'},
+  {name:'Café Nescafé Dolce Gusto Intenso 16 cápsulas',price:6.49,stores:{continente:6.49,pingo_doce:6.39,auchan:6.59},emoji:'☕',cat:'café'},
+  {name:'Café Segafredo 250g',price:5.49,stores:{continente:5.49,auchan:5.39},emoji:'☕',cat:'café'},
+  {name:'Cápsulas Cafés do Norte 10 un.',price:3.59,stores:{pingo_doce:3.59,continente:3.69},emoji:'☕',cat:'café'},
+  {name:'Café Pingo Doce Intenso 250g',price:2.49,stores:{pingo_doce:2.49},emoji:'☕',cat:'café'},
+
+  // PADARIA (mais)
+  {name:'Baguete Pré-cozida Continente 2 unid.',price:0.89,stores:{continente:0.89,pingo_doce:0.85},emoji:'🥖',cat:'padaria'},
+  {name:'Croissants de Manteiga Continente 6 unid.',price:2.19,stores:{continente:2.19,pingo_doce:2.09},emoji:'🥐',cat:'padaria'},
+  {name:'Pão de Mistura Continente 500g',price:1.35,stores:{continente:1.35,pingo_doce:1.29},emoji:'🍞',cat:'padaria'},
+  {name:'Pão Integral Pingo Doce 500g',price:1.29,stores:{pingo_doce:1.29},emoji:'🍞',cat:'padaria'},
+  {name:'Torrada de Trigo Pingo Doce 500g',price:1.49,stores:{pingo_doce:1.49,continente:1.55},emoji:'🍞',cat:'padaria'},
+  {name:'Pão de Leite Pingo Doce 6 unid.',price:1.39,stores:{pingo_doce:1.39},emoji:'🥖',cat:'padaria'},
+
+  // SNACKS (mais)
+  {name:'Bolachas Oreo 300g',price:2.29,stores:{continente:2.29,pingo_doce:2.19,auchan:2.35},emoji:'🍪',cat:'snacks'},
+  {name:'Bolachas Maria Continente 200g',price:0.59,stores:{continente:0.59,pingo_doce:0.55},emoji:'🍪',cat:'snacks'},
+  {name:'Batatas Fritas Pingo Doce 190g',price:1.49,stores:{pingo_doce:1.49},emoji:'🥔',cat:'snacks'},
+  {name:'Frutos Secos Mistas Continente 200g',price:2.99,stores:{continente:2.99,pingo_doce:2.89},emoji:'🥜',cat:'snacks'},
+  {name:'Barrinha de Cereais Continente 6 un.',price:2.19,stores:{continente:2.19,pingo_doce:2.09},emoji:'🥣',cat:'snacks'},
+  {name:'Chocolate Pantagruel 300g',price:1.99,stores:{continente:1.99,pingo_doce:1.89,auchan:2.05},emoji:'🍫',cat:'snacks'},
+  {name:'Pretzels Continente 200g',price:1.29,stores:{continente:1.29,pingo_doce:1.19},emoji:'🥨',cat:'snacks'},
+
+  // CARNE (mais)
+  {name:'Frango Pernas 1kg',price:3.99,stores:{continente:3.99,pingo_doce:3.89,auchan:4.09},emoji:'🍗',cat:'carne'},
+  {name:'Frango Asas 1kg',price:2.99,stores:{continente:2.99,pingo_doce:2.89},emoji:'🍗',cat:'carne'},
+  {name:'Bife de Vaca 1kg',price:11.99,stores:{continente:11.99,pingo_doce:12.49},emoji:'🥩',cat:'carne'},
+  {name:'Carne Picada de Vaca 500g',price:3.49,stores:{continente:3.49,pingo_doce:3.39},emoji:'🥩',cat:'carne'},
+  {name:'Costeletas de Porco 1kg',price:4.99,stores:{continente:4.99,pingo_doce:4.79},emoji:'🥩',cat:'carne'},
+  {name:'Perna de Peru 1kg',price:4.99,stores:{continente:4.99,pingo_doce:4.89},emoji:'🦃',cat:'carne'},
+  {name:'Secretos de Porco Preto 1kg',price:8.99,stores:{continente:8.99,pingo_doce:9.49},emoji:'🥩',cat:'carne',promo:'Iberic de Bísaro'},
+
+  // PEIXE (mais)
+  {name:'Salmão Fresco 1kg',price:14.99,stores:{continente:14.99,pingo_doce:15.49,auchan:15.29},emoji:'🐟',cat:'peixe'},
+  {name:'Pescada Fresca 1kg',price:8.99,stores:{continente:8.99,pingo_doce:8.49},emoji:'🐟',cat:'peixe'},
+  {name:'Robalo 1kg',price:11.49,stores:{continente:11.49,pingo_doce:11.99},emoji:'🐟',cat:'peixe'},
+  {name:'Dourada 1kg',price:8.49,stores:{continente:8.49,pingo_doce:8.99},emoji:'🐟',cat:'peixe'},
+  {name:'Camarão 71/90 Descascado 500g',price:5.49,stores:{continente:5.49,pingo_doce:5.29},emoji:'🦐',cat:'peixe'},
+  {name:'Polvo Congelado 1kg',price:12.99,stores:{continente:12.99,auchan:13.49},emoji:'🐙',cat:'congelados'},
+
+  // CONSERVAS (mais)
+  {name:'Sardinhas em Azeite Bom Petisco 120g',price:1.59,stores:{continente:1.59,pingo_doce:1.49},emoji:'🐟',cat:'conservas'},
+  {name:'Atum em Óleo Continente 3x80g',price:2.49,stores:{continente:2.49},emoji:'🐟',cat:'conservas'},
+  {name:'Atum ao Natural Lidl 3x80g',price:2.29,stores:{lidl:2.29},emoji:'🐟',cat:'conservas'},
+  {name:'Feijão Encarnado Cozido Continente 400g',price:0.69,stores:{continente:0.69,pingo_doce:0.65},emoji:'🫘',cat:'mercearia'},
+  {name:'Grão de Bico Cozido Continente 400g',price:0.69,stores:{continente:0.69,pingo_doce:0.65},emoji:'🫘',cat:'mercearia'},
+  {name:'Cogumelos Laminados Continente 400g',price:1.29,stores:{continente:1.29,pingo_doce:1.19},emoji:'🍄',cat:'conservas'},
+  {name:'Milho Doce Continente 400g',price:0.79,stores:{continente:0.79,pingo_doce:0.75},emoji:'🌽',cat:'conservas'},
+
+  // CHARCUTARIA (mais)
+  {name:'Salame Fatiado Continente 100g',price:1.79,stores:{continente:1.79,pingo_doce:1.69},emoji:'🥓',cat:'charcutaria'},
+  {name:'Chourição Fatiado Continente 100g',price:1.49,stores:{continente:1.49},emoji:'🥓',cat:'charcutaria'},
+  {name:'Mortadela Fatiada Continente 150g',price:1.19,stores:{continente:1.19,pingo_doce:1.09},emoji:'🥓',cat:'charcutaria'},
+  {name:'Presunto Serrano Fatiado 100g',price:3.29,stores:{continente:3.29,pingo_doce:3.19},emoji:'🥓',cat:'charcutaria'},
+  {name:'Bacon Fatiado Continente 150g',price:1.99,stores:{continente:1.99,pingo_doce:1.89},emoji:'🥓',cat:'charcutaria'},
+
+  // CONGELADOS (mais)
+  {name:'Salmão Congelado 400g',price:6.99,stores:{continente:6.99,pingo_doce:6.79,auchan:7.19},emoji:'🐟',cat:'congelados'},
+  {name:'Camarão Cozido Descascado 300g',price:4.49,stores:{continente:4.49,pingo_doce:4.29},emoji:'🦐',cat:'congelados'},
+  {name:'Pizza Margherita Continente 350g',price:1.99,stores:{continente:1.99,pingo_doce:1.89},emoji:'🍕',cat:'congelados'},
+  {name:'Gelado Baunilha Continente 1L',price:2.49,stores:{continente:2.49,pingo_doce:2.39},emoji:'🍦',cat:'congelados'},
+  {name:'Brócolos Congelados Continente 600g',price:1.49,stores:{continente:1.49},emoji:'🥦',cat:'congelados'},
+  {name:'Feijão Verde Cortado Congelado Continente 600g',price:1.39,stores:{continente:1.39},emoji:'🫘',cat:'congelados'},
+  {name:'Frango Panado Congelado Continente 400g',price:3.19,stores:{continente:3.19,pingo_doce:3.09},emoji:'🍗',cat:'congelados'},
+
+  // PRONTA (mais)
+  {name:'Feijoada à Portuguesa Continente 400g',price:2.49,stores:{continente:2.49,pingo_doce:2.39},emoji:'🍲',cat:'pronta'},
+  {name:'Bacalhau à Brás Congelado 300g',price:3.99,stores:{continente:3.99,pingo_doce:3.89},emoji:'🐟',cat:'pronta'},
+  {name:'Sopa de Peixe Pingo Doce 1L',price:1.99,stores:{pingo_doce:1.99},emoji:'🍲',cat:'pronta'},
+  {name:'Frango Grelhado Continente (unid.)',price:5.99,stores:{continente:5.99},emoji:'🍗',cat:'pronta'},
+  {name:'Sandes de Panado Pingo Doce 150g',price:2.49,stores:{pingo_doce:2.49},emoji:'🥪',cat:'pronta'},
+  {name:'Canja de Galinha Pingo Doce 1L',price:1.69,stores:{pingo_doce:1.69},emoji:'🍲',cat:'pronta'},
+
+  // FRUTA (mais)
+  {name:'Morango 500g',price:1.99,stores:{continente:1.99,pingo_doce:1.89,auchan:2.09},emoji:'🍓',cat:'fruta'},
+  {name:'Uva Branca 1kg',price:2.49,stores:{continente:2.49,pingo_doce:2.39},emoji:'🍇',cat:'fruta'},
+  {name:'Pêssego 1kg',price:2.29,stores:{continente:2.29,pingo_doce:2.19},emoji:'🍑',cat:'fruta'},
+  {name:'Pera Rocha 1kg',price:1.99,stores:{continente:1.99,pingo_doce:1.89,auchan:2.09},emoji:'🍐',cat:'fruta'},
+  {name:'Kiwi 500g',price:1.49,stores:{continente:1.49,pingo_doce:1.39},emoji:'🥝',cat:'fruta'},
+  {name:'Abacate (unid.)',price:0.89,stores:{continente:0.89,pingo_doce:0.85},emoji:'🥑',cat:'fruta'},
+  {name:'Manga 1kg',price:2.99,stores:{continente:2.99,pingo_doce:2.89},emoji:'🥭',cat:'fruta'},
+  {name:'Melão 1kg',price:1.99,stores:{continente:1.99,pingo_doce:1.89},emoji:'🍈',cat:'fruta'},
+  {name:'Framboesas 125g',price:2.49,stores:{continente:2.49,pingo_doce:2.39},emoji:'🫐',cat:'fruta'},
+
+  // LEGUMES (mais)
+  {name:'Pepino (unid.)',price:0.69,stores:{continente:0.69,pingo_doce:0.65},emoji:'🥒',cat:'legumes'},
+  {name:'Courgette 1kg',price:1.19,stores:{continente:1.19,pingo_doce:1.09},emoji:'🥒',cat:'legumes'},
+  {name:'Brócolos 1kg',price:2.49,stores:{continente:2.49,pingo_doce:2.39},emoji:'🥦',cat:'legumes'},
+  {name:'Alho Francês 1kg',price:1.79,stores:{continente:1.79,pingo_doce:1.69},emoji:'🧅',cat:'legumes'},
+  {name:'Pimento Vermelho 1kg',price:2.19,stores:{continente:2.19,pingo_doce:2.09},emoji:'🫑',cat:'legumes'},
+  {name:'Espinafres 500g',price:1.29,stores:{continente:1.29,pingo_doce:1.19},emoji:'🥬',cat:'legumes'},
+  {name:'Rúcula 100g',price:1.09,stores:{continente:1.09,pingo_doce:0.99},emoji:'🥗',cat:'legumes'},
+  {name:'Beterraba 1kg',price:1.59,stores:{continente:1.59,pingo_doce:1.49},emoji:'🫐',cat:'legumes'},
+  {name:'Cogumelos Frescos 400g',price:1.89,stores:{continente:1.89,pingo_doce:1.79},emoji:'🍄',cat:'legumes'},
+  {name:'Milho Doce 1kg',price:1.29,stores:{continente:1.29,pingo_doce:1.19},emoji:'🌽',cat:'legumes'},
+
+  // MERCEARIA (mais)
+  {name:'Feijão Encarnado Seco 500g',price:1.49,stores:{continente:1.49,pingo_doce:1.39},emoji:'🫘',cat:'mercearia'},
+  {name:'Grão de Bico Seco 500g',price:1.39,stores:{continente:1.39,pingo_doce:1.29},emoji:'🫘',cat:'mercearia'},
+  {name:'Lentilhas Secas 500g',price:1.59,stores:{continente:1.59,pingo_doce:1.49},emoji:'🫘',cat:'mercearia'},
+  {name:'Farinha de Trigo Continente 1kg',price:0.79,stores:{continente:0.79,pingo_doce:0.75},emoji:'🌾',cat:'mercearia'},
+  {name:'Açúcar Mascavado Sidul 500g',price:1.69,stores:{continente:1.69,pingo_doce:1.59},emoji:'🍬',cat:'mercearia'},
+  {name:'Cacau em Pó Continente 400g',price:2.49,stores:{continente:2.49,pingo_doce:2.39},emoji:'🍫',cat:'mercearia'},
+  {name:'Mel Continente 500g',price:3.99,stores:{continente:3.99,pingo_doce:3.89},emoji:'🍯',cat:'mercearia'},
+  {name:'Compota de Morango Continente 350g',price:1.99,stores:{continente:1.99,pingo_doce:1.89},emoji:'🍓',cat:'mercearia'},
+  {name:'Ketchup Heinz 500g',price:2.49,stores:{continente:2.49,pingo_doce:2.39},emoji:'🍅',cat:'mercearia'},
+  {name:'Mostarda Continente 300g',price:1.19,stores:{continente:1.19,pingo_doce:1.09},emoji:'🟡',cat:'mercearia'},
+  {name:'Maionese Calvé 350ml',price:1.99,stores:{continente:1.99,pingo_doce:1.89},emoji:'🥚',cat:'mercearia'},
+  {name:'Vinagre de Vinho Branco Continente 1L',price:0.99,stores:{continente:0.99,pingo_doce:0.89},emoji:'🍶',cat:'mercearia'},
+
+  // BEBIDAS (mais)
+  {name:'Água com Gás Continente 1.5L',price:0.49,stores:{continente:0.49},emoji:'💧',cat:'bebidas'},
+  {name:'Água sem Gás Continente 6x1.5L',price:1.99,stores:{continente:1.99},emoji:'💧',cat:'bebidas'},
+  {name:'Sumo Ananás Compal 1L',price:1.69,stores:{continente:1.69,pingo_doce:1.65},emoji:'🍍',cat:'bebidas'},
+  {name:'Néctar Pêssego Compal 1L',price:1.79,stores:{continente:1.79,pingo_doce:1.75},emoji:'🍑',cat:'bebidas'},
+  {name:'Ice Tea Lipton Limão 1.5L',price:1.99,stores:{continente:1.99,pingo_doce:1.89},emoji:'🍋',cat:'bebidas'},
+  {name:'Fanta Laranja 1.5L',price:1.89,stores:{continente:1.89,pingo_doce:1.85},emoji:'🍊',cat:'bebidas'},
+  {name:'Sprite 1.5L',price:1.89,stores:{continente:1.89,pingo_doce:1.85},emoji:'🥤',cat:'bebidas'},
+  {name:'Cerveja Super Bock Sem Álcool 6x33cl',price:3.99,stores:{continente:3.99,pingo_doce:3.89},emoji:'🍺',cat:'bebidas'},
+  {name:'Vinho Branco Casal Garcia 75cl',price:3.99,stores:{continente:3.99,pingo_doce:3.89,auchan:4.09},emoji:'🍷',cat:'bebidas'},
+  {name:'Água das Pedras com Gás 1.5L',price:0.89,stores:{continente:0.89,pingo_doce:0.85},emoji:'💧',cat:'bebidas'},
+
+  // HIGIENE (mais)
+  {name:'Sabonete Dove 100g (pack 3)',price:2.49,stores:{continente:2.49,pingo_doce:2.39},emoji:'🧼',cat:'higiene'},
+  {name:'Creme Nivea Creme 150ml',price:2.99,stores:{continente:2.99,pingo_doce:2.89},emoji:'🧴',cat:'higiene'},
+  {name:'Protetor Solar Nivea 200ml',price:9.99,stores:{continente:9.99,pingo_doce:9.79,auchan:10.29},emoji:'🧴',cat:'higiene'},
+  {name:'Escova de Dentes Colgate 2 un.',price:2.49,stores:{continente:2.49,pingo_doce:2.39},emoji:'🪥',cat:'higiene'},
+  {name:'Fio Dentário Oral-B 50m',price:2.79,stores:{continente:2.79,pingo_doce:2.69},emoji:'🪥',cat:'higiene'},
+  {name:'Desodorizante Dove Spray 150ml',price:2.79,stores:{continente:2.79,pingo_doce:2.69,auchan:2.89},emoji:'🧴',cat:'higiene'},
+  {name:'Champô Elseve L\'Oréal 400ml',price:4.79,stores:{continente:4.79,pingo_doce:4.69},emoji:'🧴',cat:'higiene'},
+  {name:'Gel de Banho Continente 500ml',price:0.99,stores:{continente:0.99},emoji:'🧴',cat:'higiene'},
+
+  // LIMPEZA (mais)
+  {name:'Detergente Loiça Líquido Continente 1L',price:0.99,stores:{continente:0.99},emoji:'🫧',cat:'limpeza'},
+  {name:'Limpa-vidros Ajax 750ml',price:1.79,stores:{continente:1.79,pingo_doce:1.69},emoji:'🫧',cat:'limpeza'},
+  {name:'Desengordurante Cif 750ml',price:2.29,stores:{continente:2.29,pingo_doce:2.19},emoji:'🫧',cat:'limpeza'},
+  {name:'Pastilhas WC Net 750ml',price:2.19,stores:{continente:2.19,pingo_doce:2.09},emoji:'🫧',cat:'limpeza'},
+  {name:'Esponjas (pack 5)',price:1.29,stores:{continente:1.29,pingo_doce:1.19,lidl:0.99},emoji:'🧽',cat:'limpeza'},
+  {name:'Limpador Multiusos Continente 1L',price:1.19,stores:{continente:1.19},emoji:'🫧',cat:'limpeza'},
+
+  // BEBÉS (mais)
+  {name:'Papas Cerelac 500g',price:3.99,stores:{continente:3.99,pingo_doce:3.89},emoji:'🥣',cat:'bebés'},
+  {name:'Boião Nestlé Legumes 200g',price:1.49,stores:{continente:1.49,pingo_doce:1.39},emoji:'🥕',cat:'bebés'},
+  {name:'Toalhitas Bebé Continente (pack 64)',price:1.79,stores:{continente:1.79},emoji:'🧴',cat:'bebés'},
+  {name:'Leite Infantil Bebé 1 Continente 800g',price:12.99,stores:{continente:12.99},emoji:'🍼',cat:'bebés'},
+
+  // ANIMAIS (mais)
+  {name:'Ração Cão Royal Canin 4kg',price:24.99,stores:{continente:24.99,pingo_doce:25.49},emoji:'🐶',cat:'animais'},
+  {name:'Ração Gato Purina Gourmet 2kg',price:8.99,stores:{continente:8.99,pingo_doce:8.79},emoji:'🐱',cat:'animais'},
+  {name:'Snacks Dentastix Cão (pack 7)',price:2.49,stores:{continente:2.49,pingo_doce:2.39},emoji:'🐶',cat:'animais'},
+  {name:'Ração Gato Continente 1.5kg',price:4.99,stores:{continente:4.99},emoji:'🐱',cat:'animais'},
+
+  // BEBIDAS ALCOÓLICAS (mais)
+  {name:'Cerveja Área 46 6x33cl',price:2.99,stores:{continente:2.99,pingo_doce:2.89,auchan:3.09},emoji:'🍺',cat:'bebidas'},
+  {name:'Vinho Tinto Quinta do Crasto 75cl',price:6.99,stores:{continente:6.99,pingo_doce:7.49},emoji:'🍷',cat:'bebidas'},
+  {name:'Espumante Murganheira Brut 75cl',price:9.99,stores:{continente:9.99,pingo_doce:10.49},emoji:'🥂',cat:'bebidas'},
+  {name:'Gin London Dry 70cl',price:14.99,stores:{continente:14.99,pingo_doce:15.49},emoji:'🥃',cat:'bebidas'},
+];
+CATALOG.push(...EXTRA_CATALOG);
+
 // ══════════════════════════════════════════════════════
 // CAMPANHAS
 // ══════════════════════════════════════════════════════
@@ -1057,8 +1276,8 @@ function storeLogoSvg(k){return (STORE_META[k]&&STORE_META[k].logo)||'<svg viewB
 function storeBadgeHtml(k){return `<span class="store-badge"><span class="sb-logo">${storeLogoSvg(k)}</span>${storeName(k)}</span>`;}
 
 // ══════════════════════════════════════════════════════
-// "FOTO" DO PRODUTO (ilustração por categoria — sem usar
-// fotografias reais/protegidas por direitos de autor)
+// "FOTO" DO PRODUTO (foto real Wikimedia Commons quando
+// disponível; caso contrário ícone ilustrativo por categoria)
 // ══════════════════════════════════════════════════════
 const CAT_GRADIENT = {
   leite:'linear-gradient(135deg,#dbeafe,#bfdbfe)', manteiga:'linear-gradient(135deg,#fef9c3,#fde68a)',
@@ -1075,9 +1294,255 @@ const CAT_GRADIENT = {
   congelados:'linear-gradient(135deg,#cffafe,#7dd3fc)', bebés:'linear-gradient(135deg,#fbcfe8,#f9a8d4)',
   animais:'linear-gradient(135deg,#e7e5e4,#d6d3d1)', charcutaria:'linear-gradient(135deg,#fecaca,#fda4af)',
 };
+function productPhotoUrl(p){
+  if(p.photo) return p.photo;
+  const n = (p.name||'').toLowerCase();
+  for(const k of Object.keys(PHOTO_KEYWORDS)){ if(n.includes(k)) return PHOTO_KEYWORDS[k]; }
+  return CAT_PHOTOS[p.cat]||'';
+}
+
+// ══════════════════════════════════════════════════════
+// FOTOS REAIS (Wikimedia Commons · licença livre)
+// URLs de thumbs verificados; cai no ícone+gradiente se falhar.
+// ══════════════════════════════════════════════════════
+const PHOTO_KEYWORDS = {
+  'pão de leite': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/White_bread.jpg/330px-White_bread.jpg',
+  'pao de leite': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/White_bread.jpg/330px-White_bread.jpg',
+  'leite infantil': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Infant_formula.jpg/330px-Infant_formula.jpg',
+  'aptamil': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Infant_formula.jpg/330px-Infant_formula.jpg',
+  'cerelac': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Infant_formula.jpg/330px-Infant_formula.jpg',
+  'papas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Infant_formula.jpg/330px-Infant_formula.jpg',
+  'boião': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Infant_formula.jpg/330px-Infant_formula.jpg',
+  'boiao': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Infant_formula.jpg/330px-Infant_formula.jpg',
+  'leite chocolate': 'https://upload.wikimedia.org/wikipedia/commons/4/46/Chocolate_milk.jpg',
+  'chocolate milk': 'https://upload.wikimedia.org/wikipedia/commons/4/46/Chocolate_milk.jpg',
+  'leite': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Milk_glass.jpg/330px-Milk_glass.jpg',
+  'sumo ananás': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Apple_juice.jpg/330px-Apple_juice.jpg',
+  'sumo laranja': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Orange_juice.jpg/330px-Orange_juice.jpg',
+  'sumo': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Orange_juice.jpg/330px-Orange_juice.jpg',
+  'coca': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Coca-Cola_bottle.jpg/330px-Coca-Cola_bottle.jpg',
+  'sprite': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Soda.jpg/330px-Soda.jpg',
+  'fanta': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Soda.jpg/330px-Soda.jpg',
+  'sumol': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Soda.jpg/330px-Soda.jpg',
+  'ice tea': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Iced_tea.jpg/330px-Iced_tea.jpg',
+  'lipton': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Iced_tea.jpg/330px-Iced_tea.jpg',
+  'energético': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Energy_drink.jpg/330px-Energy_drink.jpg',
+  'água': 'https://upload.wikimedia.org/wikipedia/commons/7/71/Water_bottle.jpg',
+  'agua': 'https://upload.wikimedia.org/wikipedia/commons/7/71/Water_bottle.jpg',
+  'cerveja sagres': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Cerveja_Sagres.jpg/330px-Cerveja_Sagres.jpg',
+  'sagres': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Cerveja_Sagres.jpg/330px-Cerveja_Sagres.jpg',
+  'super bock': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Super_Bock.jpg/330px-Super_Bock.jpg',
+  'cerveja': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Beer_glass.jpg/330px-Beer_glass.jpg',
+  'vinagre balsâmico': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Turkish_balsamic_vinegar.jpg/330px-Turkish_balsamic_vinegar.jpg',
+  'vinagre': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Vinegar.jpg/330px-Vinegar.jpg',
+  'vinho branco': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/White_wine.jpg/330px-White_wine.jpg',
+  'vinho verde': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/White_wine.jpg/330px-White_wine.jpg',
+  'vinho tinto': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Red_wine.jpg/330px-Red_wine.jpg',
+  'vinho': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Red_wine.jpg/330px-Red_wine.jpg',
+  'espumante': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/White_wine.jpg/330px-White_wine.jpg',
+  'gin': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Gin_and_tonic.jpg/330px-Gin_and_tonic.jpg',
+  'whisky': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Whisky.jpg/330px-Whisky.jpg',
+  'vodka': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Vodka.jpg/330px-Vodka.jpg',
+  'nescafé': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Instant_coffee.jpg/330px-Instant_coffee.jpg',
+  'expresso': 'https://upload.wikimedia.org/wikipedia/commons/b/bb/Espresso.jpg',
+  'café': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Roasted_coffee_beans.jpg/330px-Roasted_coffee_beans.jpg',
+  'cafe': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Roasted_coffee_beans.jpg/330px-Roasted_coffee_beans.jpg',
+  'croissant': 'https://upload.wikimedia.org/wikipedia/commons/3/32/Croissant.jpg',
+  'margarina': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Margarine.jpg/330px-Margarine.jpg',
+  'manteiga': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Butter_on_bread.jpg/330px-Butter_on_bread.jpg',
+  'azeite': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Olive_oil.jpg/330px-Olive_oil.jpg',
+  'arroz integral': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Brown_rice.jpg/330px-Brown_rice.jpg',
+  'arroz': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/White_rice.jpg/330px-White_rice.jpg',
+  'lasanha': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Lasagna.jpg/330px-Lasagna.jpg',
+  'esparguete': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Spaghetti.jpg/330px-Spaghetti.jpg',
+  'espirais': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Spaghetti.jpg/330px-Spaghetti.jpg',
+  'massa': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Spaghetti.jpg/330px-Spaghetti.jpg',
+  'pizza': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Pizza.jpg/330px-Pizza.jpg',
+  'queijo': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Emmentaler.jpg/330px-Emmentaler.jpg',
+  'iogurte': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Yogurt.jpg/330px-Yogurt.jpg',
+  'ovos': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Chicken_eggs.jpg/330px-Chicken_eggs.jpg',
+  'carne picada': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Minced_meat.jpg/330px-Minced_meat.jpg',
+  'bife': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Steak.jpg/330px-Steak.jpg',
+  'entrecosto': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Pork.jpg/330px-Pork.jpg',
+  'lombo': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Pork.jpg/330px-Pork.jpg',
+  'costeletas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Pork.jpg/330px-Pork.jpg',
+  'porco': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Pork.jpg/330px-Pork.jpg',
+  'panado': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Chicken_nuggets.jpg/330px-Chicken_nuggets.jpg',
+  'frango assado': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Roast_chicken.jpg/330px-Roast_chicken.jpg',
+  'frango grelhado': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Grilled_chicken.jpg/330px-Grilled_chicken.jpg',
+  'frango': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Raw_chicken.jpg/330px-Raw_chicken.jpg',
+  'bacon': 'https://upload.wikimedia.org/wikipedia/commons/d/dd/Bacon.jpg',
+  'salmão': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Salmon.jpg/330px-Salmon.jpg',
+  'salmao': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Salmon.jpg/330px-Salmon.jpg',
+  'camarão': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Prawns.jpg/330px-Prawns.jpg',
+  'camarao': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Prawns.jpg/330px-Prawns.jpg',
+  'gambas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Prawns.jpg/330px-Prawns.jpg',
+  'robalo': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Robalo.jpg/330px-Robalo.jpg',
+  'filetes': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Fish_fingers.jpg/330px-Fish_fingers.jpg',
+  'bacalhau': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Bacalhau.jpg/330px-Bacalhau.jpg',
+  'pescada': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Fish_fingers.jpg/330px-Fish_fingers.jpg',
+  'atum': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Tuna_can.jpg/330px-Tuna_can.jpg',
+  'sardinhas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Sardines_-_%E9%B0%AF%28%E3%81%84%E3%82%8F%E3%81%97%29.jpg/330px-Sardines_-_%E9%B0%AF%28%E3%81%84%E3%82%8F%E3%81%97%29.jpg',
+  'feijão verde': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Green_beans.jpg/330px-Green_beans.jpg',
+  'feijao verde': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Green_beans.jpg/330px-Green_beans.jpg',
+  'feijão': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Kidney_beans.jpg/330px-Kidney_beans.jpg',
+  'feijao': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Kidney_beans.jpg/330px-Kidney_beans.jpg',
+  'grão de bico': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Chickpea.jpg/330px-Chickpea.jpg',
+  'grao de bico': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Chickpea.jpg/330px-Chickpea.jpg',
+  'lentilhas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Lens_culinaris.jpg/330px-Lens_culinaris.jpg',
+  'cogumelos': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Mushrooms.jpg/330px-Mushrooms.jpg',
+  'milho': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Sweet_corn.jpg/330px-Sweet_corn.jpg',
+  'mascavado': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Brown_sugar.jpg/330px-Brown_sugar.jpg',
+  'açúcar': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Sugar.jpg/330px-Sugar.jpg',
+  'acucar': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Sugar.jpg/330px-Sugar.jpg',
+  'açucar': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Sugar.jpg/330px-Sugar.jpg',
+  'farinha': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flour.jpg/330px-Flour.jpg',
+  'sal ': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Sea_salt.jpg/330px-Sea_salt.jpg',
+  'cacau': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Chocolate_bar.jpg/330px-Chocolate_bar.jpg',
+  'compota': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Strawberry_jam.jpg/330px-Strawberry_jam.jpg',
+  'mel ': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Jam.jpg/330px-Jam.jpg',
+  'ketchup': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Ketchup.jpg/330px-Ketchup.jpg',
+  'mostarda': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Dijon_mustard.jpg/330px-Dijon_mustard.jpg',
+  'maionese': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Mayo.jpg/330px-Mayo.jpg',
+  'soja': 'https://upload.wikimedia.org/wikipedia/commons/1/12/Soy_sauce.jpg',
+  'banana': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Bananas.jpg/330px-Bananas.jpg',
+  'maçã': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Apples.jpg/330px-Apples.jpg',
+  'maca': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Apples.jpg/330px-Apples.jpg',
+  'laranja': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Oranges.jpg/330px-Oranges.jpg',
+  'morango': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Strawberries.jpg/330px-Strawberries.jpg',
+  'uva': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Grapes.jpg/330px-Grapes.jpg',
+  'pêssego': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Peaches.jpg/330px-Peaches.jpg',
+  'pera': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Pears.jpg/330px-Pears.jpg',
+  'kiwi': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Kiwi.jpg/330px-Kiwi.jpg',
+  'abacate': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Avocado.jpg/330px-Avocado.jpg',
+  'manga': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Mango.jpg/330px-Mango.jpg',
+  'melão': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Melon.jpg/330px-Melon.jpg',
+  'framboesas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Raspberries.jpg/330px-Raspberries.jpg',
+  'ananás': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Anan%C3%A1s.jpg/330px-Anan%C3%A1s.jpg',
+  'coco': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Coco.jpg/330px-Coco.jpg',
+  'tomate': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Tomato.jpg/330px-Tomato.jpg',
+  'cebola': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Onions.jpg/330px-Onions.jpg',
+  'batata frita congelada': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/French_fries.jpg/330px-French_fries.jpg',
+  'batata frita': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Potato_chips.jpg/330px-Potato_chips.jpg',
+  'batata': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Potatoes.jpg/330px-Potatoes.jpg',
+  'alface': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Lettuce.jpg/330px-Lettuce.jpg',
+  'cenoura': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Carrots.jpg/330px-Carrots.jpg',
+  'pepino': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Cucumber.jpg/330px-Cucumber.jpg',
+  'courgette': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Courgette.jpg/330px-Courgette.jpg',
+  'brócolos': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Broccoli.jpg/330px-Broccoli.jpg',
+  'brocolos': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Broccoli.jpg/330px-Broccoli.jpg',
+  'alho francês': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Leek.jpg/330px-Leek.jpg',
+  'alho frances': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Leek.jpg/330px-Leek.jpg',
+  'pimento': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Bell_pepper.jpg/330px-Bell_pepper.jpg',
+  'espinafres': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Spinach.jpg/330px-Spinach.jpg',
+  'rúcula': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Lettuce.jpg/330px-Lettuce.jpg',
+  'beterraba': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Beets.jpg/330px-Beets.jpg',
+  'alho': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Garlic.jpg/330px-Garlic.jpg',
+  'ervilhas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Peas.jpg/330px-Peas.jpg',
+  'batata doce': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Sweet_potato.jpg/330px-Sweet_potato.jpg',
+  'gelado': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/M%C3%B6venpick_Ice_Cream.jpg/330px-M%C3%B6venpick_Ice_Cream.jpg',
+  'croquete': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Meatballs.jpg/330px-Meatballs.jpg',
+  'almôndegas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Meatballs.jpg/330px-Meatballs.jpg',
+  'almondegas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Meatballs.jpg/330px-Meatballs.jpg',
+  'sopa de peixe': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Vegetable_soup.jpg/330px-Vegetable_soup.jpg',
+  'sopa': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Vegetable_soup.jpg/330px-Vegetable_soup.jpg',
+  'canja': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Canja_de_galinha.jpg/330px-Canja_de_galinha.jpg',
+  'caldo verde': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Caldo_verde.jpg/330px-Caldo_verde.jpg',
+  'gaspacho': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Gazpacho.jpg/330px-Gazpacho.jpg',
+  'bifanas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Bifanas.jpg/330px-Bifanas.jpg',
+  'alheira': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Alheira.jpg/330px-Alheira.jpg',
+  'frozen pizza': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Frozen_pizza.jpg/330px-Frozen_pizza.jpg',
+  'baguete': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Baguette.jpg/330px-Baguette.jpg',
+  'carcaças': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Baguette.jpg/330px-Baguette.jpg',
+  'carcacas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Baguette.jpg/330px-Baguette.jpg',
+  'tostas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Saltine_crackers.jpg/330px-Saltine_crackers.jpg',
+  'pão integral': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Whole_wheat_bread.jpg/330px-Whole_wheat_bread.jpg',
+  'pao integral': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Whole_wheat_bread.jpg/330px-Whole_wheat_bread.jpg',
+  'pão de forma': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/White_bread.jpg/330px-White_bread.jpg',
+  'pão': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/White_bread.jpg/330px-White_bread.jpg',
+  'pao': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/White_bread.jpg/330px-White_bread.jpg',
+  'milka': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Milka.jpg/330px-Milka.jpg',
+  'kitkat': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/KitKat.jpg/330px-KitKat.jpg',
+  'snickers': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Snickers.jpg/330px-Snickers.jpg',
+  'twix': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Twix.jpg/330px-Twix.jpg',
+  'toblerone': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Toblerone.jpg/330px-Toblerone.jpg',
+  'chocolate': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Chocolate_bar.jpg/330px-Chocolate_bar.jpg',
+  'oreo': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Cookies.jpg/330px-Cookies.jpg',
+  'bolachas maria': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Saltine_crackers.jpg/330px-Saltine_crackers.jpg',
+  'bolachas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Cookies.jpg/330px-Cookies.jpg',
+  'amendoins': 'https://upload.wikimedia.org/wikipedia/commons/5/57/Mixed_nuts.jpg',
+  'frutos secos': 'https://upload.wikimedia.org/wikipedia/commons/5/57/Mixed_nuts.jpg',
+  'barrinha': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Granola.jpg/330px-Granola.jpg',
+  'granola': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Granola.jpg/330px-Granola.jpg',
+  'corn flakes': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Corn_flakes.jpg/330px-Corn_flakes.jpg',
+  'cereais': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Cereal.jpg/330px-Cereal.jpg',
+  'batatas fritas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Potato_chips.jpg/330px-Potato_chips.jpg',
+  'gummy': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Gummy_bears.jpg/330px-Gummy_bears.jpg',
+  'marshmallow': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Marshmallows.jpg/330px-Marshmallows.jpg',
+  'champô': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Shampoo.jpg/330px-Shampoo.jpg',
+  'champu': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Shampoo.jpg/330px-Shampoo.jpg',
+  'pasta de dentes': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Toothpaste.jpg/330px-Toothpaste.jpg',
+  'escova de dentes': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Toothbrush.jpg/330px-Toothbrush.jpg',
+  'fio dentário': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Toothbrush.jpg/330px-Toothbrush.jpg',
+  'desodorizante': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Deodorant.jpg/330px-Deodorant.jpg',
+  'gel de banho': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Soap.jpg/330px-Soap.jpg',
+  'sabonete': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Soap.jpg/330px-Soap.jpg',
+  'protetor solar': 'https://upload.wikimedia.org/wikipedia/commons/5/58/Sunscreen.jpg',
+  'gel barbear': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Shaving_cream.jpg/330px-Shaving_cream.jpg',
+  'lenços': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Tissues.jpg/330px-Tissues.jpg',
+  'lencos': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Tissues.jpg/330px-Tissues.jpg',
+  'fraldas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Diaper.jpg/330px-Diaper.jpg',
+  'papel higiénico': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Toilet_paper_roll.jpg/330px-Toilet_paper_roll.jpg',
+  'papel higienico': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Toilet_paper_roll.jpg/330px-Toilet_paper_roll.jpg',
+  'rolo de cozinha': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Paper_towel.jpg/330px-Paper_towel.jpg',
+  'esponjas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Sponge.jpg/330px-Sponge.jpg',
+  'saco do lixo': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/A_typical_black_bin_bag_from_the_UK_20060811.jpg/330px-A_typical_black_bin_bag_from_the_UK_20060811.jpg',
+  'sacos do lixo': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/A_typical_black_bin_bag_from_the_UK_20060811.jpg/330px-A_typical_black_bin_bag_from_the_UK_20060811.jpg',
+  'fiambre': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Fiambre.jpg/330px-Fiambre.jpg',
+  'presunto': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Fiambre.jpg/330px-Fiambre.jpg',
+  'chourição': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Chouri%C3%A7o.jpg/330px-Chouri%C3%A7o.jpg',
+  'chourico': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Chouri%C3%A7o.jpg/330px-Chouri%C3%A7o.jpg',
+  'chouriço': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Chouri%C3%A7o.jpg/330px-Chouri%C3%A7o.jpg',
+  'salame': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Salami.jpg/330px-Salami.jpg',
+  'mortadela': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Salami.jpg/330px-Salami.jpg',
+  'areia': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Litter_box.jpg/330px-Litter_box.jpg',
+  'catsan': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Litter_box.jpg/330px-Litter_box.jpg',
+};
+
+const CAT_PHOTOS = {
+  'leite': '',
+  'manteiga': '',
+  'azeite': '',
+  'arroz': '',
+  'café': '',
+  'massa': '',
+  'queijo': '',
+  'iogurte': '',
+  'laticínio': '',
+  'ovos': '',
+  'carne': '',
+  'peixe': '',
+  'conservas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Canned_food.jpg/330px-Canned_food.jpg',
+  'mercearia': '',
+  'bebidas': '',
+  'higiene': '',
+  'limpeza': '',
+  'snacks': '',
+  'padaria': '',
+  'pronta': '',
+  'fruta': '',
+  'legumes': '',
+  'congelados': '',
+  'bebés': '',
+  'animais': '',
+  'charcutaria': '',
+};
+
 function productPhotoHtml(p, big){
   const grad = CAT_GRADIENT[p.cat]||'linear-gradient(135deg,#e2e8f0,#cbd5e1)';
-  return `<div class="prod-photo${big?' lg':''}" style="background:${grad}" title="Imagem ilustrativa (sem fotos protegidas)">${p.emoji||'🛒'}${p.cat?`<span class="cat-tag">${p.cat}</span>`:''}</div>`;
+  const url = productPhotoUrl(p);
+  const img = url ? `<img class="prod-img" src="${url}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : '';
+  return `<div class="prod-photo${big?' lg':''}" style="background:${grad}" title="Foto ilustrativa (Wikimedia Commons)">${p.emoji||'🛒'}${img}${p.cat?`<span class="cat-tag">${p.cat}</span>`:''}</div>`;
 }
 
 // ══════════════════════════════════════════════════════
@@ -1100,6 +1565,887 @@ function priceHistory(productName, store, currentPrice){
   return hist;
 }
 
+// ═══════════════════════════════════════════════════════════════════
+// GERADOR PROGRAMÁTICO — catálogo alargado a ~2500 produtos
+// Cria variantes determinísticas (marca × tamanho × embalagem) por
+// categoria, reutilizando as lojas e preços médios de Jun 2026.
+// ═══════════════════════════════════════════════════════════════════
+(function(){
+  var ALL_STORES = Object.keys(STORE_META);
+  var STORE_BRAND = {
+    'Continente':'continente','Pingo Doce':'pingo_doce','Pilos':'lidl','Lidl':'lidl',
+    'Aldi':'aldi','Auchan':'auchan','Intermarché':'intermarche','Mercadona':'mercadona',
+    'Hacendado':'mercadona'
+  };
+  function pickStores(brand, seed){
+    var sb = STORE_BRAND[brand];
+    if(sb){
+      var s2 = seedFromStr(brand+'!aux');
+      if((s2%10)<4){
+        var others = ALL_STORES.filter(function(s){return s!==sb;});
+        return [sb, others[s2 % others.length]];
+      }
+      return [sb];
+    }
+    var n = 3 + (seed % 3);
+    var sorted = ALL_STORES.slice().sort(function(a,b){
+      return seedFromStr(brand+'|'+a) - seedFromStr(brand+'|'+b);
+    });
+    return sorted.slice(0,n);
+  }
+  var seen = {};
+  for(var i=0;i<CATALOG.length;i++) seen[CATALOG[i].name]=1;
+  var FAMILIES = [
+    // ── LEITE ──
+    {cat:'leite',emoji:'🥛',name:'Leite UHT {brand}',brands:['Mimosa','Milhafre','Agros','LactoNova','Terra Nostra','Auchan','Continente','Pingo Doce','Pilos','Aldi','Hacendado'],
+      sizes:[['Meio Gordo 1L',0.99],['Gordo 1L',1.02],['Magro 1L',0.95],['Meio Gordo Sem Lactose 1L',1.19],['Meio Gordo 500ml',0.55],['Meio Gordo 1.5L',1.45]]},
+    {cat:'leite',emoji:'🥛',name:'Leite Fresco {brand}',brands:['Mimosa','Milhafre','Agros','Continente','Pingo Doce'],
+      sizes:[['Gordo 1L',1.09],['Meio Gordo 1L',1.05],['Magro 1L',1.03]]},
+    {cat:'leite',emoji:'🥛',name:'Leite Chocolate {brand}',brands:['Mimosa','Milhafre','Continente','Pingo Doce'],
+      sizes:[['1L',1.45],['200ml',0.49]]},
+
+    // ── MANTEIGA ──
+    {cat:'manteiga',emoji:'🧈',name:'Manteiga {brand} com Sal',brands:['Milhafre','Terra Nostra','Auchan','Continente','Pingo Doce','Pilos','Hacendado','Aldi'],
+      sizes:[['250g',2.85],['500g',4.99],['100g',1.29]]},
+    {cat:'manteiga',emoji:'🧈',name:'Manteiga {brand} sem Sal',brands:['Milhafre','Terra Nostra','Auchan','Continente','Pingo Doce','Pilos','Hacendado','Aldi'],
+      sizes:[['250g',2.85],['500g',4.99]]},
+    {cat:'manteiga',emoji:'🧈',name:'Margarina {brand}',brands:['Vaqueiro','Delicia','Auchan','Continente','Pingo Doce','Pilos'],
+      sizes:[['250g',1.29],['500g',2.49],['750g',3.29]]},
+
+    // ── AZEITE ──
+    {cat:'azeite',emoji:'🫒',name:'Azeite Virgem Extra {brand}',brands:['Gallo','Oliveira da Serra','Andorinha','Fula','Monini','Continente','Pingo Doce','Pilos','Aldi','Hacendado'],
+      sizes:[['500ml',5.49],['75cl',7.99],['1L',9.49],['5L',34.99]]},
+    {cat:'azeite',emoji:'🫒',name:'Azeite Clássico {brand}',brands:['Gallo','Oliveira da Serra','Andorinha','Continente','Pingo Doce','Lidl'],
+      sizes:[['75cl',6.49],['1L',7.79]]},
+
+    // ── ARROZ ──
+    {cat:'arroz',emoji:'🍚',name:'Arroz {brand} Agulha',brands:['Cigala','Auchan','Continente','Pingo Doce','Lidl','Aldi','Hacendado'],
+      sizes:[['1kg',1.49],['500g',0.85],['2kg',2.79]]},
+    {cat:'arroz',emoji:'🍚',name:'Arroz {brand} Carolino',brands:['Caçarola','Auchan','Continente','Pingo Doce','Pilos','Aldi','Hacendado'],
+      sizes:[['1kg',1.69],['2kg',3.19]]},
+    {cat:'arroz',emoji:'🍚',name:'Arroz Basmati {brand}',brands:['Uncle Bens','Tilda','Auchan','Continente','Pingo Doce','Hacendado'],
+      sizes:[['500g',2.49],['1kg',3.99]]},
+
+    // ── MASSAS ──
+    {cat:'massa',emoji:'🍝',name:'Massa Esparguete {brand}',brands:['Milaneza','Barilla','Continente','Pingo Doce','Lidl','Aldi','Hacendado'],
+      sizes:[['500g',0.89],['1kg',1.59],['1kg N.º 3',1.69]]},
+    {cat:'massa',emoji:'🍝',name:'Massa Penne {brand}',brands:['Milaneza','Barilla','Continente','Pingo Doce','Lidl','Aldi','Hacendado'],
+      sizes:[['500g',0.89],['1kg',1.59]]},
+    {cat:'massa',emoji:'🍝',name:'Massa Fusilli {brand}',brands:['Milaneza','Barilla','Continente','Pingo Doce','Hacendado'],
+      sizes:[['500g',1.05],['1kg',1.89]]},
+    {cat:'massa',emoji:'🍝',name:'Massa Tagliatelle {brand}',brands:['Barilla','Continente','Pingo Doce','Auchan'],
+      sizes:[['500g',1.15],['250g',0.65]]},
+
+    // ── CAFÉ ──
+    {cat:'café',emoji:'☕',name:'Café {brand} 250g',brands:['Delta','Delta Platina','Nescafé Classic','Nescafé Gold','Segafredo','Buondi','Sical','Auchan','Continente','Pingo Doce','Pilos','Hacendado'],
+      sizes:[['250g',4.29],['500g',7.99],['1kg',13.99]]},
+    {cat:'café',emoji:'☕',name:'Cápsulas {brand}',brands:['Delta Q Intenso','Delta Q Ristretto','Nescafé Dolce Gusto Intenso','Nespresso Original','Auchan','Continente','Pingo Doce','Lidl'],
+      sizes:[['10 cápsulas',4.49],['16 cápsulas',6.49],['30 cápsulas',9.99]]},
+
+    // ── QUEIJO ──
+    {cat:'queijo',emoji:'🧀',name:'Queijo Flamengo Fatiado {brand}',brands:['Serra da Cangalha','Limiano','Terra Nostra','Auchan','Continente','Pingo Doce','Pilos','Hacendado'],
+      sizes:[['250g',2.29],['150g',1.49],['400g',3.49]]},
+    {cat:'queijo',emoji:'🧀',name:'Queijo Mozzarella {brand}',brands:['Galbani','Santa Lúcia','Auchan','Continente','Pingo Doce','Pilos'],
+      sizes:[['125g',1.09],['250g',1.99]]},
+    {cat:'queijo',emoji:'🧀',name:'Queijo Curado {brand}',brands:['Terra Nostra','Mimoso','Continente','Pingo Doce'],
+      sizes:[['200g',2.99],['400g',5.49]]},
+    {cat:'queijo',emoji:'🧀',name:'Queijo de Ovelha {brand}',brands:['Serra da Estrela','Terra Nostra','Continente'],
+      sizes:[['150g',4.49]]},
+
+    // ── IOGURTES ──
+    {cat:'iogurte',emoji:'🥛',name:'Iogurte Líquido {brand}',brands:['Mimosa','Danone','Nestlé','Auchan','Continente','Pingo Doce','Pilos'],
+      sizes:[['6x100g',2.19],['4x150g',1.99]]},
+    {cat:'iogurte',emoji:'🥛',name:'Iogurte Sólido Morango {brand}',brands:['Danone','Mimosa','Auchan','Continente','Pingo Doce','Pilos','Hacendado'],
+      sizes:[['4x125g',1.69],['6x125g',2.49]]},
+    {cat:'iogurte',emoji:'🥛',name:'Iogurte Grego {brand}',brands:['FAGE','Mimosa','Oikos','Auchan','Continente','Pingo Doce','Pilos'],
+      sizes:[['2x150g',2.29],['4x150g',3.99]]},
+    {cat:'iogurte',emoji:'🥛',name:'Iogurte Skyr {brand}',brands:['Arla','Mimosa','Auchan','Continente','Pingo Doce'],
+      sizes:[['4x150g',2.19],['500g',1.99]]},
+
+    // ── LATICÍNIOS ──
+    {cat:'laticínio',emoji:'🥛',name:'Natas {brand}',brands:['Milhafre','Auchan','Continente','Pingo Doce','Pilos'],
+      sizes:[['200ml',0.79],['500ml',1.69]]},
+    {cat:'laticínio',emoji:'🥛',name:'Leite Condensado {brand}',brands:['Nestlé','Auchan','Continente','Pingo Doce'],
+      sizes:[['397g',1.59]]},
+    {cat:'laticínio',emoji:'🥛',name:'Creme de Leite {brand}',brands:['Milhafre','Auchan','Continente','Pingo Doce'],
+      sizes:[['200ml',0.69],['500ml',1.29]]},
+    {cat:'laticínio',emoji:'🥛',name:'Bebida de Soja {brand}',brands:['Alpro','Auchan','Continente','Pingo Doce','Pilos'],
+      sizes:[['1L',1.89],['500ml',1.19]]},
+    {cat:'laticínio',emoji:'🥛',name:'Bebida de Aveia {brand}',brands:['Alpro','Auchan','Continente','Pingo Doce','Pilos'],
+      sizes:[['1L',1.99],['500ml',1.29]]},
+
+    // ── OVOS ──
+    {cat:'ovos',emoji:'🥚',name:'Ovos M {brand}',brands:['Mimosa','LactoNova','Auchan','Continente','Pingo Doce','Lidl','Aldi','Hacendado'],
+      sizes:[['6 unid.',1.29],['10 unid.',2.09],['12 unid.',2.49]]},
+    {cat:'ovos',emoji:'🥚',name:'Ovos L {brand}',brands:['Mimosa','LactoNova','Auchan','Continente','Pingo Doce','Lidl'],
+      sizes:[['6 unid.',1.49],['10 unid.',2.39]]},
+    {cat:'ovos',emoji:'🥚',name:'Ovos XL {brand}',brands:['Mimosa','LactoNova','Continente','Pingo Doce'],
+      sizes:[['6 unid.',1.69],['12 unid.',3.19]]},
+    {cat:'ovos',emoji:'🥚',name:'Ovos Campestres M {brand}',brands:['Mimosa','LactoNova','Terra Nostra','Continente','Pingo Doce'],
+      sizes:[['6 unid.',1.89],['10 unid.',2.99]]},
+
+    // ── PADARIA ──
+    {cat:'padaria',emoji:'🥖',name:'Pão {brand} 500g',brands:['Saloio','Cerealis','Continente','Pingo Doce','Lidl','Aldi'],
+      sizes:[['500g',1.19],['750g',1.69]]},
+    {cat:'padaria',emoji:'🥖',name:'Baguete {brand}',brands:['Saloio','Cerealis','Continente','Pingo Doce','Lidl'],
+      sizes:[['250g',0.59],['2 unid.',0.89]]},
+    {cat:'padaria',emoji:'🥖',name:'Pão de Leite {brand}',brands:['Saloio','Continente','Pingo Doce','Lidl','Aldi'],
+      sizes:[['6 unid.',1.39],['12 unid.',2.49]]},
+    {cat:'padaria',emoji:'🥖',name:'Torrada de Trigo {brand}',brands:['Cerealis','Continente','Pingo Doce','Lidl','Aldi'],
+      sizes:[['500g',1.49],['250g',0.89]]},
+    {cat:'padaria',emoji:'🥖',name:'Croissants de Manteiga {brand}',brands:['Cerealis','Continente','Pingo Doce','Lidl'],
+      sizes:[['6 unid.',2.19]]},
+    {cat:'padaria',emoji:'🥖',name:'Pão de Forma {brand}',brands:['Saloio','Cerealis','Continente','Pingo Doce','Lidl','Aldi','Hacendado'],
+      sizes:[['400g',1.29],['750g',1.99]]},
+
+    // ── CONSERVAS ──
+    {cat:'conservas',emoji:'🐟',name:'Atum em Óleo Vegetal {brand}',brands:['Bom Petisco','Continente','Pingo Doce','Lidl','Aldi','Hacendado'],
+      sizes:[['80g',1.09],['120g',1.49],['2x80g',1.99]]},
+    {cat:'conservas',emoji:'🐟',name:'Atum ao Natural {brand}',brands:['Bom Petisco','Continente','Pingo Doce','Lidl'],
+      sizes:[['80g',1.19],['120g',1.69]]},
+    {cat:'conservas',emoji:'🐟',name:'Sardinhas em Azeite {brand}',brands:['Minerva','Continente','Pingo Doce','Lidl'],
+      sizes:[['120g',1.79],['3x120g',4.99]]},
+    {cat:'conservas',emoji:'🐟',name:'Salsichas {brand}',brands:['Bom Petisco','Continente','Pingo Doce','Lidl'],
+      sizes:[['6 unid. 300g',1.09]]},
+    {cat:'conservas',emoji:'🐟',name:'Grão de Bico {brand}',brands:['Bom Petisco','Continente','Pingo Doce','Lidl','Aldi'],
+      sizes:[['400g',0.79],['2x400g',1.29]]},
+    {cat:'conservas',emoji:'🐟',name:'Feijão Encarnado {brand}',brands:['Bom Petisco','Continente','Pingo Doce','Lidl','Aldi'],
+      sizes:[['400g',0.75],['2x400g',1.25]]},
+
+    // ── MERCEARIA ──
+    {cat:'mercearia',emoji:'🥫',name:'Açúcar Branco {brand}',brands:['Sidul','Continente','Pingo Doce','Lidl','Aldi'],
+      sizes:[['1kg',0.99],['2kg',1.79]]},
+    {cat:'mercearia',emoji:'🥫',name:'Sal Fino {brand}',brands:['Sidul','Continente','Pingo Doce','Lidl','Aldi'],
+      sizes:[['1kg',0.49]]},
+    {cat:'mercearia',emoji:'🥫',name:'Farinha de Trigo {brand}',brands:['Sidul','Continente','Pingo Doce','Lidl','Aldi'],
+      sizes:[['1kg',0.79],['5kg',2.99]]},
+    {cat:'mercearia',emoji:'🥫',name:'Azeitonas {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['200g',0.99],['500g',2.19]]},
+    {cat:'mercearia',emoji:'🥫',name:'Catchup {brand}',brands:['Heinz','Calvé','Continente','Pingo Doce'],
+      sizes:[['340g',1.49],['570g',2.29]]},
+    {cat:'mercearia',emoji:'🥫',name:'Maionese {brand}',brands:['Calvé','Heinz','Continente','Pingo Doce'],
+      sizes:[['220g',1.29],['450g',2.19]]},
+    {cat:'mercearia',emoji:'🥫',name:'Mostarda {brand}',brands:['Calvé','Continente','Pingo Doce'],
+      sizes:[['200g',1.09]]},
+    {cat:'mercearia',emoji:'🥫',name:'Vinagre {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['500ml',0.69]]},
+    {cat:'mercearia',emoji:'🥫',name:'Cereais de Pequeno-almoço {brand}',brands:['Kellogg\'s Corn Flakes','Nesquik','Auchan','Continente','Pingo Doce','Lidl','Hacendado'],
+      sizes:[['375g',2.99],['500g',3.49]]},
+    {cat:'mercearia',emoji:'🥫',name:'Bolachas Maria {brand}',brands:['Continente','Pingo Doce','Lidl','Aldi'],
+      sizes:[['200g',0.59],['800g',1.79]]},
+    {cat:'mercearia',emoji:'🥫',name:'Mel {brand}',brands:['Compaçal','Continente','Pingo Doce','Lidl'],
+      sizes:[['350g',2.99],['500g',3.99]]},
+    {cat:'mercearia',emoji:'🥫',name:'Doce de Morango {brand}',brands:['Compaçal','Continente','Pingo Doce'],
+      sizes:[['350g',1.39]]},
+
+    // ── BEBIDAS ──
+    {cat:'bebidas',emoji:'🥤',name:'Água Mineral {brand}',brands:['Luso','Vitalis','Fastio','Continente','Pingo Doce','Lidl'],
+      sizes:[['1.5L',0.35],['6x1.5L',1.99],['50cl',0.25]]},
+    {cat:'bebidas',emoji:'🥤',name:'Cola {brand}',brands:['Coca-Cola','Pepsi','Kima','Continente','Pingo Doce','Lidl'],
+      sizes:[['1.5L',1.69],['2L',2.19],['330ml',0.89]]},
+    {cat:'bebidas',emoji:'🥤',name:'Sumo de Laranja {brand}',brands:['Compal','Santal','Continente','Pingo Doce'],
+      sizes:[['1L',1.79],['200ml',0.59]]},
+    {cat:'bebidas',emoji:'🥤',name:'Néctar de Pêssego {brand}',brands:['Compal','Santal','Continente','Pingo Doce'],
+      sizes:[['1L',1.69]]},
+    {cat:'bebidas',emoji:'🥤',name:'Cerveja {brand}',brands:['Super Bock','Sagres','Coral'],
+      sizes:[['330ml',0.69],['6x330ml',3.99],['1L',1.59]]},
+    {cat:'bebidas',emoji:'🥤',name:'Vinho Tinto {brand}',brands:['Alentejo','Dão','Continente','Pingo Doce'],
+      sizes:[['75cl',3.49],['1L',4.99]]},
+    {cat:'bebidas',emoji:'🥤',name:'Vinho Verde {brand}',brands:['Casal Garcia','Gazela','Continente','Pingo Doce'],
+      sizes:[['75cl',3.29]]},
+    {cat:'bebidas',emoji:'🥤',name:'Chá Gelado {brand}',brands:['Lipton','Nestea','Continente','Pingo Doce'],
+      sizes:[['1L',1.29],['330ml',0.79]]},
+    {cat:'bebidas',emoji:'🥤',name:'Refrigerante Laranja {brand}',brands:['Fanta','Sumol','Continente','Pingo Doce','Lidl'],
+      sizes:[['2L',1.99],['330ml',0.79]]},
+    {cat:'bebidas',emoji:'🥤',name:'Água com Gás {brand}',brands:['Luso','Continente','Pingo Doce','Lidl'],
+      sizes:[['1.5L',0.45]]},
+
+    // ── HIGIENE ──
+    {cat:'higiene',emoji:'🧴',name:'Shampoo {brand}',brands:['Head & Shoulders','Pantene','Dove','Auchan','Continente','Pingo Doce'],
+      sizes:[['250ml',2.99],['400ml',3.99]]},
+    {cat:'higiene',emoji:'🧴',name:'Gel de Banho {brand}',brands:['Dove','Nivea','Auchan','Continente','Pingo Doce','Lidl'],
+      sizes:[['250ml',1.99],['500ml',2.99],['750ml',3.49]]},
+    {cat:'higiene',emoji:'🧴',name:'Pasta de Dentes {brand}',brands:['Colgate','Sensodyne','Auchan','Continente','Pingo Doce'],
+      sizes:[['75ml',2.29],['125ml',3.29]]},
+    {cat:'higiene',emoji:'🧴',name:'Desodorizante {brand}',brands:['Dove','Rexona','Nivea','Auchan','Continente','Pingo Doce'],
+      sizes:[['150ml',2.49]]},
+    {cat:'higiene',emoji:'🧴',name:'Sabonete {brand}',brands:['Dove','Nivea','Continente','Pingo Doce','Lidl'],
+      sizes:[['100g',0.69],['3x100g',1.79]]},
+    {cat:'higiene',emoji:'🧴',name:'Papel Higiénico {brand}',brands:['Renova','Colhogar','Auchan','Continente','Pingo Doce','Lidl'],
+      sizes:[['4 rolos',1.99],['12 rolos',4.99]]},
+    {cat:'higiene',emoji:'🧴',name:'Fio Dental {brand}',brands:['Oral-B','Colgate','Continente','Pingo Doce'],
+      sizes:[['50m',1.49]]},
+    {cat:'higiene',emoji:'🧴',name:'Espuma de Barbear {brand}',brands:['Gillette','Nivea','Continente','Pingo Doce'],
+      sizes:[['200ml',2.49]]},
+    {cat:'higiene',emoji:'🧴',name:'Cotonetes {brand}',brands:['Johnson\'s','Continente','Pingo Doce','Lidl'],
+      sizes:[['120 un.',1.19]]},
+
+    // ── LIMPEZA ──
+    {cat:'limpeza',emoji:'🧹',name:'Detergente Roupa {brand}',brands:['Skip','Ariel','Persil','Auchan','Continente','Pingo Doce','Lidl'],
+      sizes:[['2kg',5.99],['3kg',7.99],['5kg',11.99]]},
+    {cat:'limpeza',emoji:'🧹',name:'Detergente Loiça {brand}',brands:['Fairy','Limpol','Auchan','Continente','Pingo Doce','Lidl'],
+      sizes:[['450ml',1.99],['750ml',2.79]]},
+    {cat:'limpeza',emoji:'🧹',name:'Lixívia {brand}',brands:['Cif','Continente','Pingo Doce','Lidl'],
+      sizes:[['1L',0.99]]},
+    {cat:'limpeza',emoji:'🧹',name:'Limpa-vidros {brand}',brands:['Cif','Continente','Pingo Doce'],
+      sizes:[['500ml',1.29]]},
+    {cat:'limpeza',emoji:'🧹',name:'Toalhitas Multiusos {brand}',brands:['Dove','Continente','Pingo Doce','Lidl'],
+      sizes:[['60 un.',1.29]]},
+    {cat:'limpeza',emoji:'🧹',name:'Saco do Lixo {brand}',brands:['Continente','Pingo Doce','Lidl','Aldi'],
+      sizes:[['30 un. 50L',2.29],['20 un. 100L',3.29]]},
+    {cat:'limpeza',emoji:'🧹',name:'Esponja {brand}',brands:['Scotch-Brite','Continente','Pingo Doce','Lidl'],
+      sizes:[['4 un.',1.49]]},
+
+    // ── SNACKS ──
+    {cat:'snacks',emoji:'🍪',name:'Chocolate {brand}',brands:['Milka','Pantagruel','Nestlé','Auchan','Continente','Pingo Doce','Lidl'],
+      sizes:[['100g',1.29],['300g',2.99]]},
+    {cat:'snacks',emoji:'🍪',name:'Batatas Fritas {brand}',brands:['Lay\'s','Ruffles','Auchan','Continente','Pingo Doce','Lidl'],
+      sizes:[['190g',1.99],['45g',0.79]]},
+    {cat:'snacks',emoji:'🍪',name:'Bolachas {brand}',brands:['Oreo','Belbake','Continente','Pingo Doce','Lidl'],
+      sizes:[['300g',2.29],['176g',1.29]]},
+    {cat:'snacks',emoji:'🍪',name:'Frutos Secos {brand}',brands:['Continente','Pingo Doce','Lidl','Aldi'],
+      sizes:[['200g',2.99],['500g',5.99]]},
+    {cat:'snacks',emoji:'🍪',name:'Pretzels {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['200g',1.29]]},
+    {cat:'snacks',emoji:'🍪',name:'Pipocas {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['100g',0.99]]},
+
+    // ── FRUTA ──
+    {cat:'fruta',emoji:'🍎',name:'Banana {brand}',brands:['1kg','Continente','Pingo Doce','Lidl'],
+      sizes:[['1kg',1.19]]},
+    {cat:'fruta',emoji:'🍎',name:'Maçã {brand}',brands:['Golden','Gala','Continente','Pingo Doce','Lidl'],
+      sizes:[['1kg',1.49]]},
+    {cat:'fruta',emoji:'🍎',name:'Laranja {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['1kg',1.29]]},
+    {cat:'fruta',emoji:'🍎',name:'Limão {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['500g',0.99]]},
+    {cat:'fruta',emoji:'🍎',name:'Morangos {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['250g',1.99]]},
+    {cat:'fruta',emoji:'🍎',name:'Uva {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['500g',2.29]]},
+    {cat:'fruta',emoji:'🍎',name:'Pêra Rocha {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['1kg',1.79]]},
+    {cat:'fruta',emoji:'🍎',name:'Kiwi {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['500g',1.99]]},
+
+    // ── LEGUMES ──
+    {cat:'legumes',emoji:'🍅',name:'Tomate {brand}',brands:['Rama','Continente','Pingo Doce','Lidl'],
+      sizes:[['1kg',1.99]]},
+    {cat:'legumes',emoji:'🍅',name:'Cebola {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['1kg',0.99]]},
+    {cat:'legumes',emoji:'🍅',name:'Batata {brand}',brands:['Nova','Continente','Pingo Doce','Lidl','Aldi'],
+      sizes:[['2kg',1.99]]},
+    {cat:'legumes',emoji:'🍅',name:'Alface {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['1 un.',0.89]]},
+    {cat:'legumes',emoji:'🍅',name:'Cenoura {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['1kg',0.79]]},
+    {cat:'legumes',emoji:'🍅',name:'Pimento {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['500g',1.69]]},
+    {cat:'legumes',emoji:'🍅',name:'Courgette {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['1kg',1.89]]},
+    {cat:'legumes',emoji:'🍅',name:'Brócolos {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['500g',1.29]]},
+    {cat:'legumes',emoji:'🍅',name:'Alho {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['200g',1.19]]},
+
+    // ── CONGELADOS ──
+    {cat:'congelados',emoji:'🧊',name:'Batata Frita Congelada {brand}',brands:['Iglo','Auchan','Continente','Pingo Doce','Lidl'],
+      sizes:[['1kg',2.49],['750g',1.99]]},
+    {cat:'congelados',emoji:'🧊',name:'Pizza {brand}',brands:['Iglo','Dr. Oetker','Continente','Pingo Doce','Lidl'],
+      sizes:[['350g',2.99],['2x350g',4.99]]},
+    {cat:'congelados',emoji:'🧊',name:'Legumes Mistos {brand}',brands:['Iglo','Auchan','Continente','Pingo Doce','Lidl'],
+      sizes:[['450g',1.49],['1kg',2.99]]},
+    {cat:'congelados',emoji:'🧊',name:'Gelado {brand}',brands:['Magnum','Olá','Auchan','Continente','Pingo Doce','Lidl'],
+      sizes:[['4 un.',3.29],['1L',4.49]]},
+    {cat:'congelados',emoji:'🧊',name:'Peixe Panado {brand}',brands:['Iglo','Continente','Pingo Doce','Lidl'],
+      sizes:[['300g',2.29]]},
+    {cat:'congelados',emoji:'🧊',name:'Rissóis {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['12 un.',2.99]]},
+    {cat:'congelados',emoji:'🧊',name:'Croquetes {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['12 un.',2.49]]},
+
+    // ── CARNE ──
+    {cat:'carne',emoji:'🍗',name:'Frango Inteiro {brand}',brands:['Continente','Pingo Doce','Lidl','Auchan'],
+      sizes:[['1kg (aprox.)',3.49]]},
+    {cat:'carne',emoji:'🍗',name:'Peito de Frango {brand}',brands:['Continente','Pingo Doce','Lidl','Auchan'],
+      sizes:[['500g',3.99]]},
+    {cat:'carne',emoji:'🍗',name:'Carne Picada {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['500g',4.49]]},
+    {cat:'carne',emoji:'🍗',name:'Bife de Vaca {brand}',brands:['Continente','Pingo Doce','Auchan'],
+      sizes:[['400g',6.99]]},
+    {cat:'carne',emoji:'🍗',name:'Costeletas de Porco {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['600g',3.99]]},
+    {cat:'carne',emoji:'🍗',name:'Salsichas Frescas {brand}',brands:['Primor','Continente','Pingo Doce'],
+      sizes:[['400g',2.49]]},
+
+    // ── PEIXE ──
+    {cat:'peixe',emoji:'🐟',name:'Bacalhau {brand}',brands:['Noruega','Continente','Pingo Doce','Lidl'],
+      sizes:[['1kg (aprox.)',14.99]]},
+    {cat:'peixe',emoji:'🐟',name:'Salmão {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['400g',7.99]]},
+    {cat:'peixe',emoji:'🐟',name:'Pescada {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['600g',5.49]]},
+    {cat:'peixe',emoji:'🐟',name:'Dourada {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['500g',6.99]]},
+    {cat:'peixe',emoji:'🐟',name:'Polvo {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['1kg (aprox.)',18.99]]},
+
+    // ── CHARCUTARIA ──
+    {cat:'charcutaria',emoji:'🥓',name:'Fiambre {brand}',brands:['Primor','Danovita','Continente','Pingo Doce','Lidl'],
+      sizes:[['200g',2.29],['400g',3.99]]},
+    {cat:'charcutaria',emoji:'🥓',name:'Presunto {brand}',brands:['Lidade','Primor','Continente','Pingo Doce'],
+      sizes:[['150g',2.99],['250g',4.49]]},
+    {cat:'charcutaria',emoji:'🥓',name:'Chouriço {brand}',brands:['Lidade','Continente','Pingo Doce'],
+      sizes:[['300g',3.49]]},
+    {cat:'charcutaria',emoji:'🥓',name:'Bacon {brand}',brands:['Primor','Danovita','Continente','Pingo Doce'],
+      sizes:[['200g',2.79]]},
+    {cat:'charcutaria',emoji:'🥓',name:'Paio {brand}',brands:['Lidade','Continente','Pingo Doce'],
+      sizes:[['200g',2.49]]},
+
+    // ── BEBÉS ──
+    {cat:'bebés',emoji:'🍼',name:'Fraldas {brand}',brands:['Pampers','Continente','Pingo Doce','Lidl','Aldi'],
+      sizes:[['P 44 un.',9.99],['M 40 un.',10.99],['G 36 un.',11.99]]},
+    {cat:'bebés',emoji:'🍼',name:'Leite Infantil {brand}',brands:['Aptamil','NAN','Blemil','Continente','Pingo Doce'],
+      sizes:[['800g',14.99],['400g',8.99]]},
+    {cat:'bebés',emoji:'🍼',name:'Papas {brand}',brands:['Ceresi','Nestlé','Continente','Pingo Doce'],
+      sizes:[['250g',2.99]]},
+    {cat:'bebés',emoji:'🍼',name:'Toalhitas Bebé {brand}',brands:['Pampers','Continente','Pingo Doce','Lidl'],
+      sizes:[['56 un.',1.99]]},
+    {cat:'bebés',emoji:'🍼',name:'Boião de Fruta {brand}',brands:['Nestlé','Continente','Pingo Doce'],
+      sizes:[['6x100g',2.99]]},
+
+    // ── ANIMAIS ──
+    {cat:'animais',emoji:'🐶',name:'Ração de Cão {brand}',brands:['Pedigree','Purina','Auchan','Continente','Pingo Doce','Lidl'],
+      sizes:[['3kg',6.99],['10kg',18.99]]},
+    {cat:'animais',emoji:'🐶',name:'Ração de Gato {brand}',brands:['Whiskas','Purina','Auchan','Continente','Pingo Doce','Lidl'],
+      sizes:[['2kg',5.99],['10kg',16.99]]},
+    {cat:'animais',emoji:'🐶',name:'Comida Húmida Cão {brand}',brands:['Pedigree','Purina','Auchan','Continente','Pingo Doce'],
+      sizes:[['12x100g',6.49]]},
+    {cat:'animais',emoji:'🐶',name:'Comida Húmida Gato {brand}',brands:['Whiskas','Purina','Auchan','Continente','Pingo Doce'],
+      sizes:[['12x85g',5.99]]},
+    {cat:'animais',emoji:'🐶',name:'Areia para Gatos {brand}',brands:['Sanicat','Auchan','Continente','Pingo Doce','Lidl'],
+      sizes:[['5L',2.99],['10L',4.99]]},
+    {cat:'animais',emoji:'🐶',name:'Biscoitos para Cão {brand}',brands:['Pedigree','Continente','Pingo Doce'],
+      sizes:[['500g',2.49]]},
+
+    // ── PRONTA ──
+    {cat:'pronta',emoji:'🍽️',name:'Lasanha {brand}',brands:['Iglo','Auchan','Continente','Pingo Doce'],
+      sizes:[['400g',3.49]]},
+    {cat:'pronta',emoji:'🍽️',name:'Canelones {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['400g',3.29]]},
+    {cat:'pronta',emoji:'🍽️',name:'Sopa de Legumes {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['500ml',1.49]]},
+    {cat:'pronta',emoji:'🍽️',name:'Sopa de Caldo Verde {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['500ml',1.49]]},
+    {cat:'pronta',emoji:'🍽️',name:'Empadão de Carne {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['600g',4.49]]},
+    {cat:'pronta',emoji:'🍽️',name:'Frango Assado {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['1 un. (aprox. 900g)',5.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Hambúrguer {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['2x110g',1.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Cachorro-quente {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['400g',2.49]]},
+    {cat:'pronta',emoji:'🍽️',name:'Bacalhau à Brás {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['500g',6.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Paella {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['500g',4.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Nuggets {brand}',brands:['Iglo','Continente','Pingo Doce','Lidl'],
+      sizes:[['300g',2.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Sandes Mista {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['1 un.',1.49]]},
+    {cat:'pronta',emoji:'🍽️',name:'Salada Pronta {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['200g',1.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Pão com Fiambre {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['1 un.',1.29]]},
+    {cat:'pronta',emoji:'🍽️',name:'Omelete {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['400g',3.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Arroz de Pato {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['400g',3.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Bife Panado {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['300g',2.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Tortilha de Batata {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['400g',3.49]]},
+    {cat:'pronta',emoji:'🍽️',name:'Caril de Frango {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['500g',4.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Chili com Carne {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['400g',3.49]]},
+    {cat:'pronta',emoji:'🍽️',name:'Mac e Queijo {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['250g',2.49]]},
+    {cat:'pronta',emoji:'🍽️',name:'Wrap de Frango {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['1 un.',1.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Pizza de Queijo {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['350g',2.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Bacalhau Gratinado {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['400g',5.49]]},
+{cat:'conservas',emoji:'🐟',name:'Mexilhões em Escabeche {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['280g',1.99]]},
+    {cat:'mercearia',emoji:'🥫',name:'Farinha Sem Glúten {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['500g',1.99]]},
+    {cat:'bebidas',emoji:'🥤',name:'Cidra {brand}',brands:['Super Bock','Sagres','Continente'],
+      sizes:[['330ml',0.99]]},
+    {cat:'higiene',emoji:'🧴',name:'Pensos Higiénicos {brand}',brands:['Always','Continente','Pingo Doce'],
+      sizes:[['16 un.',2.49]]},
+    {cat:'higiene',emoji:'🧴',name:'Gel de Banho 2 em 1 {brand}',brands:['Dove','Nivea','Continente','Pingo Doce'],
+      sizes:[['500ml',3.29]]},
+    {cat:'limpeza',emoji:'🧹',name:'Esponja de Aço {brand}',brands:['Scotch-Brite','Continente','Pingo Doce'],
+      sizes:[['3 un.',1.19]]},
+    {cat:'limpeza',emoji:'🧹',name:'Luvas de Borracha {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['1 par',1.49]]},
+    {cat:'snacks',emoji:'🍪',name:'Pipocas de Manteiga {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['100g',1.19]]},
+    {cat:'snacks',emoji:'🍪',name:'Chocolate ao Leite com Avelãs {brand}',brands:['Milka','Nestlé','Continente','Pingo Doce'],
+      sizes:[['100g',1.59]]},
+    {cat:'congelados',emoji:'🧊',name:'Frango Panado Congelado {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['400g',3.99]]},
+    {cat:'carne',emoji:'🍗',name:'Lombo de Porco {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['800g',5.49]]},
+    {cat:'peixe',emoji:'🐟',name:'Camarão Tigre {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['400g',9.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Peixe à Brás {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['400g',5.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Bacalhau Espiritual {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['450g',6.49]]},
+{cat:'leite',emoji:'🥛',name:'Leite UHT Meio Gordo {brand} 3x1L',brands:['Mimosa','Milhafre','Agros','Continente','Pingo Doce','Pilos','Lidl','Aldi'],
+      sizes:[['3x1L',2.79]]},
+    {cat:'arroz',emoji:'🍚',name:'Arroz {brand} Agulha 5kg',brands:['Continente','Pingo Doce','Lidl','Aldi'],
+      sizes:[['5kg',6.49]]},
+    {cat:'massa',emoji:'🍝',name:'Massa {brand} Lacinhos',brands:['Milaneza','Continente','Pingo Doce','Lidl'],
+      sizes:[['500g',1.09]]},
+    {cat:'massa',emoji:'🍝',name:'Massa {brand} Esparguete Integral',brands:['Milaneza','Continente','Pingo Doce','Lidl'],
+      sizes:[['500g',1.29]]},
+    {cat:'café',emoji:'☕',name:'Café {brand} Intenso 250g',brands:['Delta','Sical','Buondi','Continente','Pingo Doce'],
+      sizes:[['250g',4.49]]},
+    {cat:'queijo',emoji:'🧀',name:'Queijo da Ilha {brand}',brands:['Terra Nostra','Mimoso','Continente','Pingo Doce'],
+      sizes:[['200g',3.29]]},
+    {cat:'iogurte',emoji:'🥛',name:'Iogurte Grego com Mel {brand}',brands:['FAGE','Oikos','Continente','Pingo Doce'],
+      sizes:[['2x150g',2.49]]},
+    {cat:'ovos',emoji:'🥚',name:'Ovos Brancos M {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['10 unid.',1.99]]},
+    {cat:'padaria',emoji:'🥖',name:'Wraps {brand}',brands:['Saloio','Continente','Pingo Doce','Lidl'],
+      sizes:[['6 un.',2.19]]},
+    {cat:'padaria',emoji:'🥖',name:'Pão Ralado {brand}',brands:['Cerealis','Continente','Pingo Doce'],
+      sizes:[['400g',1.19]]},
+    {cat:'padaria',emoji:'🥖',name:'Bolachas de Chocolate {brand}',brands:['Cerealis','Continente','Pingo Doce','Lidl'],
+      sizes:[['200g',1.19]]},
+    {cat:'conservas',emoji:'🐟',name:'Feijão Frade {brand}',brands:['Bom Petisco','Continente','Pingo Doce','Lidl'],
+      sizes:[['400g',0.89]]},
+    {cat:'conservas',emoji:'🐟',name:'Sardinhas em Óleo {brand}',brands:['Minerva','Continente','Pingo Doce','Lidl'],
+      sizes:[['120g',1.59]]},
+    {cat:'mercearia',emoji:'🥫',name:'Cereais de Chocolate {brand}',brands:['Nesquik','Continente','Pingo Doce','Lidl'],
+      sizes:[['375g',3.19]]},
+    {cat:'mercearia',emoji:'🥫',name:'Flocos de Aveia {brand}',brands:['Continente','Pingo Doce','Lidl','Aldi'],
+      sizes:[['500g',1.29]]},
+    {cat:'mercearia',emoji:'🥫',name:'Massa de Bolacha {brand}',brands:['Danone','Continente','Pingo Doce'],
+      sizes:[['500g',2.19]]},
+    {cat:'mercearia',emoji:'🥫',name:'Pudim {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['2x100g',1.19]]},
+    {cat:'bebidas',emoji:'🥤',name:'Sumo de Tomate {brand}',brands:['Compal','Continente','Pingo Doce'],
+      sizes:[['200ml',0.69]]},
+    {cat:'bebidas',emoji:'🥤',name:'Cerveja Preta {brand}',brands:['Super Bock','Sagres'],
+      sizes:[['330ml',0.85]]},
+    {cat:'bebidas',emoji:'🥤',name:'Vinho do Porto {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['75cl',9.99]]},
+    {cat:'bebidas',emoji:'🥤',name:'Água com Gás Limão {brand}',brands:['Luso','Continente','Pingo Doce'],
+      sizes:[['1.5L',0.59]]},
+    {cat:'bebidas',emoji:'🥤',name:'Sangria {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['1L',2.99]]},
+    {cat:'higiene',emoji:'🧴',name:'Colónia {brand}',brands:['Nivea','Axe','Continente','Pingo Doce'],
+      sizes:[['150ml',4.99]]},
+    {cat:'higiene',emoji:'🧴',name:'Pensos Diários {brand}',brands:['Always','Continente','Pingo Doce'],
+      sizes:[['40 un.',1.99]]},
+    {cat:'higiene',emoji:'🧴',name:'Champô Anti-caspa {brand}',brands:['Head & Shoulders','Continente','Pingo Doce'],
+      sizes:[['250ml',2.99]]},
+    {cat:'limpeza',emoji:'🧹',name:'Toalhitas de Cozinha {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['40 un.',1.19]]},
+    {cat:'limpeza',emoji:'🧹',name:'Detergente Loiça Cápsulas {brand}',brands:['Fairy','Somat','Continente','Pingo Doce'],
+      sizes:[['25 un.',3.49]]},
+    {cat:'limpeza',emoji:'🧹',name:'Limpa-madeiras {brand}',brands:['Cif','Continente','Pingo Doce'],
+      sizes:[['750ml',2.29]]},
+    {cat:'snacks',emoji:'🍪',name:'Chocolate com Caramelo {brand}',brands:['Milka','Nestlé','Continente','Pingo Doce'],
+      sizes:[['100g',1.49]]},
+    {cat:'snacks',emoji:'🍪',name:'Amendoins Salgados {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['200g',1.49]]},
+    {cat:'snacks',emoji:'🍪',name:'Barrinha de Proteína {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['1 un.',1.29]]},
+    {cat:'congelados',emoji:'🧊',name:'Salada de Fruta Congelada {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['500g',2.99]]},
+    {cat:'congelados',emoji:'🧊',name:'Pizza de Atum {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['350g',3.29]]},
+    {cat:'congelados',emoji:'🧊',name:'Sopa Congelada {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['500g',2.49]]},
+    {cat:'carne',emoji:'🍗',name:'Hambúrguer de Vaca {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['2x110g',2.49]]},
+    {cat:'carne',emoji:'🍗',name:'Frango do Campo {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['1kg (aprox.)',5.49]]},
+    {cat:'peixe',emoji:'🐟',name:'Peixe Espada {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['600g',6.99]]},
+    {cat:'peixe',emoji:'🐟',name:'Berbigão {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['500g',4.49]]},
+    {cat:'bebés',emoji:'🍼',name:'Boião de Carne {brand}',brands:['Nestlé','Continente','Pingo Doce'],
+      sizes:[['6x100g',3.49]]},
+    {cat:'bebés',emoji:'🍼',name:'Água Bebé {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['6x330ml',2.49]]},
+    {cat:'animais',emoji:'🐶',name:'Ração de Gato Sénior {brand}',brands:['Whiskas','Purina','Continente','Pingo Doce'],
+      sizes:[['2kg',6.49]]},
+    {cat:'animais',emoji:'🐶',name:'Biscoitos para Gato {brand}',brands:['Whiskas','Continente','Pingo Doce'],
+      sizes:[['60g',1.29]]},
+    {cat:'pronta',emoji:'🍽️',name:'Frango à Moda da Casa {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['1 un.',4.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Sopa de Feijão {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['500ml',1.39]]},
+    {cat:'pronta',emoji:'🍽️',name:'Risotto de Cogumelos {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['400g',4.29]]},
+{cat:'conservas',emoji:'🐟',name:'Ananás em Calda {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['565g',1.49]]},
+    {cat:'conservas',emoji:'🐟',name:'Pêssego em Calda {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['820g',1.79]]},
+    {cat:'conservas',emoji:'🐟',name:'Sardinhas em Molho de Tomate {brand}',brands:['Minerva','Continente','Pingo Doce'],
+      sizes:[['120g',1.49]]},
+    {cat:'conservas',emoji:'🐟',name:'Cocktail de Fruta {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['410g',1.29]]},
+    {cat:'conservas',emoji:'🐟',name:'Azeitonas com Pimentos {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['200g',1.19]]},
+    {cat:'mercearia',emoji:'🥫',name:'Feijão Preto {brand}',brands:['Bom Petisco','Continente','Pingo Doce','Lidl'],
+      sizes:[['400g',0.85]]},
+    {cat:'mercearia',emoji:'🥫',name:'Farinha de Milho {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['1kg',1.29]]},
+    {cat:'mercearia',emoji:'🥫',name:'Creme de Chocolate com Avelã {brand}',brands:['Nutella','Auchan','Continente','Pingo Doce'],
+      sizes:[['200g',2.99],['400g',4.99]]},
+    {cat:'mercearia',emoji:'🥫',name:'Papel de Alumínio {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['10m',1.29]]},
+    {cat:'mercearia',emoji:'🥫',name:'Sopa de Pacote {brand}',brands:['Calao','Continente','Pingo Doce','Lidl'],
+      sizes:[['4 saquetas',1.99]]},
+    {cat:'mercearia',emoji:'🥫',name:'Pimenta Preta {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['45g',1.49]]},
+    {cat:'mercearia',emoji:'🥫',name:'Canela {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['30g',1.19]]},
+    {cat:'mercearia',emoji:'🥫',name:'Açúcar Amarelo {brand}',brands:['Sidul','Continente','Pingo Doce'],
+      sizes:[['1kg',1.09]]},
+    {cat:'bebidas',emoji:'🥤',name:'Cerveja Lager Pack 8 {brand}',brands:['Super Bock','Sagres','Coral'],
+      sizes:[['8x330ml',5.49]]},
+    {cat:'bebidas',emoji:'🥤',name:'Vinho Espumante {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['75cl',5.99]]},
+    {cat:'bebidas',emoji:'🥤',name:'Néctar de Manga {brand}',brands:['Compal','Continente','Pingo Doce'],
+      sizes:[['1L',1.89]]},
+    {cat:'bebidas',emoji:'🥤',name:'Gin Tónica {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['250ml',1.29]]},
+    {cat:'bebidas',emoji:'🥤',name:'Sumo de Ananás {brand}',brands:['Compal','Santal','Continente','Pingo Doce'],
+      sizes:[['1L',1.79]]},
+    {cat:'higiene',emoji:'🧴',name:'Creme Corporal {brand}',brands:['Nivea','Dove','Continente','Pingo Doce'],
+      sizes:[['250ml',3.49]]},
+    {cat:'higiene',emoji:'🧴',name:'Ambientador {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['250ml',2.29]]},
+    {cat:'higiene',emoji:'🧴',name:'Protetor Solar {brand}',brands:['Nivea','Garnier','Continente','Pingo Doce'],
+      sizes:[['200ml',9.99]]},
+    {cat:'higiene',emoji:'🧴',name:'Gel de Barbear {brand}',brands:['Gillette','Nivea','Continente','Pingo Doce'],
+      sizes:[['200ml',3.49]]},
+    {cat:'limpeza',emoji:'🧹',name:'Lava-loiça {brand}',brands:['Cif','Continente','Pingo Doce','Lidl'],
+      sizes:[['750ml',2.99]]},
+    {cat:'limpeza',emoji:'🧹',name:'Alvejante {brand}',brands:['Cif','Continente','Pingo Doce','Lidl'],
+      sizes:[['1L',1.29]]},
+    {cat:'limpeza',emoji:'🧹',name:'Desengordurante {brand}',brands:['Cif','Continente','Pingo Doce'],
+      sizes:[['500ml',1.99]]},
+    {cat:'limpeza',emoji:'🧹',name:'Limpa-forno {brand}',brands:['Cif','Continente','Pingo Doce'],
+      sizes:[['500ml',1.99]]},
+    {cat:'snacks',emoji:'🍪',name:'Chocolate Amargo {brand}',brands:['Pantagruel','Lindt','Continente','Pingo Doce'],
+      sizes:[['100g',1.49]]},
+    {cat:'snacks',emoji:'🍪',name:'Nozes {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['100g',1.99]]},
+    {cat:'snacks',emoji:'🍪',name:'Aveia {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['500g',1.29]]},
+    {cat:'snacks',emoji:'🍪',name:'Muesli {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['400g',2.49]]},
+    {cat:'fruta',emoji:'🍎',name:'Melancia {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['1kg',0.89]]},
+    {cat:'fruta',emoji:'🍎',name:'Ananás {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['1 un.',1.49]]},
+    {cat:'fruta',emoji:'🍎',name:'Cerejas {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['500g',3.99]]},
+    {cat:'fruta',emoji:'🍎',name:'Uva Branca {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['500g',2.49]]},
+    {cat:'legumes',emoji:'🍅',name:'Cebola Roxa {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['1kg',1.29]]},
+    {cat:'legumes',emoji:'🍅',name:'Abóbora {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['1kg',0.99]]},
+    {cat:'legumes',emoji:'🍅',name:'Alface Iceberg {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['1 un.',0.99]]},
+    {cat:'legumes',emoji:'🍅',name:'Tomate Cherry {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['250g',1.99]]},
+    {cat:'congelados',emoji:'🧊',name:'Cogumelos Congelados {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['300g',1.99]]},
+    {cat:'congelados',emoji:'🧊',name:'Sorbet {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['500ml',2.99]]},
+    {cat:'congelados',emoji:'🧊',name:'Espinafres Congelados {brand}',brands:['Iglo','Continente','Pingo Doce','Lidl'],
+      sizes:[['450g',1.39]]},
+    {cat:'congelados',emoji:'🧊',name:'Bacalhau Congelado {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['400g',7.49]]},
+    {cat:'congelados',emoji:'🧊',name:'Hambúrguer de Frango {brand}',brands:['Iglo','Continente','Pingo Doce','Lidl'],
+      sizes:[['2x100g',1.99]]},
+    {cat:'carne',emoji:'🍗',name:'Entremeada {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['500g',3.49]]},
+    {cat:'carne',emoji:'🍗',name:'Espetadas de Frango {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['400g',4.49]]},
+    {cat:'carne',emoji:'🍗',name:'Bife de Peru {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['400g',3.99]]},
+    {cat:'carne',emoji:'🍗',name:'Asas de Frango {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['600g',2.79]]},
+    {cat:'peixe',emoji:'🐟',name:'Linguado {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['400g',6.49]]},
+    {cat:'peixe',emoji:'🐟',name:'Atum Fresco {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['300g',5.49]]},
+    {cat:'peixe',emoji:'🐟',name:'Mexilhão {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['1kg',4.99]]},
+    {cat:'peixe',emoji:'🐟',name:'Carapau {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['500g',2.99]]},
+    {cat:'charcutaria',emoji:'🥓',name:'Mortadela {brand}',brands:['Primor','Continente','Pingo Doce'],
+      sizes:[['200g',1.99]]},
+    {cat:'charcutaria',emoji:'🥓',name:'Farinheira {brand}',brands:['Lidade','Continente','Pingo Doce'],
+      sizes:[['250g',2.99]]},
+    {cat:'charcutaria',emoji:'🥓',name:'Morcela {brand}',brands:['Lidade','Continente','Pingo Doce'],
+      sizes:[['200g',2.49]]},
+    {cat:'charcutaria',emoji:'🥓',name:'Lombo de Porco Fumado {brand}',brands:['Primor','Continente','Pingo Doce'],
+      sizes:[['200g',2.99]]},
+    {cat:'bebés',emoji:'🍼',name:'Iogurte Bebé {brand}',brands:['Nestlé','Continente','Pingo Doce'],
+      sizes:[['6x100g',2.79]]},
+    {cat:'bebés',emoji:'🍼',name:'Bebida de Continuação {brand}',brands:['Aptamil','NAN','Blemil','Continente','Pingo Doce'],
+      sizes:[['800g',16.99]]},
+    {cat:'bebés',emoji:'🍼',name:'Bolachas Bebé {brand}',brands:['Ceresi','Nestlé','Continente','Pingo Doce'],
+      sizes:[['180g',1.99]]},
+    {cat:'bebés',emoji:'🍼',name:'Toalhitas Bebé Sensível {brand}',brands:['Pampers','Continente','Pingo Doce'],
+      sizes:[['56 un.',2.19]]},
+    {cat:'animais',emoji:'🐶',name:'Snacks de Cão {brand}',brands:['Pedigree','Continente','Pingo Doce'],
+      sizes:[['200g',1.99]]},
+    {cat:'animais',emoji:'🐶',name:'Areia Sanitária Cristais {brand}',brands:['Sanicat','Continente','Pingo Doce','Lidl'],
+      sizes:[['5L',3.49]]},
+    {cat:'animais',emoji:'🐶',name:'Comida Húmida Gato Sénior {brand}',brands:['Whiskas','Continente','Pingo Doce'],
+      sizes:[['12x85g',6.49]]},
+    {cat:'animais',emoji:'🐶',name:'Comida Húmida Cão Adulto {brand}',brands:['Pedigree','Purina','Continente','Pingo Doce'],
+      sizes:[['12x100g',6.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Arroz de Marisco {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['400g',4.49]]},
+    {cat:'pronta',emoji:'🍽️',name:'Sopa de Creme de Legumes {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['500ml',1.49]]},
+    {cat:'pronta',emoji:'🍽️',name:'Goulash {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['400g',3.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Esparguete à Bolonhesa {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['400g',3.49]]},
+    {cat:'pronta',emoji:'🍽️',name:'Purié de Batata {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['500g',1.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Salmão Grelhado {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['300g',6.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Croissant de Chocolate {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['4 un.',2.49]]},
+    {cat:'pronta',emoji:'🍽️',name:'Sandes de Fiambre {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['1 un.',1.19]]},
+    {cat:'pronta',emoji:'🍽️',name:'Arroz de Pato {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['400g',3.99]]},
+{cat:'leite',emoji:'🥛',name:'Bebida de Arroz {brand}',brands:['Alpro','Continente','Pingo Doce','Pilos','Aldi'],
+      sizes:[['1L',1.99],['500ml',1.29]]},
+    {cat:'manteiga',emoji:'🧈',name:'Manteiga Light {brand}',brands:['Milhafre','Auchan','Continente','Pingo Doce','Pilos'],
+      sizes:[['250g',2.59]]},
+    {cat:'azeite',emoji:'🫒',name:'Azeite Virgem Extra {brand} 250ml',brands:['Gallo','Oliveira da Serra','Andorinha','Continente','Pingo Doce','Lidl','Aldi'],
+      sizes:[['250ml',2.99]]},
+    {cat:'arroz',emoji:'🍚',name:'Arroz {brand} Integral',brands:['Cigala','Auchan','Continente','Pingo Doce','Pilos','Aldi','Hacendado'],
+      sizes:[['1kg',1.89],['500g',0.99]]},
+    {cat:'massa',emoji:'🍝',name:'Massa {brand} Cotovelo',brands:['Milaneza','Continente','Pingo Doce','Lidl','Aldi','Hacendado'],
+      sizes:[['500g',0.79],['1kg',1.49]]},
+    {cat:'massa',emoji:'🍝',name:'Massa {brand} Conchas',brands:['Milaneza','Continente','Pingo Doce','Lidl'],
+      sizes:[['500g',0.99]]},
+    {cat:'café',emoji:'☕',name:'Café Solúvel {brand}',brands:['Nescafé','Sical','Continente','Pingo Doce'],
+      sizes:[['100g',3.99],['200g',6.99]]},
+    {cat:'café',emoji:'☕',name:'Cápsulas {brand} 60 un.',brands:['Delta Q','Nespresso','Continente','Pingo Doce','Lidl'],
+      sizes:[['60 cápsulas',19.99]]},
+    {cat:'queijo',emoji:'🧀',name:'Queijo Fresco {brand}',brands:['Santa Lúcia','Mimoso','Auchan','Continente','Pingo Doce'],
+      sizes:[['250g',1.49],['500g',2.49]]},
+    {cat:'queijo',emoji:'🧀',name:'Queijo Ralado {brand}',brands:['Terra Nostra','Auchan','Continente','Pingo Doce','Pilos'],
+      sizes:[['150g',1.79],['300g',3.29]]},
+    {cat:'iogurte',emoji:'🥛',name:'Iogurte de Morango {brand}',brands:['Danone','Mimosa','Auchan','Continente','Pingo Doce','Pilos','Aldi','Hacendado'],
+      sizes:[['4x125g',1.79],['8x125g',3.19]]},
+    {cat:'iogurte',emoji:'🥛',name:'Iogurte Natural {brand}',brands:['Mimosa','Danone','Auchan','Continente','Pingo Doce','Pilos','Aldi'],
+      sizes:[['4x125g',1.59],['500g',1.39]]},
+    {cat:'laticínio',emoji:'🥛',name:'Queijo Creme {brand}',brands:['Philadelphia','Milhafre','Continente','Pingo Doce'],
+      sizes:[['250g',2.29]]},
+    {cat:'laticínio',emoji:'🥛',name:'Manteiga de Amendoim {brand}',brands:['Continente','Pingo Doce','Lidl','Aldi'],
+      sizes:[['350g',2.49]]},
+    {cat:'padaria',emoji:'🥖',name:'Pão de Centeio {brand}',brands:['Saloio','Cerealis','Continente','Pingo Doce','Lidl'],
+      sizes:[['500g',1.29]]},
+    {cat:'padaria',emoji:'🥖',name:'Bolachas de Água e Sal {brand}',brands:['Cerealis','Continente','Pingo Doce','Lidl'],
+      sizes:[['250g',0.79],['500g',1.29]]},
+    {cat:'padaria',emoji:'🥖',name:'Tostas {brand}',brands:['Cerealis','Continente','Pingo Doce','Lidl','Aldi'],
+      sizes:[['200g',1.19]]},
+    {cat:'conservas',emoji:'🐟',name:'Milho Doce {brand}',brands:['Bom Petisco','Continente','Pingo Doce','Lidl','Aldi'],
+      sizes:[['200g',0.79],['400g',1.19]]},
+    {cat:'conservas',emoji:'🐟',name:'Ervilhas {brand}',brands:['Bom Petisco','Continente','Pingo Doce','Lidl'],
+      sizes:[['400g',0.69]]},
+    {cat:'conservas',emoji:'🐟',name:'Pate de Atum {brand}',brands:['Bom Petisco','Continente','Pingo Doce'],
+      sizes:[['90g',0.99]]},
+    {cat:'mercearia',emoji:'🥫',name:'Polpa de Tomate {brand}',brands:['Continente','Pingo Doce','Lidl','Aldi'],
+      sizes:[['400g',0.79],['2x400g',1.39]]},
+    {cat:'mercearia',emoji:'🥫',name:'Tomate Pelado {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['400g',0.99]]},
+    {cat:'mercearia',emoji:'🥫',name:'Sopas de Creme {brand}',brands:['Calao','Continente','Pingo Doce','Lidl'],
+      sizes:[['4 saquetas',2.19]]},
+    {cat:'mercearia',emoji:'🥫',name:'Lentilhas {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['400g',0.89]]},
+    {cat:'mercearia',emoji:'🥫',name:'Barra de Cereais {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['6 un.',2.19]]},
+    {cat:'mercearia',emoji:'🥫',name:'Cacau em Pó {brand}',brands:['Nestlé','Continente','Pingo Doce'],
+      sizes:[['200g',2.49]]},
+    {cat:'bebidas',emoji:'🥤',name:'Sumo Multivitamínico {brand}',brands:['Compal','Santal','Continente','Pingo Doce'],
+      sizes:[['1L',1.99],['200ml',0.69]]},
+    {cat:'bebidas',emoji:'🥤',name:'Sumo de Maçã {brand}',brands:['Compal','Santal','Continente','Pingo Doce','Lidl'],
+      sizes:[['1L',1.79]]},
+    {cat:'bebidas',emoji:'🥤',name:'Refrigerante Limão {brand}',brands:['Sprite','7up','Continente','Pingo Doce','Lidl'],
+      sizes:[['2L',1.99],['330ml',0.79]]},
+    {cat:'bebidas',emoji:'🥤',name:'Vinho Branco {brand}',brands:['Alentejo','Dão','Continente','Pingo Doce'],
+      sizes:[['75cl',3.49],['1L',4.99]]},
+    {cat:'bebidas',emoji:'🥤',name:'Vinho Rosé {brand}',brands:['Alentejo','Continente','Pingo Doce'],
+      sizes:[['75cl',3.49]]},
+    {cat:'bebidas',emoji:'🥤',name:'Bebida Energética {brand}',brands:['Red Bull','Monster','Continente','Pingo Doce'],
+      sizes:[['250ml',1.49]]},
+    {cat:'bebidas',emoji:'🥤',name:'Whisky {brand}',brands:['Johnnie Walker','Ballantines'],
+      sizes:[['70cl',16.99]]},
+    {cat:'bebidas',emoji:'🥤',name:'Gin {brand}',brands:['Gordon\'s','Continente','Pingo Doce'],
+      sizes:[['70cl',12.99]]},
+    {cat:'higiene',emoji:'🧴',name:'Amaciador de Cabelo {brand}',brands:['Pantene','Dove','Auchan','Continente','Pingo Doce'],
+      sizes:[['200ml',2.49],['400ml',3.49]]},
+    {cat:'higiene',emoji:'🧴',name:'Sabonete Líquido {brand}',brands:['Dove','Nivea','Continente','Pingo Doce','Lidl'],
+      sizes:[['250ml',1.49],['500ml',2.49]]},
+    {cat:'higiene',emoji:'🧴',name:'Champô 2 em 1 {brand}',brands:['Head & Shoulders','Clear','Continente','Pingo Doce'],
+      sizes:[['400ml',3.49]]},
+    {cat:'higiene',emoji:'🧴',name:'Lâminas de Barbear {brand}',brands:['Gillette','BIC','Continente','Pingo Doce'],
+      sizes:[['5 un.',4.99]]},
+    {cat:'higiene',emoji:'🧴',name:'Creme de Mãos {brand}',brands:['Nivea','Dove','Continente','Pingo Doce'],
+      sizes:[['100ml',2.49]]},
+    {cat:'limpeza',emoji:'🧹',name:'Amaciador de Roupa {brand}',brands:['Comfort','Auchan','Continente','Pingo Doce','Lidl'],
+      sizes:[['1L',2.99],['2L',4.99]]},
+    {cat:'limpeza',emoji:'🧹',name:'Desinfetante {brand}',brands:['Cif','Dettol','Continente','Pingo Doce','Lidl'],
+      sizes:[['1L',1.79]]},
+    {cat:'limpeza',emoji:'🧹',name:'Pastilhas Máquina Loiça {brand}',brands:['Fairy','Somat','Auchan','Continente','Pingo Doce','Lidl'],
+      sizes:[['30 un.',3.99]]},
+    {cat:'limpeza',emoji:'🧹',name:'Limpador Multiusos {brand}',brands:['Cif','Continente','Pingo Doce','Lidl'],
+      sizes:[['750ml',1.99],['1L',2.49]]},
+    {cat:'limpeza',emoji:'🧹',name:'Detergente Máquina Cápsulas {brand}',brands:['Skip','Ariel','Continente','Pingo Doce','Lidl'],
+      sizes:[['20 un.',6.99]]},
+    {cat:'limpeza',emoji:'🧹',name:'Abrilhantador {brand}',brands:['Fairy','Somat','Continente','Pingo Doce'],
+      sizes:[['400ml',2.49]]},
+    {cat:'snacks',emoji:'🍪',name:'Chocolate Branco {brand}',brands:['Milka','Nestlé','Pantagruel','Continente','Pingo Doce'],
+      sizes:[['100g',1.39]]},
+    {cat:'snacks',emoji:'🍪',name:'Amendoins {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['100g',0.99]]},
+    {cat:'snacks',emoji:'🍪',name:'Crackers {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['200g',1.09]]},
+    {cat:'fruta',emoji:'🍎',name:'Abacate {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['1 un.',0.99]]},
+    {cat:'fruta',emoji:'🍎',name:'Maçã Granny Smith {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['1kg',1.99]]},
+    {cat:'fruta',emoji:'🍎',name:'Tangerina {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['1kg',1.49]]},
+    {cat:'legumes',emoji:'🍅',name:'Cogumelos {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['250g',1.89]]},
+    {cat:'legumes',emoji:'🍅',name:'Espinafres {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['200g',1.49]]},
+    {cat:'legumes',emoji:'🍅',name:'Pepino {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['1 un.',0.89]]},
+    {cat:'legumes',emoji:'🍅',name:'Feijão Verde {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['500g',1.69]]},
+    {cat:'congelados',emoji:'🧊',name:'Camarão {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['400g',7.99]]},
+    {cat:'congelados',emoji:'🧊',name:'Batata Doce Frita {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['750g',2.49]]},
+    {cat:'congelados',emoji:'🧊',name:'Palitos de Peixe {brand}',brands:['Iglo','Continente','Pingo Doce','Lidl'],
+      sizes:[['300g',2.49]]},
+    {cat:'congelados',emoji:'🧊',name:'Ervilhas Congeladas {brand}',brands:['Iglo','Continente','Pingo Doce','Lidl'],
+      sizes:[['450g',1.19]]},
+    {cat:'carne',emoji:'🍗',name:'Coxas de Frango {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['800g',2.99]]},
+    {cat:'carne',emoji:'🍗',name:'Almôndegas {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['400g',2.99]]},
+    {cat:'carne',emoji:'🍗',name:'Picanha {brand}',brands:['Continente','Pingo Doce','Auchan'],
+      sizes:[['500g',9.99]]},
+    {cat:'carne',emoji:'🍗',name:'Peru Picado {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['500g',3.49]]},
+    {cat:'peixe',emoji:'🐟',name:'Robalo {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['500g',7.49]]},
+    {cat:'peixe',emoji:'🐟',name:'Cavala {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['500g',2.79]]},
+    {cat:'peixe',emoji:'🐟',name:'Lulas {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['500g',5.99]]},
+    {cat:'charcutaria',emoji:'🥓',name:'Peito de Peru Fumado {brand}',brands:['Primor','Danovita','Continente','Pingo Doce','Lidl'],
+      sizes:[['150g',2.49]]},
+    {cat:'charcutaria',emoji:'🥓',name:'Salame {brand}',brands:['Primor','Lidade','Continente','Pingo Doce'],
+      sizes:[['150g',2.79]]},
+    {cat:'charcutaria',emoji:'🥓',name:'Chouriço de Vinho {brand}',brands:['Lidade','Continente','Pingo Doce'],
+      sizes:[['200g',3.29]]},
+    {cat:'charcutaria',emoji:'🥓',name:'Fiambre de Peru {brand}',brands:['Primor','Danovita','Continente','Pingo Doce','Lidl'],
+      sizes:[['200g',2.09]]},
+    {cat:'bebés',emoji:'🍼',name:'Leite de Transição {brand}',brands:['Aptamil','NAN','Blemil','Continente','Pingo Doce'],
+      sizes:[['800g',15.99]]},
+    {cat:'bebés',emoji:'🍼',name:'Creme de Bebé {brand}',brands:['Nivea','Continente','Pingo Doce','Lidl'],
+      sizes:[['250ml',3.49]]},
+    {cat:'bebés',emoji:'🍼',name:'Shampoo Bebé {brand}',brands:['Johnson\'s','Continente','Pingo Doce'],
+      sizes:[['300ml',2.99]]},
+    {cat:'animais',emoji:'🐶',name:'Comida Gato Adulto {brand}',brands:['Whiskas','Purina','Continente','Pingo Doce','Lidl'],
+      sizes:[['2kg',5.99]]},
+    {cat:'animais',emoji:'🐶',name:'Areia Aglomerante {brand}',brands:['Sanicat','Continente','Pingo Doce','Lidl'],
+      sizes:[['10L',5.49]]},
+    {cat:'animais',emoji:'🐶',name:'Ração de Cão Sénior {brand}',brands:['Pedigree','Purina','Continente','Pingo Doce'],
+      sizes:[['10kg',18.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Bacalhau com Natas {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['450g',6.49]]},
+    {cat:'pronta',emoji:'🍽️',name:'Cozido à Portuguesa {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['500g',4.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Pastel de Bacalhau {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['4 un.',2.49]]},
+    {cat:'pronta',emoji:'🍽️',name:'Pizza Margherita {brand}',brands:['Iglo','Continente','Pingo Doce','Lidl'],
+      sizes:[['350g',2.79]]},
+    {cat:'pronta',emoji:'🍽️',name:'Lasagna Vegetariana {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['400g',3.79]]},
+    {cat:'pronta',emoji:'🍽️',name:'Caril de Vegetais {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['400g',3.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Sopa de Peixe {brand}',brands:['Continente','Pingo Doce','Lidl'],
+      sizes:[['500ml',1.69]]},
+    {cat:'pronta',emoji:'🍽️',name:'Nuggets de Frango {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['300g',2.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Bacalhau à Brás {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['500g',6.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Sushi {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['8 peças',6.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Rolo de Carne {brand}',brands:['Iglo','Continente','Pingo Doce'],
+      sizes:[['400g',3.99]]},
+    {cat:'pronta',emoji:'🍽️',name:'Frango Assado com Batata {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['1 un.',5.49]]},
+    {cat:'pronta',emoji:'🍽️',name:'Bifanas {brand}',brands:['Continente','Pingo Doce'],
+      sizes:[['400g',2.99]]}
+  ];
+
+  var before = CATALOG.length;
+  for(var f=0; f<FAMILIES.length; f++){
+    var fam = FAMILIES[f];
+    for(var b=0; b<fam.brands.length; b++){
+      var brand = fam.brands[b];
+      for(var s=0; s<fam.sizes.length; s++){
+        var size = fam.sizes[s];
+        var pname = fam.name.replace('{brand}', brand) + ' ' + size[0];
+        if(seen[pname]) continue;
+        seen[pname] = 1;
+        var bSeed = seedFromStr(pname);
+        var factor = 1 + ((bSeed % 11) - 5)/100; // -5%..+5%
+        var price = Math.max(0.10, Math.round(size[1]*factor*100)/100);
+        var stores = {};
+        var sts = pickStores(brand, bSeed);
+        for(var k=0; k<sts.length; k++){
+          var sSeed = seedFromStr(pname+'|'+sts[k]);
+          var sf = 1 + ((sSeed % 7) - 3)/100; // -3%..+3%
+          stores[sts[k]] = Math.max(0.05, Math.round(price*sf*100)/100);
+        }
+        CATALOG.push({name:pname, price:price, stores:stores, emoji:fam.emoji, cat:fam.cat});
+      }
+    }
+  }
+  // console.log('gerados:', CATALOG.length - before, 'total:', CATALOG.length);
+})();
+
 // ══════════════════════════════════════════════════════
 // MODAL: produto / histórico de preços
 // ══════════════════════════════════════════════════════
@@ -1109,15 +2455,18 @@ function closeModalBg(ev,id){ if(ev.target.id===id) closeModal(id); }
 
 function openProductModal(product){
   if(!product) return;
+  window.__openProduct = product;
   document.getElementById('pm-title').textContent = product.name;
   // Rebuild photo element safely
   const photoEl = document.getElementById('pm-photo');
   const grad = CAT_GRADIENT[product.cat]||'linear-gradient(135deg,#e2e8f0,#cbd5e1)';
   photoEl.style.background = grad;
-  photoEl.innerHTML = (product.emoji||'🛒')+(product.cat?`<span class="cat-tag">${product.cat}</span>`:'');
+  const url = productPhotoUrl(product);
+  const img = url ? `<img class="prod-img" src="${url}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : '';
+  photoEl.innerHTML = (product.emoji||'🛒')+img+(product.cat?`<span class="cat-tag">${product.cat}</span>`:'');
 
   const stores = product.stores||{};
-  const entries = Object.entries(stores);
+  const entries = Object.entries(stores).map(([k,v])=>[k, livePrice(v, product.name+'|'+k, liveTime())]);
   if(!entries.length){
     document.getElementById('pm-bestnote').textContent = 'Sem preços por loja disponíveis.';
     document.getElementById('pm-stores').innerHTML = `<div class="empty-state"><span class="empty-icon">🏷️</span>Preço único: ${fmtEur(product.price)}</div>`;
@@ -1274,6 +2623,76 @@ function save(){localStorage.setItem('pf_list',JSON.stringify(listItems))}
 function fmtEur(v){return v.toFixed(2).replace('.',',')+'\u20AC'}
 
 // ══════════════════════════════════════════════════════
+// PREÇOS LIVE — flutuação contínua (±0.5%) por produto/loja
+// Preços "atualizados ao segundo": a UI re-renderiza os
+// produtos visíveis a cada tick e o mais barato pode mudar.
+// ══════════════════════════════════════════════════════
+function liveTime(){ return Math.floor(Date.now()/1000); }
+function livePrice(base, key, t){
+  const seed = seedFromStr(key||'');
+  const phase = (seed % 6283)/1000; // 0..2π determinístico
+  const amp = 0.01;                 // ±1%
+  const w = Math.sin(t/3 + phase);  // ciclo ~19s
+  const v = base*(1 + w*amp);
+  return Math.max(0.01, Math.round(v*100)/100);
+}
+function basePriceOf(p, sel){
+  return (sel && p.stores && p.stores[sel]!=null) ? p.stores[sel] : (p.price||0);
+}
+function effPriceOf(p, sel, t){
+  const tt = (t==null) ? liveTime() : t;
+  return livePrice(basePriceOf(p, sel), p.name+'|'+(sel||'avg'), tt);
+}
+function effStorePrices(p, t){
+  const s = p.stores||{};
+  const out = {};
+  for(const k in s) out[k] = effPriceOf(p, k, t);
+  return out;
+}
+let _liveTimer = null;
+function hasInputFocus(){
+  const a = document.activeElement;
+  return a && (a.tagName==='INPUT'||a.tagName==='SELECT'||a.tagName==='TEXTAREA');
+}
+function refreshLivePrices(){
+  const clk = document.getElementById('live-clock');
+  if(clk) clk.textContent = '⏱ Atualizado às '+new Date().toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  if(hasInputFocus()) return; // não interromper a digitação
+  const featSec = document.getElementById('featured-section');
+  const resultsEl = document.getElementById('search-results');
+  if(currentTab==='pesquisa'){
+    if(featSec && featSec.style.display==='none' && window.__searchResults && window.__searchResults.length){
+      renderResults(resultsEl, window.__searchResults, window.__searchSource||'Catálogo local');
+    } else {
+      renderFeatured();
+    }
+  } else if(currentTab==='lista'){
+    renderList();
+    calcTotal();
+  }
+  // modal aberto
+  const modal = document.getElementById('product-modal');
+  if(window.__openProduct && modal && modal.classList.contains('show')){
+    const mb = document.querySelector('.modal-box');
+    const sc = mb ? mb.scrollTop : 0;
+    const tab = window.__activeHistTab;
+    openProductModal(window.__openProduct);
+    if(tab){
+      const btns = document.querySelectorAll('#pm-hist-tabs button');
+      btns.forEach(b=>{
+        if(b.textContent.replace(/\s/g,'')===storeName(tab).replace(/\s/g,'')) showHistTab(tab, b);
+      });
+    }
+    if(mb) mb.scrollTop = sc;
+  }
+}
+function startLiveTicker(){
+  if(_liveTimer) return;
+  _liveTimer = setInterval(function(){ refreshLivePrices(); }, 1000);
+  refreshLivePrices();
+}
+
+// ══════════════════════════════════════════════════════
 // TABS
 // ══════════════════════════════════════════════════════
 function switchTab(t){
@@ -1404,12 +2823,12 @@ function renderFeatured(){
         </div>`;
       window.__featuredRec = recProducts;
       html += recProducts.map((p,idx)=>{
-        const dPrice = (storeFilter&&p.stores&&p.stores[storeFilter]!=null)?p.stores[storeFilter]:p.price;
+        const dPrice = effPriceOf(p, storeFilter);
         return `<div class="prod-card">
           <div onclick="openProductModal(window.__featuredRec[${idx}])">${productPhotoHtml(p,false)}</div>
           <div class="prod-info">
             <div class="prod-name">${p.name}</div>
-            <div class="prod-store">${formatStores(p.stores)}</div>
+            <div class="prod-store">${formatStores(p.stores, p.name)}</div>
             ${p.promo?`<div class="prod-promo">ℹ️ ${p.promo}</div>`:''}
           </div>
           <div class="prod-right">
@@ -1449,15 +2868,16 @@ function renderFeatured(){
       <div class="card-title" style="margin-bottom:9px">🛒 Produtos em destaque</div>`;
     window.__featuredProds = featuredProds;
     html += featuredProds.map((p,idx)=>{
-      const dPrice = (storeFilter&&p.stores&&p.stores[storeFilter]!=null)?p.stores[storeFilter]:p.price;
-      const prices = Object.values(p.stores||{p:p.price});
-      const minP = Math.min(...prices);
-      const isBest = dPrice===minP && Object.keys(p.stores||{}).length>1;
+      const dPrice = effPriceOf(p, storeFilter);
+      const live = effStorePrices(p);
+      const keys = Object.keys(live);
+      const minP = keys.length ? Math.min(...keys.map(k=>live[k])) : dPrice;
+      const isBest = dPrice===minP && keys.length>1;
       return `<div class="prod-card">
         <div onclick="openProductModal(window.__featuredProds[${idx}])">${productPhotoHtml(p,false)}</div>
         <div class="prod-info">
           <div class="prod-name">${p.name}</div>
-          <div class="prod-store">${formatStores(p.stores)}</div>
+          <div class="prod-store">${formatStores(p.stores, p.name)}</div>
           ${p.promo?`<div class="prod-promo">ℹ️ ${p.promo}</div>`:''}
           ${isBest?'<span class="chip-best">✓ Melhor preço</span>':''}
         </div>
@@ -1613,23 +3033,24 @@ function renderResults(el, products, source){
     return;
   }
   window.__searchResults = products;
-  const prices = products.map(p=>p.price);
-  const min = Math.min(...prices), max = Math.max(...prices);
+  window.__searchSource = source;
   const storeFilter = document.getElementById('search-store-filter') ? document.getElementById('search-store-filter').value : '';
   const sel = storeFilter || (document.getElementById('list-market') ? document.getElementById('list-market').value : null);
+  const prices = products.map(p=>effPriceOf(p, sel));
+  const min = Math.min(...prices), max = Math.max(...prices);
   el.innerHTML = `<div style="font-size:.63rem;color:var(--muted);margin-bottom:6px;padding:0 1px">Fonte: ${source} · toca na imagem para ver histórico de preços</div>`+
     products.map((p,idx)=>{
-      const dPrice = (sel && p.stores && p.stores[sel]!=null) ? p.stores[sel] : p.price;
+      const dPrice = effPriceOf(p, sel);
       return `
     <div class="prod-card">
       <div onclick="openProductModal(window.__searchResults[${idx}])">${productPhotoHtml(p,false)}</div>
       <div class="prod-info">
         <div class="prod-name">${p.name}</div>
-        <div class="prod-store">${formatStores(p.stores)}</div>
+        <div class="prod-store">${formatStores(p.stores, p.name)}</div>
         ${p.promo?`<div class="prod-promo">ℹ️ ${p.promo}</div>`:''}
         ${sel && p.stores && p.stores[sel]!=null?`<div class="prod-store" style="color:var(--green);font-weight:700">🛒 Preço em ${storeName(sel)} pré-selecionado</div>`:''}
-        ${p.price===min&&prices.length>1?'<span class="chip-best">✓ Mais barato</span>':''}
-        ${p.price===max&&prices.length>1?'<span class="chip-high">▲ Mais caro</span>':''}
+        ${dPrice===min&&prices.length>1?'<span class="chip-best">✓ Mais barato</span>':''}
+        ${dPrice===max&&prices.length>1?'<span class="chip-high">▲ Mais caro</span>':''}
       </div>
       <div class="prod-right">
         <div class="prod-price">${fmtEur(dPrice)}</div>
@@ -1638,9 +3059,9 @@ function renderResults(el, products, source){
     </div>`;}).join('');
 }
 
-function formatStores(stores){
+function formatStores(stores, name){
   if(!stores) return '';
-  return Object.entries(stores).map(([k,v])=>`${storeName(k)}: ${fmtEur(v)}`).join(' · ');
+  return Object.entries(stores).map(([k,v])=>`${storeName(k)}: ${fmtEur(name?livePrice(v, name+'|'+k, liveTime()):v)}`).join(' · ');
 }
 
 // ══════════════════════════════════════════════════════
@@ -1692,13 +3113,13 @@ function renderListResults(el, products){
   window.__listSearchResults = products;
   const sel = document.getElementById('list-market') ? document.getElementById('list-market').value : null;
   el.innerHTML = products.map((p,idx)=>{
-    const dPrice = (sel && p.stores && p.stores[sel]!=null) ? p.stores[sel] : p.price;
+    const dPrice = effPriceOf(p, sel);
     return `
     <div class="prod-card" style="margin-bottom:5px">
       <div onclick="openProductModal(window.__listSearchResults[${idx}])">${productPhotoHtml(p,false)}</div>
       <div class="prod-info">
         <div class="prod-name" style="font-size:.76rem">${p.name}</div>
-        <div class="prod-store" style="font-size:.62rem">${sel && p.stores && p.stores[sel]!=null ? `${storeName(sel)}: ${fmtEur(dPrice)}` : `${fmtEur(p.price)} (preço médio)`}</div>
+        <div class="prod-store" style="font-size:.62rem">${sel && p.stores && p.stores[sel]!=null ? `${storeName(sel)}: ${fmtEur(dPrice)}` : `${fmtEur(dPrice)} (preço médio)`}</div>
       </div>
       <button class="add-btn-sm" onclick='addToList(${JSON.stringify({name:p.name,price:dPrice,stores:p.stores||{},emoji:p.emoji||"🛒",promo:p.promo||null})})'>+</button>
     </div>`;
@@ -1758,19 +3179,22 @@ function renderList(){
   window.__listItemsCache = listItems;
   el.innerHTML = listItems.map((item,idx)=>{
     const qty = item.qty||1;
-    const linePrice = item.price * qty;
+    const hasStores = item.stores && Object.keys(item.stores).length>0;
+    const dPrice = hasStores ? effPriceOf(item, market) : item.price;
+    const linePrice = dPrice * qty;
     // cheaper elsewhere?
     let cheaperHtml = '';
-    if(item.stores && Object.keys(item.stores).length>1){
+    if(hasStores && Object.keys(item.stores).length>1){
       const others = Object.entries(item.stores).filter(([k])=>k!==market);
       if(others.length){
-        const [cheapStore, cheapPrice] = others.reduce((a,b)=>b[1]<a[1]?b:a);
-        if(cheapPrice < (item.stores[market]||item.price) - 0.01){
-          cheaperHtml = `<div class="li-cheaper">💡 Mais barato no <strong>${storeName(cheapStore)}</strong>: ${fmtEur(cheapPrice)}/un (poupa ${fmtEur((item.stores[market]||item.price)-cheapPrice)}/un)</div>`;
+        const othersLive = others.map(([k])=>[k, effPriceOf(item, k)]);
+        const [cheapStore, cheapPrice] = othersLive.reduce((a,b)=>b[1]<a[1]?b:a);
+        const myPrice = effPriceOf(item, market);
+        if(cheapPrice < myPrice - 0.01){
+          cheaperHtml = `<div class="li-cheaper">💡 Mais barato no <strong>${storeName(cheapStore)}</strong>: ${fmtEur(cheapPrice)}/un (poupa ${fmtEur(myPrice-cheapPrice)}/un)</div>`;
         }
       }
     }
-    const hasStores = item.stores && Object.keys(item.stores).length>0;
     return `
     <div class="list-item">
       <div class="li-top">
@@ -1791,7 +3215,7 @@ function renderList(){
         <input type="number" inputmode="numeric" min="1" max="99" value="${qty}"
           style="width:52px;padding:4px 6px;border:1.5px solid var(--border);border-radius:8px;font-size:.85rem;font-weight:700;text-align:center;background:var(--input-bg);color:var(--text);font-family:inherit;-moz-appearance:textfield"
           onchange="setQty(${item.id},this.value)" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-        <span style="font-size:.65rem;color:var(--muted)">× ${fmtEur(item.price)}/un</span>
+        <span style="font-size:.65rem;color:var(--muted)">× ${fmtEur(dPrice)}/un</span>
       </div>
       ${cheaperHtml}
     </div>`;
@@ -1799,7 +3223,11 @@ function renderList(){
 }
 
 function calcTotal(){
-  const total = listItems.reduce((s,i)=>s+(i.price*(i.qty||1)),0);
+  const market = document.getElementById('list-market') ? document.getElementById('list-market').value : null;
+  const total = listItems.reduce((s,i)=>{
+    const p = (i.stores && Object.keys(i.stores).length>0) ? effPriceOf(i, market) : i.price;
+    return s+(p*(i.qty||1));
+  },0);
   document.getElementById('total-amt').textContent = fmtEur(total);
 
   const c = activeCampaign;
@@ -2150,6 +3578,7 @@ self.addEventListener('fetch', e => {
   updatePredefPrices();
   renderFeatured();
   document.getElementById('footer-bar').style.display='none';
+  startLiveTicker();
 })();
 </script>
 </body>
