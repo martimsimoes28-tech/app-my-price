@@ -2,7 +2,13 @@
 <html lang="pt">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="Compara preços de supermercado em Portugal e poupa nas tuas compras. Milhares de produtos, campanhas ativas e listas de compras.">
+<meta name="theme-color" content="#16a34a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Poupa Fácil">
 <title>Poupa Fácil 🛒</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
@@ -11,11 +17,12 @@
   --green:#16a34a; --green-l:#dcfce7; --green-d:#14532d;
   --amber:#f59e0b; --amber-l:#fef3c7;
   --red:#dc2626; --red-l:#fee2e2;
-  --bg:#f0fdf4; --card:#fff; --border:#e2e8f0;
+  --bg:#f2f7f3; --card:#fff; --border:#e2e8f0;
   --text:#1e293b; --muted:#64748b;
-  --sh:0 1px 3px rgba(0,0,0,.08);
-  --sh-lg:0 10px 15px -3px rgba(0,0,0,.07);
+  --sh:0 1px 2px rgba(16,40,20,.05),0 4px 14px rgba(16,40,20,.05);
+  --sh-lg:0 14px 30px -10px rgba(16,40,20,.18);
   --input-bg:#f8fafc; --overlay:rgba(15,23,42,.55);
+  --nav-h:66px;
 }
 body.dark {
   --green:#22c55e; --green-l:#14532d; --green-d:#86efac;
@@ -29,7 +36,8 @@ body.dark {
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:140px;transition:background .25s,color .25s}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:calc(var(--nav-h) + 26px);transition:background .25s,color .25s}
+body.has-footer{padding-bottom:calc(var(--nav-h) + 130px)}
 body.dark .inp,body.dark .sel{background:var(--input-bg);color:var(--text);border-color:var(--border)}
 body.dark .inp:focus{background:#1e293b}
 body.dark .qchip{background:#14532d;color:#86efac;border-color:#166534}
@@ -56,25 +64,31 @@ body.dark .cb-desc{color:#cbd5e1}
 body.dark .sb-none{background:#1e293b;color:var(--muted)}
 
 /* HEADER */
-header{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:13px 16px 11px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
-.h-inner{max-width:480px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-.h-title{font-size:1.15rem;font-weight:900;letter-spacing:-.5px}
-.h-sub{font-size:.6rem;color:#86efac;margin-top:2px;letter-spacing:.8px;text-transform:uppercase}
-.h-badge{background:var(--amber);color:#78350f;font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:99px}
+header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);color:#fff;padding:11px 16px;position:sticky;top:0;z-index:100;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 4px 18px rgba(6,45,24,.28)}
+.h-inner{max-width:480px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.h-brand{display:flex;align-items:center;gap:10px;min-width:0}
+.h-logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(145deg,#ffffff,#e6f6eb);display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 3px 10px rgba(0,0,0,.25),inset 0 0 0 1px rgba(255,255,255,.7);flex-shrink:0}
+.h-title{font-size:1.12rem;font-weight:900;letter-spacing:-.4px;line-height:1.02}
+.h-sub{font-size:.58rem;color:#bbf7d0;margin-top:3px;letter-spacing:.5px;text-transform:uppercase;font-weight:600}
+.h-badge{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);color:#fff;font-size:.6rem;font-weight:700;padding:3px 10px;border-radius:99px;backdrop-filter:blur(4px)}
 
-/* TABS */
-.tabs{background:#fff;border-bottom:2px solid var(--border);position:sticky;top:60px;z-index:90}
-.tabs-inner{max-width:480px;margin:0 auto;display:flex}
-.tab-btn{flex:1;padding:11px 2px;font-size:.72rem;font-weight:700;color:var(--muted);background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:2px}
-.tab-btn .ticon{font-size:1.1rem}
-.tab-btn.active{color:var(--green);border-bottom-color:var(--green)}
+/* TABS — barra de navegação inferior (estilo app) */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:90;background:var(--card);border-top:1px solid var(--border);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));box-shadow:0 -6px 24px rgba(15,23,42,.08)}
+.tabs-inner{max-width:480px;margin:0 auto;display:flex;align-items:stretch}
+.tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px 2px;font-size:.56rem;font-weight:700;letter-spacing:.1px;color:var(--muted);background:none;border:none;cursor:pointer;border-radius:12px;transition:color .2s,transform .15s;position:relative}
+.tab-btn .ticon{font-size:1.3rem;line-height:1;transition:transform .2s}
+.tab-btn:active{transform:scale(.93)}
+.tab-btn.active{color:var(--green)}
+.tab-btn.active .ticon{transform:translateY(-1px)}
+.tab-btn.active::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:24px;height:3px;border-radius:0 0 5px 5px;background:var(--green)}
 
 /* CONTENT */
-.content{max-width:480px;margin:0 auto;padding:12px 12px 0;display:none}
-.content.active{display:block}
+.content{max-width:480px;margin:0 auto;padding:14px 12px 0;display:none}
+.content.active{display:block;animation:tabIn .3s ease-out}
+@keyframes tabIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
 /* CARD */
-.card{background:var(--card);border-radius:14px;padding:13px;border:1px solid var(--border);box-shadow:var(--sh);margin-bottom:11px}
+.card{background:var(--card);border-radius:16px;padding:13px;border:1px solid var(--border);box-shadow:var(--sh);margin-bottom:11px}
 .card-title{font-size:.6rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:9px}
 
 /* INPUTS */
@@ -120,7 +134,8 @@ header{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:13p
 .qchip:hover{background:#bbf7d0}
 
 /* Product card */
-.prod-card{background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:10px 11px;display:flex;gap:9px;align-items:center;margin-bottom:7px}
+.prod-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:10px 11px;display:flex;gap:9px;align-items:center;margin-bottom:8px;box-shadow:var(--sh);transition:transform .15s,box-shadow .15s}
+.prod-card:active{transform:scale(.985)}
 .prod-icon{width:50px;height:50px;border-radius:8px;background:linear-gradient(135deg,#e2e8f0,#cbd5e1);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
 .prod-info{flex:1;min-width:0}
 .prod-name{font-size:.8rem;font-weight:600;color:var(--text);line-height:1.3}
@@ -154,7 +169,7 @@ header{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:13p
 .add-row{display:grid;grid-template-columns:1fr 80px;gap:7px;margin-bottom:7px}
 
 /* ── PROGRESS / FOOTER ── */
-.footer-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1.5px solid var(--border);padding:10px 14px 18px;z-index:80;box-shadow:0 -4px 15px rgba(0,0,0,.07)}
+.footer-bar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--nav-h) + 10px);width:100%;max-width:480px;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:10px 14px 14px;z-index:80;box-shadow:var(--sh-lg)}
 .footer-inner{max-width:480px;margin:0 auto}
 .total-row{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:6px}
 .total-lbl{font-size:.58rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.7px}
@@ -200,6 +215,7 @@ header{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:13p
 .prod-photo.lg{width:84px;height:84px;font-size:2.4rem;border-radius:14px;cursor:default}
 .prod-photo .cat-tag{position:absolute;bottom:1px;right:1px;font-size:.45rem;background:rgba(0,0,0,.35);color:#fff;padding:1px 4px;border-radius:4px;text-transform:uppercase;letter-spacing:.3px}
 .prod-photo .prod-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:8px;background:var(--card)}
+.prod-photo .prod-img.emoji-img{object-fit:contain;padding:9px;background:transparent}
 .prod-photo.lg .prod-img{border-radius:14px}
 
 /* ── STORE BADGE / LOGO ── */
@@ -242,6 +258,94 @@ header{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:13p
 .fs-grid{display:flex;gap:6px}
 .fs-btn{flex:1;padding:8px 4px;border-radius:9px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-family:inherit;font-weight:700;cursor:pointer}
 .fs-btn.active{border-color:var(--green);background:var(--green-l);color:var(--green-d)}
+
+/* ── SUPERMERCADOS ── */
+.store-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px}
+.store-card{background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:12px 10px;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;transition:transform .15s,box-shadow .15s;box-shadow:var(--sh);text-align:center}
+.store-card:hover{transform:translateY(-2px);box-shadow:var(--sh-lg)}
+.store-card.sel{border-color:var(--green);background:var(--green-l)}
+.store-card .sc-logo{width:46px;height:46px;border-radius:12px;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;border:1px solid var(--border)}
+.store-card .sc-logo svg{width:100%;height:100%}
+.sc-name{font-size:.8rem;font-weight:800;color:var(--text)}
+.sc-meta{font-size:.62rem;color:var(--muted);line-height:1.4}
+.store-tabs{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 10px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.store-tabs::-webkit-scrollbar{display:none}
+.store-tab{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:7px 11px;border-radius:10px;border:1.5px solid var(--border);background:var(--card);color:var(--muted);font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.store-tab .st-logo{width:16px;height:16px;border-radius:4px;overflow:hidden;display:flex;flex-shrink:0}
+.store-tab .st-logo svg{width:100%;height:100%}
+.store-tab.active{background:var(--green);border-color:var(--green);color:#fff}
+.store-head{display:flex;align-items:center;gap:11px;margin-bottom:11px}
+.sh-logo{width:52px;height:52px;border-radius:14px;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);flex-shrink:0}
+.sh-logo svg{width:100%;height:100%}
+.sh-name{font-size:1.02rem;font-weight:900;color:var(--text)}
+.sh-sub{font-size:.66rem;color:var(--muted);margin-top:2px;line-height:1.4}
+.fav-promo{background:linear-gradient(135deg,var(--amber-l),#fff7ed);border:1.5px solid var(--amber);border-radius:12px;padding:10px 11px;display:flex;gap:9px;align-items:center;margin-bottom:7px;box-shadow:var(--sh)}
+.promo-badge{background:var(--amber);color:#78350f;font-size:.58rem;font-weight:800;padding:2px 8px;border-radius:99px;display:inline-block}
+.cb-mercadona{background:#ecfdf5;border-color:#059669}
+
+/* ── PERFIL ── */
+.fav-row{display:flex;align-items:center;gap:8px;padding:8px 4px;border-bottom:1px solid var(--border)}
+.fav-row:last-child{border-bottom:none}
+.store-toggle{display:flex;align-items:center;gap:8px;padding:9px 10px;border:1.5px solid var(--border);border-radius:12px;cursor:pointer;font-family:inherit;background:var(--card);color:var(--text);font-size:.78rem;font-weight:700;width:100%;text-align:left;transition:all .15s}
+.store-toggle.sel{border-color:var(--green);background:var(--green-l);color:var(--green-d)}
+.store-toggle .st-logo{width:22px;height:22px;border-radius:6px;overflow:hidden;display:flex;flex-shrink:0}
+.store-toggle .st-logo svg{width:100%;height:100%}
+.store-toggle .st-check{margin-left:auto;font-size:.85rem}
+
+/* ── HOME / INÍCIO ── */
+.home-hello{display:flex;flex-direction:column;gap:2px;padding:2px 2px 12px}
+.hh-greet{font-size:1.18rem;font-weight:900;letter-spacing:-.4px}
+.hh-date{font-size:.68rem;color:var(--muted);text-transform:capitalize}
+.hero-card{padding:0;overflow:hidden;position:relative}
+.hero-track{display:flex;transition:transform .5s cubic-bezier(.4,0,.2,1)}
+.hero-slide{min-width:100%;cursor:pointer}
+.hero-bg{display:flex;align-items:center;gap:12px;padding:15px 16px;min-height:98px}
+.hero-logo{width:54px;height:54px;border-radius:14px;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,.12);border:1px solid rgba(255,255,255,.6)}
+.hero-logo img{width:100%;height:100%;object-fit:contain}
+.hero-content{flex:1;min-width:0}
+.hero-store{font-size:.58rem;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#92400e}
+.hero-title{font-size:.92rem;font-weight:800;color:#1e293b;line-height:1.25;margin-top:2px}
+.hero-reward{font-size:.7rem;color:#166534;font-weight:600;margin-top:3px}
+.hero-dots{display:flex;gap:5px;justify-content:center;padding:10px 0 12px}
+.hero-dot{width:7px;height:7px;border-radius:99px;background:var(--border);cursor:pointer;transition:all .3s;border:none;padding:0}
+.hero-dot.on{width:20px;background:var(--green)}
+.sec-head{display:flex;justify-content:space-between;align-items:center;margin:2px 2px 9px}
+.sec-title{font-size:.6rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.9px}
+.sec-more{font-size:.66rem;font-weight:700;color:var(--green);background:none;border:none;cursor:pointer;font-family:inherit}
+.hscroll{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 10px;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;scrollbar-width:none}
+.hscroll::-webkit-scrollbar{display:none}
+.hcard{scroll-snap-align:start;flex-shrink:0;width:152px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:10px;box-shadow:var(--sh);display:flex;flex-direction:column;gap:6px;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.hcard:active{transform:scale(.97)}
+.hc-img{align-self:center;cursor:pointer}
+.hc-name{font-size:.72rem;font-weight:700;line-height:1.25;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:36px}
+.hc-price{display:flex;align-items:baseline;gap:5px;flex-wrap:wrap}
+.hc-price .p{font-size:.95rem;font-weight:900;color:var(--green)}
+.hc-price .s{font-size:.62rem;color:var(--muted)}
+.hc-save{font-size:.56rem;font-weight:800;color:#92400e;background:var(--amber-l);padding:2px 7px;border-radius:7px;align-self:flex-start;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hc-row{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
+.hc-store{font-size:.6rem;color:var(--muted);font-weight:700}
+.hc-btn{background:var(--green);color:#fff;border:none;border-radius:9px;width:28px;height:28px;font-size:1.05rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hc-btn:active{transform:scale(.9)}
+.home-stats{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+.hs-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:12px;box-shadow:var(--sh);display:flex;flex-direction:column;gap:5px;min-width:0}
+.hs-ico{font-size:1.1rem}
+.hs-val{font-size:1.25rem;font-weight:900;letter-spacing:-.5px;line-height:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hs-lbl{font-size:.6rem;color:var(--muted);font-weight:600;line-height:1.3}
+.hs-card.grad{background:linear-gradient(135deg,var(--green-d),var(--green));border:none;color:#fff}
+.hs-card.grad .hs-lbl{color:#bbf7d0}
+.hs-card.grad .hs-val{color:#fff}
+.home-cats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.hcat{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:9px 4px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;transition:transform .15s;box-shadow:var(--sh)}
+.hcat:active{transform:scale(.94)}
+.hcat .hc-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+.hcat .hc-txt{font-size:.58rem;font-weight:700;text-align:center;color:var(--text);line-height:1.15}
+.pm-actions{display:flex;gap:7px;margin:2px 0 13px}
+.pm-act{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:9px 6px;border-radius:11px;border:1.5px solid var(--border);background:var(--input-bg);font-size:.7rem;font-weight:700;cursor:pointer;font-family:inherit;color:var(--text);transition:all .15s}
+.pm-act:active{transform:scale(.97)}
+.pm-act.on{background:var(--red-l);border-color:#fecaca;color:#7f1d1d}
+.sk{position:relative;overflow:hidden;background:#eef2f6;border-radius:10px}
+.sk::after{content:'';position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:shimmer 1.4s infinite}
+@keyframes shimmer{to{transform:translateX(100%)}}
 </style>
 </head>
 <body>
@@ -250,10 +354,12 @@ header{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:13p
 
 <header>
   <div class="h-inner">
-    <div>
-      <div class="h-title">🛒 Poupa Fácil</div>
-      <div class="h-sub">Preços reais · Campanhas ativas · Portugal</div>
-      <div class="h-sub" id="live-clock" style="font-size:.58rem;color:#dcfce7;margin-top:2px">⏱ Preços a flutuar em tempo real</div>
+    <div class="h-brand">
+      <div class="h-logo">🛒</div>
+      <div>
+        <div class="h-title">Poupa Fácil</div>
+        <div class="h-sub">Preços reais · Campanhas · Portugal</div>
+      </div>
     </div>
     <div class="h-actions">
       <span class="h-badge">Jun 2026</span>
@@ -264,16 +370,26 @@ header{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:13p
 
 <div class="tabs">
   <div class="tabs-inner">
-    <button class="tab-btn active" onclick="switchTab('pesquisa')"><span class="ticon">🔍</span>Produtos</button>
-    <button class="tab-btn" onclick="switchTab('campanhas')"><span class="ticon">📣</span>Campanhas</button>
-    <button class="tab-btn" onclick="switchTab('lista')"><span class="ticon">📝</span>Lista</button>
+    <button class="tab-btn active" data-tab="inicio" onclick="switchTab('inicio')"><span class="ticon">🏠</span><span class="tlabel">Início</span></button>
+    <button class="tab-btn" data-tab="pesquisa" onclick="switchTab('pesquisa')"><span class="ticon">🔍</span><span class="tlabel">Produtos</span></button>
+    <button class="tab-btn" data-tab="supermercados" onclick="switchTab('supermercados')"><span class="ticon">🏪</span><span class="tlabel">Lojas</span></button>
+    <button class="tab-btn" data-tab="campanhas" onclick="switchTab('campanhas')"><span class="ticon">📣</span><span class="tlabel">Ofertas</span></button>
+    <button class="tab-btn" data-tab="lista" onclick="switchTab('lista')"><span class="ticon">📝</span><span class="tlabel">Lista</span></button>
+    <button class="tab-btn" data-tab="perfil" onclick="switchTab('perfil')"><span class="ticon">👤</span><span class="tlabel">Perfil</span></button>
   </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     TAB: INÍCIO
+══════════════════════════════════════ -->
+<div class="content active" id="tab-inicio">
+  <div id="home-root"></div>
 </div>
 
 <!-- ══════════════════════════════════════
      TAB: PESQUISA
 ══════════════════════════════════════ -->
-<div class="content active" id="tab-pesquisa">
+<div class="content" id="tab-pesquisa">
 
   <div class="card">
     <div class="card-title">🔍 Pesquisar produto</div>
@@ -352,7 +468,7 @@ header{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:13p
   <div class="camp-banner cb-pd" onclick="activateCampaign('pingo_doce','pd_100_30')">
     <div class="cb-header">
       <div class="cb-logo" style="background:#fef3c7;">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Pingo_Doce_Logo.svg/200px-Pingo_Doce_Logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><circle cx=&quot;50&quot; cy=&quot;50&quot; r=&quot;50&quot; fill=&quot;#FFD700&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;28&quot; font-weight=&quot;900&quot; fill=&quot;#006400&quot; font-family=&quot;Arial&quot;>PD</text></svg>'" alt="Pingo Doce">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Pingo_Doce_logo.png/250px-Pingo_Doce_logo.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><circle cx=&quot;50&quot; cy=&quot;50&quot; r=&quot;50&quot; fill=&quot;#FFD700&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;28&quot; font-weight=&quot;900&quot; fill=&quot;#006400&quot; font-family=&quot;Arial&quot;>PD</text></svg>'" alt="Pingo Doce">
       </div>
       <div>
         <div class="cb-store">Pingo Doce</div>
@@ -372,7 +488,7 @@ header{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:13p
   <div class="camp-banner cb-pd" onclick="activateCampaign('pingo_doce','pd_acumulador')">
     <div class="cb-header">
       <div class="cb-logo" style="background:#fef3c7;">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Pingo_Doce_Logo.svg/200px-Pingo_Doce_Logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><circle cx=&quot;50&quot; cy=&quot;50&quot; r=&quot;50&quot; fill=&quot;#FFD700&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;28&quot; font-weight=&quot;900&quot; fill=&quot;#006400&quot;>PD</text></svg>'" alt="Pingo Doce">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Pingo_Doce_logo.png/250px-Pingo_Doce_logo.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><circle cx=&quot;50&quot; cy=&quot;50&quot; r=&quot;50&quot; fill=&quot;#FFD700&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;28&quot; font-weight=&quot;900&quot; fill=&quot;#006400&quot;>PD</text></svg>'" alt="Pingo Doce">
       </div>
       <div>
         <div class="cb-store">Pingo Doce</div>
@@ -392,7 +508,7 @@ header{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:13p
   <div class="camp-banner cb-pd" onclick="activateCampaign('pingo_doce','pd_50_10')">
     <div class="cb-header">
       <div class="cb-logo" style="background:#fef3c7;">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Pingo_Doce_Logo.svg/200px-Pingo_Doce_Logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><circle cx=&quot;50&quot; cy=&quot;50&quot; r=&quot;50&quot; fill=&quot;#FFD700&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;28&quot; font-weight=&quot;900&quot; fill=&quot;#006400&quot;>PD</text></svg>'" alt="Pingo Doce">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Pingo_Doce_logo.png/250px-Pingo_Doce_logo.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><circle cx=&quot;50&quot; cy=&quot;50&quot; r=&quot;50&quot; fill=&quot;#FFD700&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;28&quot; font-weight=&quot;900&quot; fill=&quot;#006400&quot;>PD</text></svg>'" alt="Pingo Doce">
       </div>
       <div>
         <div class="cb-store">Pingo Doce</div>
@@ -411,7 +527,7 @@ header{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:13p
   <div class="camp-banner cb-cont" onclick="activateCampaign('continente','cont_15pct')">
     <div class="cb-header">
       <div class="cb-logo" style="background:#eff6ff;">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Continente_logo.svg/200px-Continente_logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#e11d48&quot;/><text x=&quot;50&quot; y=&quot;58&quot; text-anchor=&quot;middle&quot; font-size=&quot;22&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot;>CONT</text></svg>'" alt="Continente">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Logo_Continente.svg/250px-Logo_Continente.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#e11d48&quot;/><text x=&quot;50&quot; y=&quot;58&quot; text-anchor=&quot;middle&quot; font-size=&quot;22&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot;>CONT</text></svg>'" alt="Continente">
       </div>
       <div>
         <div class="cb-store">Continente</div>
@@ -430,7 +546,7 @@ header{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:13p
   <div class="camp-banner cb-cont" onclick="activateCampaign('continente','cont_100_15')">
     <div class="cb-header">
       <div class="cb-logo" style="background:#eff6ff;">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Continente_logo.svg/200px-Continente_logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#e11d48&quot;/><text x=&quot;50&quot; y=&quot;58&quot; text-anchor=&quot;middle&quot; font-size=&quot;22&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot;>CONT</text></svg>'" alt="Continente">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Logo_Continente.svg/250px-Logo_Continente.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#e11d48&quot;/><text x=&quot;50&quot; y=&quot;58&quot; text-anchor=&quot;middle&quot; font-size=&quot;22&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot;>CONT</text></svg>'" alt="Continente">
       </div>
       <div>
         <div class="cb-store">Continente</div>
@@ -449,7 +565,7 @@ header{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:13p
   <div class="camp-banner cb-auch" onclick="activateCampaign('auchan','auch_50_10')">
     <div class="cb-header">
       <div class="cb-logo" style="background:#f3e8ff;">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Auchan_Logo.svg/200px-Auchan_Logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#7c3aed&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;28&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot;>A</text></svg>'" alt="Auchan">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Auchan_Retail_logo.svg/250px-Auchan_Retail_logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#7c3aed&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;28&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot;>A</text></svg>'" alt="Auchan">
       </div>
       <div>
         <div class="cb-store">Auchan</div>
@@ -469,7 +585,7 @@ header{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:13p
   <div class="camp-banner cb-inter" onclick="activateCampaign('intermarche','inter_80_8')">
     <div class="cb-header">
       <div class="cb-logo" style="background:#fff7ed;">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Intermarche-Logo.svg/200px-Intermarche-Logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#ea580c&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;36&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot;>I</text></svg>'" alt="Intermarché">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Intermarch%C3%A9_logo_2009_classic.svg/250px-Intermarch%C3%A9_logo_2009_classic.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#ea580c&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;36&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot;>I</text></svg>'" alt="Intermarché">
       </div>
       <div>
         <div class="cb-store">Intermarché</div>
@@ -488,7 +604,7 @@ header{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:13p
   <div class="camp-banner cb-lidl">
     <div class="cb-header">
       <div class="cb-logo" style="background:#fff1f2;">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Lidl-Logo.svg/200px-Lidl-Logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#1e3a8a&quot;/><rect x=&quot;0&quot; y=&quot;65&quot; width=&quot;100&quot; height=&quot;35&quot; fill=&quot;#e11d48&quot;/><text x=&quot;50&quot; y=&quot;55&quot; text-anchor=&quot;middle&quot; font-size=&quot;24&quot; font-weight=&quot;900&quot; fill=&quot;#FFD700&quot;>LIDL</text></svg>'" alt="Lidl">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Lidl-Logo.svg/250px-Lidl-Logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#1e3a8a&quot;/><rect x=&quot;0&quot; y=&quot;65&quot; width=&quot;100&quot; height=&quot;35&quot; fill=&quot;#e11d48&quot;/><text x=&quot;50&quot; y=&quot;55&quot; text-anchor=&quot;middle&quot; font-size=&quot;24&quot; font-weight=&quot;900&quot; fill=&quot;#FFD700&quot;>LIDL</text></svg>'" alt="Lidl">
       </div>
       <div>
         <div class="cb-store">Lidl</div>
@@ -506,7 +622,7 @@ header{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:13p
   <div class="camp-banner cb-aldi">
     <div class="cb-header">
       <div class="cb-logo" style="background:#f0fdf4;">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Logo_Aldi.svg/200px-Logo_Aldi.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#1e40af&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;26&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot;>ALDI</text></svg>'" alt="Aldi">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Aldi_S%C3%BCd_2017_logo.svg/250px-Aldi_S%C3%BCd_2017_logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:3px" onerror="this.outerHTML='<svg viewBox=&quot;0 0 100 100&quot; width=&quot;36&quot; height=&quot;36&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#1e40af&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;26&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot;>ALDI</text></svg>'" alt="Aldi">
       </div>
       <div>
         <div class="cb-store">Aldi</div>
@@ -517,6 +633,46 @@ header{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:13p
     <div class="cb-tags">
       <span class="tag tag-g">Preços baixos fixos</span>
     </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     TAB: SUPERMERCADOS
+══════════════════════════════════════ -->
+<div class="content" id="tab-supermercados">
+  <div id="supermercados-root"></div>
+</div>
+
+<!-- ══════════════════════════════════════
+     TAB: PERFIL
+══════════════════════════════════════ -->
+<div class="content" id="tab-perfil">
+  <div id="perfil-stats"></div>
+  <div class="card">
+    <div class="card-title">🛍️ As tuas lojas preferidas</div>
+    <div style="font-size:.68rem;color:var(--muted);margin-bottom:9px;line-height:1.5">Seleciona os supermercados que mais usas. Os teus produtos favoritos aparecem em destaque na aba desse supermercado quando estão em promoção.</div>
+    <div id="fav-stores-grid" style="display:flex;flex-direction:column;gap:7px"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">⭐ Os teus produtos favoritos</div>
+    <div class="search-row" style="margin-bottom:7px">
+      <input type="text" class="inp" id="fav-search" placeholder="Pesquisar produto favorito..." onkeydown="if(event.key==='Enter')favSearch()">
+      <button class="btn-green" onclick="favSearch()">Buscar</button>
+    </div>
+    <div id="fav-search-results" style="margin-bottom:8px"></div>
+    <div style="font-size:.65rem;color:var(--muted);margin-bottom:8px;line-height:1.5">Adiciona aqui os produtos que compras com mais frequência. Quando um destes estiver em promoção num supermercado, aparece em destaque na respetiva aba.</div>
+    <div id="fav-items">
+      <div class="empty-state"><span class="empty-icon">⭐</span>Sem favoritos.<br>Pesquisa acima os produtos que compras habitualmente.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">ℹ️ Sobre a app</div>
+    <div style="font-size:.74rem;line-height:1.6;color:var(--muted)">
+      <div><strong style="color:var(--text)">Poupa Fácil</strong> · v2.0</div>
+      <div style="margin-top:4px">Preços de referência de Jun 2026 recolhidos dos folhetos e apps das lojas. Fotos de produto © Wikimedia Commons (licença livre).</div>
+      <div style="margin-top:4px">Disponível offline via service worker. Instala a app a partir do menu do navegador.</div>
+    </div>
+    <button class="btn-dark" style="margin-top:10px;margin-bottom:0" onclick="shareApp()">📤 Partilhar a app</button>
   </div>
 </div>
 
@@ -717,6 +873,7 @@ header{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:13p
         <div style="font-size:.7rem;font-weight:700;color:var(--green);margin-top:2px" id="pm-bestnote"></div>
       </div>
     </div>
+    <div class="pm-actions" id="pm-actions"></div>
     <div id="pm-stores"></div>
   </div>
 </div>
@@ -1263,13 +1420,13 @@ const CAMP_ALERTS = {
 // LOJAS: nomes, cores e logotipos (SVG simplificado)
 // ══════════════════════════════════════════════════════
 const STORE_META = {
-  pingo_doce:{name:'Pingo Doce',color:'#f59e0b',bg:'#fef3c7',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Pingo_Doce_Logo.svg/200px-Pingo_Doce_Logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><circle cx=&quot;50&quot; cy=&quot;50&quot; r=&quot;50&quot; fill=&quot;#FFD700&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;28&quot; font-weight=&quot;900&quot; fill=&quot;#006400&quot; font-family=&quot;Arial&quot;>PD</text></svg>\'" alt="Pingo Doce">'},
-  continente:{name:'Continente',color:'#3b82f6',bg:'#eff6ff',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Continente_logo.svg/200px-Continente_logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#e11d48&quot;/><text x=&quot;50&quot; y=&quot;58&quot; text-anchor=&quot;middle&quot; font-size=&quot;22&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot; font-family=&quot;Arial&quot;>CONT</text></svg>\'" alt="Continente">'},
-  auchan:{name:'Auchan',color:'#a855f7',bg:'#f3e8ff',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Auchan_Logo.svg/200px-Auchan_Logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#7c3aed&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;28&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot; font-family=&quot;Arial&quot;>A</text></svg>\'" alt="Auchan">'},
-  intermarche:{name:'Intermarché',color:'#f97316',bg:'#fff7ed',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Intermarche-Logo.svg/200px-Intermarche-Logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#ea580c&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;36&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot; font-family=&quot;Arial&quot;>I</text></svg>\'" alt="Intermarché">'},
-  lidl:{name:'Lidl',color:'#f43f5e',bg:'#fff1f2',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Lidl-Logo.svg/200px-Lidl-Logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#1e3a8a&quot;/><rect x=&quot;0&quot; y=&quot;65&quot; width=&quot;100&quot; height=&quot;35&quot; fill=&quot;#e11d48&quot;/><text x=&quot;50&quot; y=&quot;55&quot; text-anchor=&quot;middle&quot; font-size=&quot;24&quot; font-weight=&quot;900&quot; fill=&quot;#FFD700&quot; font-family=&quot;Arial&quot;>LIDL</text></svg>\'" alt="Lidl">'},
-  aldi:{name:'Aldi',color:'#16a34a',bg:'#f0fdf4',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Logo_Aldi.svg/200px-Logo_Aldi.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#1e40af&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;26&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot; font-family=&quot;Arial&quot;>ALDI</text></svg>\'" alt="Aldi">'},
-  mercadona:{name:'Mercadona',color:'#059669',bg:'#ecfdf5',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Mercadona_logo.svg/200px-Mercadona_logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#047857&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;20&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot; font-family=&quot;Arial&quot;>MERC</text></svg>\'" alt="Mercadona">'},
+  pingo_doce:{name:'Pingo Doce',color:'#f59e0b',bg:'#fef3c7',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Pingo_Doce_logo.png/250px-Pingo_Doce_logo.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><circle cx=&quot;50&quot; cy=&quot;50&quot; r=&quot;50&quot; fill=&quot;#FFD700&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;28&quot; font-weight=&quot;900&quot; fill=&quot;#006400&quot; font-family=&quot;Arial&quot;>PD</text></svg>\'" alt="Pingo Doce">'},
+  continente:{name:'Continente',color:'#3b82f6',bg:'#eff6ff',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Logo_Continente.svg/250px-Logo_Continente.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#e11d48&quot;/><text x=&quot;50&quot; y=&quot;58&quot; text-anchor=&quot;middle&quot; font-size=&quot;22&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot; font-family=&quot;Arial&quot;>CONT</text></svg>\'" alt="Continente">'},
+  auchan:{name:'Auchan',color:'#a855f7',bg:'#f3e8ff',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Auchan_Retail_logo.svg/250px-Auchan_Retail_logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#7c3aed&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;28&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot; font-family=&quot;Arial&quot;>A</text></svg>\'" alt="Auchan">'},
+  intermarche:{name:'Intermarché',color:'#f97316',bg:'#fff7ed',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Intermarch%C3%A9_logo_2009_classic.svg/250px-Intermarch%C3%A9_logo_2009_classic.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#ea580c&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;36&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot; font-family=&quot;Arial&quot;>I</text></svg>\'" alt="Intermarché">'},
+  lidl:{name:'Lidl',color:'#f43f5e',bg:'#fff1f2',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Lidl-Logo.svg/250px-Lidl-Logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#1e3a8a&quot;/><rect x=&quot;0&quot; y=&quot;65&quot; width=&quot;100&quot; height=&quot;35&quot; fill=&quot;#e11d48&quot;/><text x=&quot;50&quot; y=&quot;55&quot; text-anchor=&quot;middle&quot; font-size=&quot;24&quot; font-weight=&quot;900&quot; fill=&quot;#FFD700&quot; font-family=&quot;Arial&quot;>LIDL</text></svg>\'" alt="Lidl">'},
+  aldi:{name:'Aldi',color:'#16a34a',bg:'#f0fdf4',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Aldi_S%C3%BCd_2017_logo.svg/250px-Aldi_S%C3%BCd_2017_logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#1e40af&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;26&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot; font-family=&quot;Arial&quot;>ALDI</text></svg>\'" alt="Aldi">'},
+  mercadona:{name:'Mercadona',color:'#059669',bg:'#ecfdf5',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Mercadona.svg/250px-Mercadona.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#047857&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;20&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot; font-family=&quot;Arial&quot;>MERC</text></svg>\'" alt="Mercadona">'},
 };
 function storeName(k){return (STORE_META[k]&&STORE_META[k].name)||k;}
 function storeLogoSvg(k){return (STORE_META[k]&&STORE_META[k].logo)||'<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" rx="12" fill="#94a3b8"/></svg>';}
@@ -1294,255 +1451,23 @@ const CAT_GRADIENT = {
   congelados:'linear-gradient(135deg,#cffafe,#7dd3fc)', bebés:'linear-gradient(135deg,#fbcfe8,#f9a8d4)',
   animais:'linear-gradient(135deg,#e7e5e4,#d6d3d1)', charcutaria:'linear-gradient(135deg,#fecaca,#fda4af)',
 };
-function productPhotoUrl(p){
-  if(p.photo) return p.photo;
-  const n = (p.name||'').toLowerCase();
-  for(const k of Object.keys(PHOTO_KEYWORDS)){ if(n.includes(k)) return PHOTO_KEYWORDS[k]; }
-  return CAT_PHOTOS[p.cat]||'';
+// As fotos reais de produto foram substituídas por emojis
+// a pedido do utilizador — productPhotoUrl devolve sempre ''
+// e o catálogo mostra o emoji (Twemoji) em todos os produtos.
+function productPhotoUrl(p){ return ''; }
+function emojiImgUrl(e){
+  if(!e) return '';
+  const cps = Array.from(e).map(c=>c.codePointAt(0).toString(16)).filter(h=>h!=='fe0f');
+  return cps.length ? 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/'+cps.join('-')+'.png' : '';
 }
 
 // ══════════════════════════════════════════════════════
-// FOTOS REAIS (Wikimedia Commons · licença livre)
-// URLs de thumbs verificados; cai no ícone+gradiente se falhar.
-// ══════════════════════════════════════════════════════
-const PHOTO_KEYWORDS = {
-  'pão de leite': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/White_bread.jpg/330px-White_bread.jpg',
-  'pao de leite': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/White_bread.jpg/330px-White_bread.jpg',
-  'leite infantil': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Infant_formula.jpg/330px-Infant_formula.jpg',
-  'aptamil': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Infant_formula.jpg/330px-Infant_formula.jpg',
-  'cerelac': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Infant_formula.jpg/330px-Infant_formula.jpg',
-  'papas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Infant_formula.jpg/330px-Infant_formula.jpg',
-  'boião': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Infant_formula.jpg/330px-Infant_formula.jpg',
-  'boiao': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Infant_formula.jpg/330px-Infant_formula.jpg',
-  'leite chocolate': 'https://upload.wikimedia.org/wikipedia/commons/4/46/Chocolate_milk.jpg',
-  'chocolate milk': 'https://upload.wikimedia.org/wikipedia/commons/4/46/Chocolate_milk.jpg',
-  'leite': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Milk_glass.jpg/330px-Milk_glass.jpg',
-  'sumo ananás': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Apple_juice.jpg/330px-Apple_juice.jpg',
-  'sumo laranja': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Orange_juice.jpg/330px-Orange_juice.jpg',
-  'sumo': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Orange_juice.jpg/330px-Orange_juice.jpg',
-  'coca': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Coca-Cola_bottle.jpg/330px-Coca-Cola_bottle.jpg',
-  'sprite': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Soda.jpg/330px-Soda.jpg',
-  'fanta': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Soda.jpg/330px-Soda.jpg',
-  'sumol': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Soda.jpg/330px-Soda.jpg',
-  'ice tea': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Iced_tea.jpg/330px-Iced_tea.jpg',
-  'lipton': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Iced_tea.jpg/330px-Iced_tea.jpg',
-  'energético': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Energy_drink.jpg/330px-Energy_drink.jpg',
-  'água': 'https://upload.wikimedia.org/wikipedia/commons/7/71/Water_bottle.jpg',
-  'agua': 'https://upload.wikimedia.org/wikipedia/commons/7/71/Water_bottle.jpg',
-  'cerveja sagres': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Cerveja_Sagres.jpg/330px-Cerveja_Sagres.jpg',
-  'sagres': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Cerveja_Sagres.jpg/330px-Cerveja_Sagres.jpg',
-  'super bock': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Super_Bock.jpg/330px-Super_Bock.jpg',
-  'cerveja': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Beer_glass.jpg/330px-Beer_glass.jpg',
-  'vinagre balsâmico': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Turkish_balsamic_vinegar.jpg/330px-Turkish_balsamic_vinegar.jpg',
-  'vinagre': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Vinegar.jpg/330px-Vinegar.jpg',
-  'vinho branco': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/White_wine.jpg/330px-White_wine.jpg',
-  'vinho verde': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/White_wine.jpg/330px-White_wine.jpg',
-  'vinho tinto': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Red_wine.jpg/330px-Red_wine.jpg',
-  'vinho': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Red_wine.jpg/330px-Red_wine.jpg',
-  'espumante': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/White_wine.jpg/330px-White_wine.jpg',
-  'gin': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Gin_and_tonic.jpg/330px-Gin_and_tonic.jpg',
-  'whisky': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Whisky.jpg/330px-Whisky.jpg',
-  'vodka': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Vodka.jpg/330px-Vodka.jpg',
-  'nescafé': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Instant_coffee.jpg/330px-Instant_coffee.jpg',
-  'expresso': 'https://upload.wikimedia.org/wikipedia/commons/b/bb/Espresso.jpg',
-  'café': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Roasted_coffee_beans.jpg/330px-Roasted_coffee_beans.jpg',
-  'cafe': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Roasted_coffee_beans.jpg/330px-Roasted_coffee_beans.jpg',
-  'croissant': 'https://upload.wikimedia.org/wikipedia/commons/3/32/Croissant.jpg',
-  'margarina': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Margarine.jpg/330px-Margarine.jpg',
-  'manteiga': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Butter_on_bread.jpg/330px-Butter_on_bread.jpg',
-  'azeite': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Olive_oil.jpg/330px-Olive_oil.jpg',
-  'arroz integral': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Brown_rice.jpg/330px-Brown_rice.jpg',
-  'arroz': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/White_rice.jpg/330px-White_rice.jpg',
-  'lasanha': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Lasagna.jpg/330px-Lasagna.jpg',
-  'esparguete': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Spaghetti.jpg/330px-Spaghetti.jpg',
-  'espirais': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Spaghetti.jpg/330px-Spaghetti.jpg',
-  'massa': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Spaghetti.jpg/330px-Spaghetti.jpg',
-  'pizza': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Pizza.jpg/330px-Pizza.jpg',
-  'queijo': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Emmentaler.jpg/330px-Emmentaler.jpg',
-  'iogurte': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Yogurt.jpg/330px-Yogurt.jpg',
-  'ovos': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Chicken_eggs.jpg/330px-Chicken_eggs.jpg',
-  'carne picada': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Minced_meat.jpg/330px-Minced_meat.jpg',
-  'bife': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Steak.jpg/330px-Steak.jpg',
-  'entrecosto': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Pork.jpg/330px-Pork.jpg',
-  'lombo': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Pork.jpg/330px-Pork.jpg',
-  'costeletas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Pork.jpg/330px-Pork.jpg',
-  'porco': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Pork.jpg/330px-Pork.jpg',
-  'panado': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Chicken_nuggets.jpg/330px-Chicken_nuggets.jpg',
-  'frango assado': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Roast_chicken.jpg/330px-Roast_chicken.jpg',
-  'frango grelhado': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Grilled_chicken.jpg/330px-Grilled_chicken.jpg',
-  'frango': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Raw_chicken.jpg/330px-Raw_chicken.jpg',
-  'bacon': 'https://upload.wikimedia.org/wikipedia/commons/d/dd/Bacon.jpg',
-  'salmão': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Salmon.jpg/330px-Salmon.jpg',
-  'salmao': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Salmon.jpg/330px-Salmon.jpg',
-  'camarão': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Prawns.jpg/330px-Prawns.jpg',
-  'camarao': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Prawns.jpg/330px-Prawns.jpg',
-  'gambas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Prawns.jpg/330px-Prawns.jpg',
-  'robalo': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Robalo.jpg/330px-Robalo.jpg',
-  'filetes': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Fish_fingers.jpg/330px-Fish_fingers.jpg',
-  'bacalhau': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Bacalhau.jpg/330px-Bacalhau.jpg',
-  'pescada': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Fish_fingers.jpg/330px-Fish_fingers.jpg',
-  'atum': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Tuna_can.jpg/330px-Tuna_can.jpg',
-  'sardinhas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Sardines_-_%E9%B0%AF%28%E3%81%84%E3%82%8F%E3%81%97%29.jpg/330px-Sardines_-_%E9%B0%AF%28%E3%81%84%E3%82%8F%E3%81%97%29.jpg',
-  'feijão verde': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Green_beans.jpg/330px-Green_beans.jpg',
-  'feijao verde': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Green_beans.jpg/330px-Green_beans.jpg',
-  'feijão': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Kidney_beans.jpg/330px-Kidney_beans.jpg',
-  'feijao': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Kidney_beans.jpg/330px-Kidney_beans.jpg',
-  'grão de bico': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Chickpea.jpg/330px-Chickpea.jpg',
-  'grao de bico': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Chickpea.jpg/330px-Chickpea.jpg',
-  'lentilhas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Lens_culinaris.jpg/330px-Lens_culinaris.jpg',
-  'cogumelos': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Mushrooms.jpg/330px-Mushrooms.jpg',
-  'milho': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Sweet_corn.jpg/330px-Sweet_corn.jpg',
-  'mascavado': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Brown_sugar.jpg/330px-Brown_sugar.jpg',
-  'açúcar': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Sugar.jpg/330px-Sugar.jpg',
-  'acucar': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Sugar.jpg/330px-Sugar.jpg',
-  'açucar': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Sugar.jpg/330px-Sugar.jpg',
-  'farinha': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flour.jpg/330px-Flour.jpg',
-  'sal ': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Sea_salt.jpg/330px-Sea_salt.jpg',
-  'cacau': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Chocolate_bar.jpg/330px-Chocolate_bar.jpg',
-  'compota': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Strawberry_jam.jpg/330px-Strawberry_jam.jpg',
-  'mel ': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Jam.jpg/330px-Jam.jpg',
-  'ketchup': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Ketchup.jpg/330px-Ketchup.jpg',
-  'mostarda': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Dijon_mustard.jpg/330px-Dijon_mustard.jpg',
-  'maionese': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Mayo.jpg/330px-Mayo.jpg',
-  'soja': 'https://upload.wikimedia.org/wikipedia/commons/1/12/Soy_sauce.jpg',
-  'banana': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Bananas.jpg/330px-Bananas.jpg',
-  'maçã': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Apples.jpg/330px-Apples.jpg',
-  'maca': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Apples.jpg/330px-Apples.jpg',
-  'laranja': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Oranges.jpg/330px-Oranges.jpg',
-  'morango': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Strawberries.jpg/330px-Strawberries.jpg',
-  'uva': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Grapes.jpg/330px-Grapes.jpg',
-  'pêssego': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Peaches.jpg/330px-Peaches.jpg',
-  'pera': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Pears.jpg/330px-Pears.jpg',
-  'kiwi': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Kiwi.jpg/330px-Kiwi.jpg',
-  'abacate': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Avocado.jpg/330px-Avocado.jpg',
-  'manga': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Mango.jpg/330px-Mango.jpg',
-  'melão': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Melon.jpg/330px-Melon.jpg',
-  'framboesas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Raspberries.jpg/330px-Raspberries.jpg',
-  'ananás': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Anan%C3%A1s.jpg/330px-Anan%C3%A1s.jpg',
-  'coco': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Coco.jpg/330px-Coco.jpg',
-  'tomate': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Tomato.jpg/330px-Tomato.jpg',
-  'cebola': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Onions.jpg/330px-Onions.jpg',
-  'batata frita congelada': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/French_fries.jpg/330px-French_fries.jpg',
-  'batata frita': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Potato_chips.jpg/330px-Potato_chips.jpg',
-  'batata': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Potatoes.jpg/330px-Potatoes.jpg',
-  'alface': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Lettuce.jpg/330px-Lettuce.jpg',
-  'cenoura': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Carrots.jpg/330px-Carrots.jpg',
-  'pepino': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Cucumber.jpg/330px-Cucumber.jpg',
-  'courgette': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Courgette.jpg/330px-Courgette.jpg',
-  'brócolos': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Broccoli.jpg/330px-Broccoli.jpg',
-  'brocolos': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Broccoli.jpg/330px-Broccoli.jpg',
-  'alho francês': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Leek.jpg/330px-Leek.jpg',
-  'alho frances': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Leek.jpg/330px-Leek.jpg',
-  'pimento': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Bell_pepper.jpg/330px-Bell_pepper.jpg',
-  'espinafres': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Spinach.jpg/330px-Spinach.jpg',
-  'rúcula': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Lettuce.jpg/330px-Lettuce.jpg',
-  'beterraba': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Beets.jpg/330px-Beets.jpg',
-  'alho': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Garlic.jpg/330px-Garlic.jpg',
-  'ervilhas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Peas.jpg/330px-Peas.jpg',
-  'batata doce': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Sweet_potato.jpg/330px-Sweet_potato.jpg',
-  'gelado': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/M%C3%B6venpick_Ice_Cream.jpg/330px-M%C3%B6venpick_Ice_Cream.jpg',
-  'croquete': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Meatballs.jpg/330px-Meatballs.jpg',
-  'almôndegas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Meatballs.jpg/330px-Meatballs.jpg',
-  'almondegas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Meatballs.jpg/330px-Meatballs.jpg',
-  'sopa de peixe': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Vegetable_soup.jpg/330px-Vegetable_soup.jpg',
-  'sopa': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Vegetable_soup.jpg/330px-Vegetable_soup.jpg',
-  'canja': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Canja_de_galinha.jpg/330px-Canja_de_galinha.jpg',
-  'caldo verde': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Caldo_verde.jpg/330px-Caldo_verde.jpg',
-  'gaspacho': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Gazpacho.jpg/330px-Gazpacho.jpg',
-  'bifanas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Bifanas.jpg/330px-Bifanas.jpg',
-  'alheira': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Alheira.jpg/330px-Alheira.jpg',
-  'frozen pizza': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Frozen_pizza.jpg/330px-Frozen_pizza.jpg',
-  'baguete': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Baguette.jpg/330px-Baguette.jpg',
-  'carcaças': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Baguette.jpg/330px-Baguette.jpg',
-  'carcacas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Baguette.jpg/330px-Baguette.jpg',
-  'tostas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Saltine_crackers.jpg/330px-Saltine_crackers.jpg',
-  'pão integral': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Whole_wheat_bread.jpg/330px-Whole_wheat_bread.jpg',
-  'pao integral': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Whole_wheat_bread.jpg/330px-Whole_wheat_bread.jpg',
-  'pão de forma': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/White_bread.jpg/330px-White_bread.jpg',
-  'pão': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/White_bread.jpg/330px-White_bread.jpg',
-  'pao': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/White_bread.jpg/330px-White_bread.jpg',
-  'milka': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Milka.jpg/330px-Milka.jpg',
-  'kitkat': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/KitKat.jpg/330px-KitKat.jpg',
-  'snickers': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Snickers.jpg/330px-Snickers.jpg',
-  'twix': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Twix.jpg/330px-Twix.jpg',
-  'toblerone': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Toblerone.jpg/330px-Toblerone.jpg',
-  'chocolate': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Chocolate_bar.jpg/330px-Chocolate_bar.jpg',
-  'oreo': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Cookies.jpg/330px-Cookies.jpg',
-  'bolachas maria': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Saltine_crackers.jpg/330px-Saltine_crackers.jpg',
-  'bolachas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Cookies.jpg/330px-Cookies.jpg',
-  'amendoins': 'https://upload.wikimedia.org/wikipedia/commons/5/57/Mixed_nuts.jpg',
-  'frutos secos': 'https://upload.wikimedia.org/wikipedia/commons/5/57/Mixed_nuts.jpg',
-  'barrinha': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Granola.jpg/330px-Granola.jpg',
-  'granola': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Granola.jpg/330px-Granola.jpg',
-  'corn flakes': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Corn_flakes.jpg/330px-Corn_flakes.jpg',
-  'cereais': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Cereal.jpg/330px-Cereal.jpg',
-  'batatas fritas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Potato_chips.jpg/330px-Potato_chips.jpg',
-  'gummy': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Gummy_bears.jpg/330px-Gummy_bears.jpg',
-  'marshmallow': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Marshmallows.jpg/330px-Marshmallows.jpg',
-  'champô': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Shampoo.jpg/330px-Shampoo.jpg',
-  'champu': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Shampoo.jpg/330px-Shampoo.jpg',
-  'pasta de dentes': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Toothpaste.jpg/330px-Toothpaste.jpg',
-  'escova de dentes': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Toothbrush.jpg/330px-Toothbrush.jpg',
-  'fio dentário': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Toothbrush.jpg/330px-Toothbrush.jpg',
-  'desodorizante': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Deodorant.jpg/330px-Deodorant.jpg',
-  'gel de banho': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Soap.jpg/330px-Soap.jpg',
-  'sabonete': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Soap.jpg/330px-Soap.jpg',
-  'protetor solar': 'https://upload.wikimedia.org/wikipedia/commons/5/58/Sunscreen.jpg',
-  'gel barbear': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Shaving_cream.jpg/330px-Shaving_cream.jpg',
-  'lenços': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Tissues.jpg/330px-Tissues.jpg',
-  'lencos': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Tissues.jpg/330px-Tissues.jpg',
-  'fraldas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Diaper.jpg/330px-Diaper.jpg',
-  'papel higiénico': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Toilet_paper_roll.jpg/330px-Toilet_paper_roll.jpg',
-  'papel higienico': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Toilet_paper_roll.jpg/330px-Toilet_paper_roll.jpg',
-  'rolo de cozinha': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Paper_towel.jpg/330px-Paper_towel.jpg',
-  'esponjas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Sponge.jpg/330px-Sponge.jpg',
-  'saco do lixo': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/A_typical_black_bin_bag_from_the_UK_20060811.jpg/330px-A_typical_black_bin_bag_from_the_UK_20060811.jpg',
-  'sacos do lixo': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/A_typical_black_bin_bag_from_the_UK_20060811.jpg/330px-A_typical_black_bin_bag_from_the_UK_20060811.jpg',
-  'fiambre': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Fiambre.jpg/330px-Fiambre.jpg',
-  'presunto': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Fiambre.jpg/330px-Fiambre.jpg',
-  'chourição': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Chouri%C3%A7o.jpg/330px-Chouri%C3%A7o.jpg',
-  'chourico': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Chouri%C3%A7o.jpg/330px-Chouri%C3%A7o.jpg',
-  'chouriço': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Chouri%C3%A7o.jpg/330px-Chouri%C3%A7o.jpg',
-  'salame': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Salami.jpg/330px-Salami.jpg',
-  'mortadela': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Salami.jpg/330px-Salami.jpg',
-  'areia': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Litter_box.jpg/330px-Litter_box.jpg',
-  'catsan': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Litter_box.jpg/330px-Litter_box.jpg',
-};
-
-const CAT_PHOTOS = {
-  'leite': '',
-  'manteiga': '',
-  'azeite': '',
-  'arroz': '',
-  'café': '',
-  'massa': '',
-  'queijo': '',
-  'iogurte': '',
-  'laticínio': '',
-  'ovos': '',
-  'carne': '',
-  'peixe': '',
-  'conservas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Canned_food.jpg/330px-Canned_food.jpg',
-  'mercearia': '',
-  'bebidas': '',
-  'higiene': '',
-  'limpeza': '',
-  'snacks': '',
-  'padaria': '',
-  'pronta': '',
-  'fruta': '',
-  'legumes': '',
-  'congelados': '',
-  'bebés': '',
-  'animais': '',
-  'charcutaria': '',
-};
-
 function productPhotoHtml(p, big){
   const grad = CAT_GRADIENT[p.cat]||'linear-gradient(135deg,#e2e8f0,#cbd5e1)';
   const url = productPhotoUrl(p);
-  const img = url ? `<img class="prod-img" src="${url}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : '';
-  return `<div class="prod-photo${big?' lg':''}" style="background:${grad}" title="Foto ilustrativa (Wikimedia Commons)">${p.emoji||'🛒'}${img}${p.cat?`<span class="cat-tag">${p.cat}</span>`:''}</div>`;
+  const src = url || emojiImgUrl(p.emoji);
+  const img = src ? `<img class="prod-img${url?'':' emoji-img'}" src="${src}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : '';
+  return `<div class="prod-photo${big?' lg':''}" style="background:${grad}" title="Imagem ilustrativa">${p.emoji||'🛒'}${img}${p.cat?`<span class="cat-tag">${p.cat}</span>`:''}</div>`;
 }
 
 // ══════════════════════════════════════════════════════
@@ -2457,16 +2382,20 @@ function openProductModal(product){
   if(!product) return;
   window.__openProduct = product;
   document.getElementById('pm-title').textContent = product.name;
+  recordView(product);
+  const actEl = document.getElementById('pm-actions');
+  if(actEl) actEl.innerHTML = pmActionsHtml(product);
   // Rebuild photo element safely
   const photoEl = document.getElementById('pm-photo');
   const grad = CAT_GRADIENT[product.cat]||'linear-gradient(135deg,#e2e8f0,#cbd5e1)';
   photoEl.style.background = grad;
   const url = productPhotoUrl(product);
-  const img = url ? `<img class="prod-img" src="${url}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : '';
+  const src = url || emojiImgUrl(product.emoji);
+  const img = src ? `<img class="prod-img${url?'':' emoji-img'}" src="${src}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : '';
   photoEl.innerHTML = (product.emoji||'🛒')+img+(product.cat?`<span class="cat-tag">${product.cat}</span>`:'');
 
   const stores = product.stores||{};
-  const entries = Object.entries(stores).map(([k,v])=>[k, livePrice(v, product.name+'|'+k, liveTime())]);
+  const entries = Object.entries(stores).map(([k,v])=>[k, v]);
   if(!entries.length){
     document.getElementById('pm-bestnote').textContent = 'Sem preços por loja disponíveis.';
     document.getElementById('pm-stores').innerHTML = `<div class="empty-state"><span class="empty-icon">🏷️</span>Preço único: ${fmtEur(product.price)}</div>`;
@@ -2569,6 +2498,57 @@ function openProductModal(product){
   openModal('product-modal');
 }
 
+// ══════════════════════════════════════════════════════
+// AÇÕES DO PRODUTO — favoritos + partilha
+// ══════════════════════════════════════════════════════
+function isFavProduct(name){ return favProducts.some(f=>f.name===name); }
+function pmActionsHtml(p){
+  const on = isFavProduct(p.name);
+  return `<button class="pm-act${on?' on':''}" onclick="toggleFavFromModal()">${on?'❤️':'🤍'} <span>${on?'Nos favoritos':'Adicionar aos favoritos'}</span></button>
+  <button class="pm-act" onclick="shareProduct()">📤 <span>Partilhar</span></button>`;
+}
+function toggleFavFromModal(){
+  const p = window.__openProduct;
+  if(!p) return;
+  const i = favProducts.findIndex(f=>f.name===p.name);
+  if(i>=0){
+    favProducts.splice(i,1);
+    showNotif('💔 Removido dos favoritos.');
+  } else {
+    favProducts.push({name:p.name,price:p.price,stores:p.stores||{},emoji:p.emoji||'🛒',cat:p.cat||'',promo:p.promo||null});
+    showNotif('❤️ Adicionado aos favoritos!');
+  }
+  saveFavProds();
+  renderPerfil();
+  const el = document.getElementById('pm-actions');
+  if(el) el.innerHTML = pmActionsHtml(p);
+}
+function shareProduct(){
+  const p = window.__openProduct;
+  if(!p) return;
+  const keys = p.stores ? Object.keys(p.stores) : [];
+  const best = keys.length ? Math.min(...keys.map(k=>p.stores[k])) : p.price;
+  const bestStore = keys.length ? storeName(keys.reduce((a,b)=>p.stores[b]<p.stores[a]?b:a)) : 'preço médio';
+  const txt = `🛒 ${p.name} — ${fmtEur(best)} em ${bestStore} (via Poupa Fácil)`;
+  if(navigator.share){
+    navigator.share({title:'Poupa Fácil', text:txt}).catch(()=>{});
+  } else if(navigator.clipboard){
+    navigator.clipboard.writeText(txt).then(()=>showNotif('📋 Copiado para a área de transferência!')).catch(()=>showNotif('📤 '+(p.name||'')));
+  } else {
+    showNotif('📤 '+(p.name||''));
+  }
+}
+function shareApp(){
+  const txt = '🛒 Poupa Fácil — compara preços e poupa nas tuas compras de supermercado!';
+  if(navigator.share){
+    navigator.share({title:'Poupa Fácil', text:txt}).catch(()=>{});
+  } else if(navigator.clipboard){
+    navigator.clipboard.writeText(txt).then(()=>showNotif('📋 Copiado para a área de transferência!')).catch(()=>showNotif('📤 Poupa Fácil 🛒'));
+  } else {
+    showNotif('📤 Poupa Fácil 🛒');
+  }
+}
+
 function showHistTab(store, btn){
   // update tab buttons
   const tabs = document.querySelectorAll('#pm-hist-tabs button');
@@ -2617,93 +2597,51 @@ function loadFontSize(){
 // ══════════════════════════════════════════════════════
 let listItems = JSON.parse(localStorage.getItem('pf_list')||'[]');
 let activeCampaign = JSON.parse(localStorage.getItem('pf_camp')||'null');
-let currentTab = 'pesquisa';
+let currentTab = 'inicio';
+let favStores = JSON.parse(localStorage.getItem('pf_fav_stores')||'[]');
+let favProducts = JSON.parse(localStorage.getItem('pf_fav_prods')||'[]');
+let currentStoreTab = null;
 
 function save(){localStorage.setItem('pf_list',JSON.stringify(listItems))}
 function fmtEur(v){return v.toFixed(2).replace('.',',')+'\u20AC'}
 
 // ══════════════════════════════════════════════════════
-// PREÇOS LIVE — flutuação contínua (±0.5%) por produto/loja
-// Preços "atualizados ao segundo": a UI re-renderiza os
-// produtos visíveis a cada tick e o mais barato pode mudar.
+// PREÇOS — estáticos por supermercado
+// Os preços são os atuais dos folhetos/preços por loja e são
+// atualizados no catálogo sempre que há alterações.
 // ══════════════════════════════════════════════════════
-function liveTime(){ return Math.floor(Date.now()/1000); }
-function livePrice(base, key, t){
-  const seed = seedFromStr(key||'');
-  const phase = (seed % 6283)/1000; // 0..2π determinístico
-  const amp = 0.01;                 // ±1%
-  const w = Math.sin(t/3 + phase);  // ciclo ~19s
-  const v = base*(1 + w*amp);
-  return Math.max(0.01, Math.round(v*100)/100);
-}
 function basePriceOf(p, sel){
   return (sel && p.stores && p.stores[sel]!=null) ? p.stores[sel] : (p.price||0);
 }
-function effPriceOf(p, sel, t){
-  const tt = (t==null) ? liveTime() : t;
-  return livePrice(basePriceOf(p, sel), p.name+'|'+(sel||'avg'), tt);
+function effPriceOf(p, sel){
+  return basePriceOf(p, sel);
 }
-function effStorePrices(p, t){
+function effStorePrices(p){
   const s = p.stores||{};
-  const out = {};
-  for(const k in s) out[k] = effPriceOf(p, k, t);
-  return out;
-}
-let _liveTimer = null;
-function hasInputFocus(){
-  const a = document.activeElement;
-  return a && (a.tagName==='INPUT'||a.tagName==='SELECT'||a.tagName==='TEXTAREA');
-}
-function refreshLivePrices(){
-  const clk = document.getElementById('live-clock');
-  if(clk) clk.textContent = '⏱ Atualizado às '+new Date().toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  if(hasInputFocus()) return; // não interromper a digitação
-  const featSec = document.getElementById('featured-section');
-  const resultsEl = document.getElementById('search-results');
-  if(currentTab==='pesquisa'){
-    if(featSec && featSec.style.display==='none' && window.__searchResults && window.__searchResults.length){
-      renderResults(resultsEl, window.__searchResults, window.__searchSource||'Catálogo local');
-    } else {
-      renderFeatured();
-    }
-  } else if(currentTab==='lista'){
-    renderList();
-    calcTotal();
-  }
-  // modal aberto
-  const modal = document.getElementById('product-modal');
-  if(window.__openProduct && modal && modal.classList.contains('show')){
-    const mb = document.querySelector('.modal-box');
-    const sc = mb ? mb.scrollTop : 0;
-    const tab = window.__activeHistTab;
-    openProductModal(window.__openProduct);
-    if(tab){
-      const btns = document.querySelectorAll('#pm-hist-tabs button');
-      btns.forEach(b=>{
-        if(b.textContent.replace(/\s/g,'')===storeName(tab).replace(/\s/g,'')) showHistTab(tab, b);
-      });
-    }
-    if(mb) mb.scrollTop = sc;
-  }
-}
-function startLiveTicker(){
-  if(_liveTimer) return;
-  _liveTimer = setInterval(function(){ refreshLivePrices(); }, 1000);
-  refreshLivePrices();
+  return Object.assign({}, s);
 }
 
 // ══════════════════════════════════════════════════════
 // TABS
 // ══════════════════════════════════════════════════════
-function switchTab(t){
+function activateTab(t){
   currentTab = t;
   document.querySelectorAll('.content').forEach(c=>c.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+t).classList.add('active');
-  const idx = {pesquisa:0,campanhas:1,lista:2}[t];
-  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  const c = document.getElementById('tab-'+t);
+  if(c) c.classList.add('active');
+  const b = document.querySelector('.tab-btn[data-tab="'+t+'"]');
+  if(b) b.classList.add('active');
+  if(document.body) document.body.classList.toggle('has-footer', t==='lista');
+}
+function switchTab(t){
+  activateTab(t);
   document.getElementById('footer-bar').style.display = t==='lista' ? 'block' : 'none';
+  if(t==='inicio') renderHome();
   if(t==='pesquisa') renderFeatured();
+  if(t==='supermercados') renderSupermercados();
+  if(t==='perfil') renderPerfil();
+  try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(e){}
 }
 
 // ══════════════════════════════════════════════════════
@@ -2916,6 +2854,280 @@ function renderFeatured(){
   sec.innerHTML = html;
 }
 
+// ══════════════════════════════════════════════════════
+// INÍCIO — landing app (destaques, melhores preços, ofertas)
+// ══════════════════════════════════════════════════════
+function renderHome(){
+  const root = document.getElementById('home-root');
+  if(!root) return;
+  const h = new Date().getHours();
+  const greet = h<6?'Boa madrugada':h<12?'Bom dia':h<20?'Boa tarde':'Boa noite';
+  let html = `<div class="home-hello">
+    <div class="hh-greet">${greet} 👋</div>
+    <div class="hh-date">${new Date().toLocaleDateString('pt-PT',{weekday:'long',day:'numeric',month:'long'})}</div>
+  </div>`;
+  html += heroCarouselHtml();
+  html += homeStatsHtml();
+  html += bestDealsRowHtml();
+  html += promoRowHtml();
+  const recent = getRecentViewed(6);
+  if(recent.length) html += recentsRowHtml(recent);
+  html += storesGridHtml();
+  html += homeCatsHtml();
+  html += campaignsSummaryHtml();
+  root.innerHTML = html;
+  startHero();
+}
+
+// ── Hero carousel (campanhas em destaque) ──
+function heroSlides(){
+  const out=[];
+  Object.keys(CAMPAIGNS).forEach(k=>{
+    (CAMPAIGNS[k]||[]).forEach(c=>{ if(c.id!=='none') out.push({store:k,camp:c}); });
+  });
+  return out.slice(0,6);
+}
+function heroCarouselHtml(){
+  const slides = heroSlides();
+  if(!slides.length) return '';
+  window.__heroSlides = slides;
+  const dots = slides.map((_,i)=>`<button class="hero-dot${i===0?' on':''}" onclick="heroGo(${i})" aria-label="Diapositivo ${i+1}"></button>`).join('');
+  const track = slides.map((s,i)=>{
+    const meta = STORE_META[s.store];
+    const c = s.camp;
+    return `<div class="hero-slide" onclick="heroTap(${i})">
+      <div class="hero-bg" style="background:${meta.bg}">
+        <div class="hero-logo">${storeLogoSvg(s.store)}</div>
+        <div class="hero-content">
+          <div class="hero-store">${meta.name} · ${c.valid||'campanha'}</div>
+          <div class="hero-title">${c.name}</div>
+          ${c.reward?`<div class="hero-reward">🏆 ${c.reward}</div>`:''}
+        </div>
+        <div style="flex-shrink:0"><button class="cb-btn" style="background:${meta.color};color:#fff">Ativar</button></div>
+      </div>
+    </div>`;
+  }).join('');
+  return `<div class="card hero-card">
+    <div class="hero-track" id="hero-track">${track}</div>
+    <div class="hero-dots">${dots}</div>
+  </div>`;
+}
+function heroGo(i){
+  const track = document.getElementById('hero-track');
+  if(!track || !window.__heroSlides || !window.__heroSlides.length) return;
+  const w = (track.parentElement && track.parentElement.clientWidth) || 320;
+  track.style.transform = `translateX(-${i*w}px)`;
+  document.querySelectorAll('.hero-dot').forEach((d,j)=>d.classList.toggle('on', j===i));
+}
+function heroTap(i){
+  const s = window.__heroSlides && window.__heroSlides[i];
+  if(!s) return;
+  activateCampaign(s.store, s.camp.id);
+}
+function startHero(){
+  if(window.__heroTimer) clearInterval(window.__heroTimer);
+  window.__heroTimer = null;
+  const n = window.__heroSlides ? window.__heroSlides.length : 0;
+  if(n<2) return;
+  let i = 0;
+  window.__heroTimer = setInterval(()=>{ i=(i+1)%n; heroGo(i); }, 4200);
+}
+
+// ── Estatísticas rápidas ──
+function homeStatsHtml(){
+  const market = document.getElementById('list-market') ? document.getElementById('list-market').value : null;
+  const total = listItems.reduce((s,i)=>{
+    const p = (i.stores && Object.keys(i.stores).length) ? effPriceOf(i, market) : i.price;
+    return s+(p*(i.qty||1));
+  },0);
+  return `<div class="home-stats">
+    <div class="hs-card grad">
+      <span class="hs-ico">🛒</span>
+      <span class="hs-val">${listItems.length?fmtEur(total):'0,00€'}</span>
+      <span class="hs-lbl">Total da lista (${listItems.length} itens)</span>
+    </div>
+    <div class="hs-card">
+      <span class="hs-ico">⭐</span>
+      <span class="hs-val">${favProducts.length}</span>
+      <span class="hs-lbl">Produtos favoritos</span>
+    </div>
+    <div class="hs-card">
+      <span class="hs-ico">🏆</span>
+      <span class="hs-val">${bestPriceCount('pingo_doce')}</span>
+      <span class="hs-lbl">Melhores preços Pingo Doce</span>
+    </div>
+    <div class="hs-card">
+      <span class="hs-ico">🗂️</span>
+      <span class="hs-val">${CATALOG.length}</span>
+      <span class="hs-lbl">Produtos no catálogo</span>
+    </div>
+  </div>`;
+}
+
+// ── Melhores preços do dia (carrossel) ──
+function bestDealsAll(n=10){
+  const out=[];
+  Object.keys(STORE_META).forEach(k=>{
+    bestPriceProducts(k,2).forEach(p=>{
+      out.push({p,store:k,saving:(p.price||0)-p.stores[k]});
+    });
+  });
+  out.sort((a,b)=>b.saving-a.saving);
+  const seen=new Set(); const res=[];
+  for(const o of out){
+    if(seen.has(o.p.name)) continue;
+    seen.add(o.p.name); res.push(o);
+    if(res.length>=n) break;
+  }
+  return res;
+}
+function bestDealsRowHtml(){
+  const deals = bestDealsAll(10);
+  if(!deals.length) return '';
+  window.__homeDeals = deals;
+  return `<div class="card">
+    <div class="sec-head"><span class="sec-title">⚡ Melhores preços do dia</span><button class="sec-more" onclick="switchTab('supermercados')">Ver tudo →</button></div>
+    <div class="hscroll">`+deals.map((d,i)=>{
+      const p=d.p;
+      const price = d.store && p.stores ? p.stores[d.store] : p.price;
+      return `<div class="hcard">
+        <div class="hc-img" onclick="openProductModal(window.__homeDeals[${i}].p)">${productPhotoHtml(p,false)}</div>
+        <div class="hc-name" onclick="openProductModal(window.__homeDeals[${i}].p)">${p.name}</div>
+        <div class="hc-price"><span class="p">${fmtEur(price)}</span><span class="s">em ${storeName(d.store)}</span></div>
+        <span class="hc-save">🏆 melhor preço</span>
+        <div class="hc-row">
+          <span class="hc-store">${storeName(d.store)}</span>
+          <button class="hc-btn" onclick='addToList(${JSON.stringify({name:p.name,price:price,stores:p.stores||{},emoji:p.emoji||"🛒",promo:p.promo||null})})'>+</button>
+        </div>
+      </div>`;
+    }).join('')+`</div>
+  </div>`;
+}
+
+// ── Em promoção agora ──
+function promoRowHtml(){
+  const prods = CATALOG.filter(p=>p.promo && p.stores && Object.keys(p.stores).length>0).slice(0,10);
+  if(!prods.length) return '';
+  window.__homePromo = prods;
+  return `<div class="card">
+    <div class="sec-head"><span class="sec-title">🔥 Em promoção agora</span><button class="sec-more" onclick="switchTab('campanhas')">Ver ofertas →</button></div>
+    <div class="hscroll">`+prods.map((p,i)=>{
+      const best = Math.min(...Object.values(p.stores));
+      const shortPromo = p.promo.split(' ').slice(0,3).join(' ');
+      const bestStore = Object.keys(p.stores).reduce((a,b)=>p.stores[b]<p.stores[a]?b:a);
+      return `<div class="hcard">
+        <div class="hc-img" onclick="openProductModal(window.__homePromo[${i}])">${productPhotoHtml(p,false)}</div>
+        <div class="hc-name" onclick="openProductModal(window.__homePromo[${i}])">${p.name}</div>
+        <div class="hc-price"><span class="p">${fmtEur(best)}</span><span class="s">normal ${fmtEur(p.price||0)}</span></div>
+        <span class="hc-save">${shortPromo}</span>
+        <div class="hc-row">
+          <span class="hc-store">${storeName(bestStore)}</span>
+          <button class="hc-btn" onclick='addToList(${JSON.stringify({name:p.name,price:best,stores:p.stores||{},emoji:p.emoji||"🛒",promo:p.promo||null})})'>+</button>
+        </div>
+      </div>`;
+    }).join('')+`</div>
+  </div>`;
+}
+
+// ── Vistos recentemente ──
+function recordView(p){
+  if(!p) return;
+  let recent = [];
+  try{ recent = JSON.parse(localStorage.getItem('pf_recent')||'[]'); }catch(e){}
+  recent = recent.filter(r=>r.name!==p.name);
+  recent.unshift({name:p.name,price:p.price,stores:p.stores||{},emoji:p.emoji||'🛒',cat:p.cat||'',promo:p.promo||null});
+  if(recent.length>14) recent=recent.slice(0,14);
+  localStorage.setItem('pf_recent', JSON.stringify(recent));
+}
+function getRecentViewed(n){
+  try{ return JSON.parse(localStorage.getItem('pf_recent')||'[]').slice(0,n); }catch(e){ return []; }
+}
+function recentsRowHtml(recent){
+  window.__homeRecent = recent;
+  return `<div class="card">
+    <div class="sec-head"><span class="sec-title">🕐 Vistos recentemente</span></div>
+    <div class="hscroll">`+recent.map((p,i)=>{
+      const price = p.price||0;
+      const storeLabel = p.stores && Object.keys(p.stores).length
+        ? storeName(Object.keys(p.stores).reduce((a,b)=>p.stores[b]<p.stores[a]?b:a)) : 'preço médio';
+      return `<div class="hcard">
+        <div class="hc-img" onclick="openProductModal(window.__homeRecent[${i}])">${productPhotoHtml(p,false)}</div>
+        <div class="hc-name" onclick="openProductModal(window.__homeRecent[${i}])">${p.name}</div>
+        <div class="hc-price"><span class="p">${fmtEur(price)}</span><span class="s">${storeLabel}</span></div>
+        <div class="hc-row">
+          <span class="hc-store">${storeLabel}</span>
+          <button class="hc-btn" onclick='addToList(${JSON.stringify({name:p.name,price:p.price,stores:p.stores||{},emoji:p.emoji||"🛒",promo:p.promo||null})})'>+</button>
+        </div>
+      </div>`;
+    }).join('')+`</div>
+  </div>`;
+}
+
+// ── As tuas lojas ──
+function storesGridHtml(){
+  return `<div class="card">
+    <div class="sec-head"><span class="sec-title">🏪 As tuas lojas</span><button class="sec-more" onclick="switchTab('supermercados')">Ver tudo →</button></div>
+    <div class="store-grid" style="margin-bottom:0">`+Object.keys(STORE_META).map(k=>{
+      const isFav = favStores.indexOf(k)>=0;
+      return `<div class="store-card${isFav?' sel':''}" onclick="goStores('${k}')">
+        <div class="sc-logo">${storeLogoSvg(k)}</div>
+        <div class="sc-name">${STORE_META[k].name}</div>
+        <div class="sc-meta">${bestPriceCount(k)} melhores preços${isFav?'<br><span style="color:var(--green);font-weight:700">⭐ tua loja</span>':''}</div>
+      </div>`;
+    }).join('')+`</div>
+  </div>`;
+}
+function goStores(k){
+  openStoreTab(k);
+  switchTab('supermercados');
+}
+
+// ── Categorias rápidas ──
+const HOME_CATS = [
+  {cat:'leite',emoji:'🥛',label:'Leite'},{cat:'manteiga',emoji:'🧈',label:'Manteiga'},
+  {cat:'azeite',emoji:'🫒',label:'Azeite'},{cat:'café',emoji:'☕',label:'Café'},
+  {cat:'massa',emoji:'🍝',label:'Massas'},{cat:'conservas',emoji:'🥫',label:'Conservas'},
+  {cat:'bebidas',emoji:'🥤',label:'Bebidas'},{cat:'congelados',emoji:'❄️',label:'Congelados'},
+  {cat:'higiene',emoji:'🧴',label:'Higiene'},{cat:'limpeza',emoji:'🫧',label:'Limpeza'},
+  {cat:'snacks',emoji:'🍪',label:'Snacks'},{cat:'fruta',emoji:'🍌',label:'Fruta'},
+];
+const HOME_CAT_GRADS = {
+  leite:'linear-gradient(135deg,#dbeafe,#bfdbfe)',manteiga:'linear-gradient(135deg,#fef9c3,#fde68a)',
+  azeite:'linear-gradient(135deg,#d9f99d,#bef264)',café:'linear-gradient(135deg,#e7d4c0,#c9a679)',
+  massa:'linear-gradient(135deg,#fef9c3,#fef08a)',conservas:'linear-gradient(135deg,#e0e7ff,#c7d2fe)',
+  bebidas:'linear-gradient(135deg,#cffafe,#a5f3fc)',congelados:'linear-gradient(135deg,#cffafe,#7dd3fc)',
+  higiene:'linear-gradient(135deg,#e0f2fe,#bae6fd)',limpeza:'linear-gradient(135deg,#ede9fe,#ddd6fe)',
+  snacks:'linear-gradient(135deg,#fed7aa,#fdba74)',fruta:'linear-gradient(135deg,#fef08a,#fde047)',
+};
+function goCat(cat){
+  const sel = document.getElementById('search-cat-filter');
+  if(sel) sel.value = cat;
+  const q = document.getElementById('search-q');
+  if(q) q.value='';
+  switchTab('pesquisa');
+  doSearch();
+}
+function homeCatsHtml(){
+  return `<div class="card">
+    <div class="sec-head"><span class="sec-title">🗂️ Explorar por categoria</span><button class="sec-more" onclick="switchTab('pesquisa')">Pesquisar →</button></div>
+    <div class="home-cats">`+HOME_CATS.map(c=>`<div class="hcat" onclick="goCat('${c.cat}')">
+      <div class="hc-ico" style="background:${HOME_CAT_GRADS[c.cat]||'var(--green-l)'}">${c.emoji}</div>
+      <div class="hc-txt">${c.label}</div>
+    </div>`).join('')+`</div>
+  </div>`;
+}
+
+// ── Campanhas ativas (acesso rápido) ──
+function campaignsSummaryHtml(){
+  const list = Object.keys(CAMPAIGNS).filter(k=>(CAMPAIGNS[k]||[]).some(c=>c.id!=='none'));
+  if(!list.length) return '';
+  return `<div class="card">
+    <div class="sec-head"><span class="sec-title">📣 Lojas com campanhas ativas</span><button class="sec-more" onclick="switchTab('campanhas')">Todas →</button></div>
+    <div class="store-tabs" style="padding-bottom:0">`+list.map(k=>`<button class="store-tab" onclick="switchTab('campanhas')">
+      <span class="st-logo">${storeLogoSvg(k)}</span>${STORE_META[k].name}</button>`).join('')+`</div>
+  </div>`;
+}
+
 function clearSearchHistory(){
   searchHistory=[];
   saveSearchHistory();
@@ -2931,11 +3143,7 @@ function doSearchQ(q){
   document.getElementById('search-suggestions').style.display='none';
   // Switch to pesquisa tab WITHOUT calling renderFeatured (which would clear results)
   if(currentTab !== 'pesquisa'){
-    currentTab = 'pesquisa';
-    document.querySelectorAll('.content').forEach(c=>c.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    document.getElementById('tab-pesquisa').classList.add('active');
-    document.querySelectorAll('.tab-btn')[0].classList.add('active');
+    activateTab('pesquisa');
     document.getElementById('footer-bar').style.display='none';
   }
   doSearch();
@@ -3061,7 +3269,7 @@ function renderResults(el, products, source){
 
 function formatStores(stores, name){
   if(!stores) return '';
-  return Object.entries(stores).map(([k,v])=>`${storeName(k)}: ${fmtEur(name?livePrice(v, name+'|'+k, liveTime()):v)}`).join(' · ');
+  return Object.entries(stores).map(([k,v])=>`${storeBadgeHtml(k)} ${fmtEur(v)}`).join(' · ');
 }
 
 // ══════════════════════════════════════════════════════
@@ -3284,6 +3492,271 @@ function activateCampaign(market, campId){
   calcTotal();
   switchTab('lista');
   showNotif(`✅ Campanha ativada! ${c.name.substring(0,40)}...`);
+}
+
+// ══════════════════════════════════════════════════════
+// SUPERMERCADOS — abas por loja (melhores preços + campanhas)
+// ══════════════════════════════════════════════════════
+function storeCbClass(k){
+  return {pingo_doce:'cb-pd',continente:'cb-cont',auchan:'cb-auch',intermarche:'cb-inter',lidl:'cb-lidl',aldi:'cb-aldi',mercadona:'cb-mercadona'}[k]||'cb-pd';
+}
+function isCheapestAt(p, k){
+  const s = p.stores;
+  if(!s || s[k]==null) return false;
+  return s[k] <= Math.min(...Object.values(s)) + 0.001;
+}
+function bestPriceCount(k){
+  let c = 0;
+  for(let i=0;i<CATALOG.length;i++){ if(isCheapestAt(CATALOG[i], k)) c++; }
+  return c;
+}
+function bestPriceProducts(k, n){
+  const out = [];
+  for(let i=0;i<CATALOG.length;i++){
+    const p = CATALOG[i];
+    if(p.stores && p.stores[k]!=null && isCheapestAt(p, k)){
+      out.push({p, saving:(p.price||0) - p.stores[k]});
+    }
+  }
+  out.sort((a,b)=>b.saving-a.saving);
+  return out.slice(0,n).map(x=>x.p);
+}
+function onPromoAt(p, k){
+  const s = p.stores;
+  if(!s || s[k]==null) return false;
+  if(p.promo) return true; // nota de promoção explícita
+  return s[k] < (p.price||0) - 0.005 && isCheapestAt(p, k);
+}
+function addToListBtnJson(p, price){
+  return JSON.stringify({name:p.name,price:price!=null?price:(p.price||0),stores:p.stores||{},emoji:p.emoji||'🛒',promo:p.promo||null});
+}
+function favPromoCard(p, k){
+  const price = p.stores[k];
+  return `<div class="fav-promo">
+    <div style="flex-shrink:0;cursor:pointer" onclick='openProductModal(${JSON.stringify(p)})'>${productPhotoHtml(p,false)}</div>
+    <div style="flex:1;min-width:0">
+      <div class="prod-name">${p.name}</div>
+      <div style="font-size:.64rem;color:var(--muted);margin-top:1px">Preço normal: <s>${fmtEur(p.price||0)}</s> → <strong style="color:var(--amber)">${fmtEur(price)}</strong></div>
+      <span class="promo-badge">🔥 Em promoção</span>
+    </div>
+    <div class="prod-right">
+      <div class="prod-price">${fmtEur(price)}</div>
+      <button class="add-btn-sm" onclick='addToList(${addToListBtnJson(p, price)})' title="Adicionar à lista">+</button>
+    </div>
+  </div>`;
+}
+function favHereCard(p, k){
+  const price = p.stores[k];
+  return `<div class="prod-card" style="margin-bottom:6px">
+    <div style="flex-shrink:0;cursor:pointer" onclick='openProductModal(${JSON.stringify(p)})'>${productPhotoHtml(p,false)}</div>
+    <div class="prod-info">
+      <div class="prod-name">${p.name}</div>
+      <div class="prod-store">Nesta loja: ${fmtEur(price)}</div>
+    </div>
+    <div class="prod-right">
+      <div class="prod-price">${fmtEur(price)}</div>
+      <button class="add-btn-sm" onclick='addToList(${addToListBtnJson(p, price)})' title="Adicionar à lista">+</button>
+    </div>
+  </div>`;
+}
+function bestPriceCard(p, k, idx){
+  const price = p.stores[k];
+  const saving = (p.price||0) - price;
+  return `<div class="prod-card">
+    <div style="cursor:pointer" onclick="openProductModal(window.__storeBest[${idx}])">${productPhotoHtml(p,false)}</div>
+    <div class="prod-info">
+      <div class="prod-name">${p.name}</div>
+      <div class="prod-store">${formatStores(p.stores, p.name)}</div>
+      <span class="chip-best">✓ Melhor preço</span>
+      ${saving>0.005?`<span class="chip-high" style="background:var(--amber-l);color:#92400e">−${fmtEur(saving)} vs normal</span>`:''}
+    </div>
+    <div class="prod-right">
+      <div class="prod-price">${fmtEur(price)}</div>
+      <button class="add-btn-sm" onclick='addToList(${addToListBtnJson(p, price)})' title="Adicionar à lista">+</button>
+    </div>
+  </div>`;
+}
+function storeTabBody(k){
+  const meta = STORE_META[k];
+  const isFav = favStores.indexOf(k)>=0;
+  let html = `<div class="store-head">
+    <div class="sh-logo">${storeLogoSvg(k)}</div>
+    <div>
+      <div class="sh-name">${meta.name}</div>
+      <div class="sh-sub">${bestPriceCount(k)} produtos com o melhor preço nesta loja${isFav?' · <span style="color:var(--green);font-weight:700">⭐ a tua loja</span>':''}</div>
+    </div>
+  </div>`;
+
+  // ── Campanhas da loja ──
+  const camps = (CAMPAIGNS[k]||[]).filter(c=>c.id!=='none');
+  html += `<div class="card">
+    <div class="card-title">📣 Campanhas</div>`;
+  if(camps.length){
+    html += camps.map(c=>{
+      const active = activeCampaign && activeCampaign.id===c.id;
+      return `<div class="camp-banner ${storeCbClass(k)}" style="margin-bottom:8px;padding:11px">
+        <div style="font-size:.82rem;font-weight:800;color:var(--text)">${c.name}</div>
+        ${c.reward?`<div style="font-size:.7rem;color:var(--muted);margin-top:3px">🏆 ${c.reward}${c.valid?' · '+c.valid:''}</div>`:''}
+        <button class="cb-btn" style="margin-top:7px;background:${meta.color};color:#fff" onclick="event.stopPropagation();activateCampaign('${k}','${c.id}')">${active?'✅ Ativada':'Ativar campanha →'}</button>
+      </div>`;
+    }).join('');
+  } else {
+    html += '<div style="font-size:.74rem;color:var(--muted)">Sem campanhas de pontos ativas esta semana. Consulta o folheto da loja para os descontos diretos.</div>';
+  }
+  html += '</div>';
+
+  // ── Os teus favoritos ──
+  if(favProducts.length){
+    const favOnPromo = favProducts.filter(p=>onPromoAt(p,k));
+    const favHere = favProducts.filter(p=>p.stores && p.stores[k]!=null && !onPromoAt(p,k));
+    html += `<div class="card">
+      <div class="card-title">⭐ Os teus favoritos</div>`;
+    if(favOnPromo.length){
+      html += `<div style="font-size:.68rem;color:#92400e;margin-bottom:7px">🔥 Em promoção nesta loja:</div>`;
+      html += favOnPromo.map(p=>favPromoCard(p,k)).join('');
+    }
+    if(favHere.length){
+      html += `<div style="font-size:.68rem;color:var(--muted);margin:7px 0">Também disponíveis nesta loja (preço normal):</div>`;
+      html += favHere.slice(0,6).map(p=>favHereCard(p,k)).join('');
+    }
+    if(!favOnPromo.length && !favHere.length){
+      html += `<div style="font-size:.74rem;color:var(--muted)">Os teus favoritos não estão disponíveis nesta loja.</div>`;
+    }
+    html += '</div>';
+  }
+
+  // ── Melhores preços ──
+  const best = bestPriceProducts(k, 12);
+  html += `<div class="card">
+    <div class="card-title">🏆 Melhores preços nesta loja</div>`;
+  if(best.length){
+    window.__storeBest = best;
+    html += best.map((p,idx)=>bestPriceCard(p,k,idx)).join('');
+  } else {
+    html += '<div style="font-size:.74rem;color:var(--muted)">Sem produtos em destaque nesta loja.</div>';
+  }
+  html += '</div>';
+
+  return html;
+}
+function renderSupermercados(){
+  const root = document.getElementById('supermercados-root');
+  if(!root) return;
+  const tabs = Object.keys(STORE_META).map(k=>{
+    const active = currentStoreTab===k;
+    return `<button class="store-tab${active?' active':''}" onclick="openStoreTab('${k}')">
+      <span class="st-logo">${storeLogoSvg(k)}</span>${STORE_META[k].name}</button>`;
+  }).join('');
+  let body = '';
+  if(currentStoreTab){
+    body = storeTabBody(currentStoreTab);
+  } else {
+    body = `<div class="store-grid">`+Object.keys(STORE_META).map(k=>{
+      const isFav = favStores.indexOf(k)>=0;
+      return `<div class="store-card${isFav?' sel':''}" onclick="openStoreTab('${k}')">
+        <div class="sc-logo">${storeLogoSvg(k)}</div>
+        <div class="sc-name">${STORE_META[k].name}</div>
+        <div class="sc-meta">${bestPriceCount(k)} produtos com o melhor preço${isFav?'<br><span style="color:var(--green);font-weight:700">⭐ a tua loja</span>':''}</div>
+      </div>`;
+    }).join('')+`</div>`;
+  }
+  root.innerHTML = `<div class="store-tabs">${tabs}</div>${body}`;
+}
+function openStoreTab(k){
+  currentStoreTab = k;
+  renderSupermercados();
+}
+
+// ══════════════════════════════════════════════════════
+// PERFIL — lojas preferidas + produtos favoritos
+// ══════════════════════════════════════════════════════
+function saveFavStores(){ localStorage.setItem('pf_fav_stores', JSON.stringify(favStores)); }
+function saveFavProds(){ localStorage.setItem('pf_fav_prods', JSON.stringify(favProducts)); }
+function toggleFavStore(k){
+  const i = favStores.indexOf(k);
+  if(i>=0) favStores.splice(i,1); else favStores.push(k);
+  saveFavStores();
+  renderPerfil();
+  showNotif(i>=0?`${STORE_META[k].name} removida das preferidas.`:`⭐ ${STORE_META[k].name} adicionada às preferidas!`);
+}
+function favSearch(){
+  const q = document.getElementById('fav-search').value.trim().toLowerCase();
+  if(!q) return;
+  const el = document.getElementById('fav-search-results');
+  const local = CATALOG.filter(p=>q.split(' ').every(w=>p.name.toLowerCase().includes(w)) || p.name.toLowerCase().includes(q)).slice(0,5);
+  if(!local.length){
+    el.innerHTML='<div style="font-size:.75rem;color:var(--muted);padding:5px 0">Sem resultado. Tenta outra palavra.</div>';
+    return;
+  }
+  window.__favSearchResults = local;
+  el.innerHTML = local.map((p,idx)=>`
+    <div class="prod-card" style="margin-bottom:5px">
+      <div style="cursor:pointer" onclick="openProductModal(window.__favSearchResults[${idx}])">${productPhotoHtml(p,false)}</div>
+      <div class="prod-info">
+        <div class="prod-name" style="font-size:.76rem">${p.name}</div>
+        <div class="prod-store" style="font-size:.62rem">${fmtEur(p.price||0)} (preço médio)</div>
+      </div>
+      <button class="add-btn-sm" onclick="addFavFromSearch(${idx})">+</button>
+    </div>`).join('');
+}
+function addFavFromSearch(idx){
+  const p = window.__favSearchResults[idx];
+  if(!p) return;
+  if(favProducts.some(f=>f.name===p.name)){ showNotif('⚠️ Já está nos favoritos.'); return; }
+  favProducts.push({name:p.name,price:p.price,stores:p.stores||{},emoji:p.emoji||'🛒',cat:p.cat||'',promo:p.promo||null});
+  saveFavProds();
+  renderPerfil();
+  document.getElementById('fav-search-results').innerHTML='';
+  document.getElementById('fav-search').value='';
+  showNotif(`⭐ ${p.name.split(' ').slice(0,3).join(' ')} adicionado aos favoritos!`);
+}
+function removeFav(i){
+  favProducts.splice(i,1);
+  saveFavProds();
+  renderPerfil();
+}
+function renderPerfil(){
+  const ps = document.getElementById('perfil-stats');
+  if(ps){
+    const market = document.getElementById('list-market') ? document.getElementById('list-market').value : null;
+    const total = listItems.reduce((s,i)=>{
+      const p = (i.stores && Object.keys(i.stores).length) ? effPriceOf(i, market) : i.price;
+      return s+(p*(i.qty||1));
+    },0);
+    ps.innerHTML = `<div class="home-stats">
+      <div class="hs-card grad"><span class="hs-ico">⭐</span><span class="hs-val">${favProducts.length}</span><span class="hs-lbl">Produtos favoritos</span></div>
+      <div class="hs-card"><span class="hs-ico">🏪</span><span class="hs-val">${favStores.length}</span><span class="hs-lbl">Lojas preferidas</span></div>
+      <div class="hs-card"><span class="hs-ico">📝</span><span class="hs-val">${listItems.length}</span><span class="hs-lbl">Itens na lista</span></div>
+      <div class="hs-card"><span class="hs-ico">💶</span><span class="hs-val">${listItems.length?fmtEur(total):'0,00€'}</span><span class="hs-lbl">Total da lista</span></div>
+    </div>`;
+  }
+  const grid = document.getElementById('fav-stores-grid');
+  if(grid){
+    grid.innerHTML = Object.keys(STORE_META).map(k=>{
+      const on = favStores.indexOf(k)>=0;
+      return `<button class="store-toggle${on?' sel':''}" onclick="toggleFavStore('${k}')">
+        <span class="st-logo">${storeLogoSvg(k)}</span>
+        <span style="flex:1;text-align:left">${STORE_META[k].name}</span>
+        <span class="st-check">${on?'✔️':'○'}</span>
+      </button>`;
+    }).join('');
+  }
+  const el = document.getElementById('fav-items');
+  if(!el) return;
+  if(!favProducts.length){
+    el.innerHTML='<div class="empty-state"><span class="empty-icon">⭐</span>Sem favoritos.<br>Pesquisa acima os produtos que compras habitualmente.</div>';
+    return;
+  }
+  window.__favProds = favProducts;
+  el.innerHTML = favProducts.map((p,i)=>`
+    <div class="fav-row">
+      <div style="flex-shrink:0;cursor:pointer" onclick='openProductModal(${JSON.stringify(p)})'>${productPhotoHtml(p,false)}</div>
+      <div style="flex:1;min-width:0">
+        <div class="prod-name">${p.name}</div>
+        <div class="prod-store">${p.stores && Object.keys(p.stores).length ? formatStores(p.stores, p.name) : 'preço único: '+fmtEur(p.price||0)}</div>
+      </div>
+      <button class="remove-btn" onclick="removeFav(${i})" title="Remover">✕</button>
+    </div>`).join('');
 }
 
 // ══════════════════════════════════════════════════════
@@ -3545,7 +4018,7 @@ function loadPredefToList(){
 if('serviceWorker' in navigator){
   // Inline SW as blob so it works no matter o caminho no GitHub Pages
   const swCode = `
-const CACHE = 'poupa-facil-v1';
+const CACHE = 'poupa-facil-v2';
 const ASSETS = [self.location.pathname];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
@@ -3569,6 +4042,32 @@ self.addEventListener('fetch', e => {
   }).catch(()=>{});
 }
 
+// ══════════════════════════════════════════════════════
+// PWA MANIFEST (gerado inline, funciona em qualquer caminho)
+// ══════════════════════════════════════════════════════
+function addManifest(){
+  try{
+    if(typeof URL === 'undefined' || typeof URL.createObjectURL !== 'function') return;
+    const icon = 'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512"><rect width="512" height="512" rx="112" fill="#16a34a"/><text x="256" y="292" font-size="290" text-anchor="middle" dominant-baseline="middle">🛒</text></svg>');
+    const manifest = {
+      name:'Poupa Fácil',
+      short_name:'Poupa Fácil',
+      description:'Compara preços de supermercado em Portugal e poupa nas tuas compras.',
+      start_url:'.',
+      scope:'.',
+      display:'standalone',
+      background_color:'#f2f7f3',
+      theme_color:'#16a34a',
+      icons:[{src:icon, sizes:'512x512', type:'image/svg+xml', purpose:'any'}]
+    };
+    const blob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
+    const link = document.createElement('link');
+    link.rel = 'manifest';
+    link.href = URL.createObjectURL(blob);
+    document.head.appendChild(link);
+  }catch(e){}
+}
+
 (function init(){
   loadDarkMode();
   loadFontSize();
@@ -3576,9 +4075,10 @@ self.addEventListener('fetch', e => {
   showCampAlert();
   calcTotal();
   updatePredefPrices();
+  renderHome();
   renderFeatured();
+  addManifest();
   document.getElementById('footer-bar').style.display='none';
-  startLiveTicker();
 })();
 </script>
 </body>
