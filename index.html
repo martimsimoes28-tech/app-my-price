@@ -921,6 +921,14 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
 
     <div class="settings-row" style="display:block">
       <div style="margin-bottom:9px">
+        <div class="settings-lbl">🔄 Atualização da app</div>
+        <div class="settings-desc">Verifica se existe uma versão mais recente e recarrega</div>
+      </div>
+      <button class="btn-green" style="width:100%" onclick="checkNowAndUpdate()">⬆️ Verificar e atualizar</button>
+    </div>
+
+    <div class="settings-row" style="display:block">
+      <div style="margin-bottom:9px">
         <div class="settings-lbl">💾 Dados e backup</div>
         <div class="settings-desc">Copia listas, favoritos, orçamento e histórico para outro dispositivo</div>
       </div>
@@ -1499,6 +1507,125 @@ const EXTRA_CATALOG = [
   {name:'Gin London Dry 70cl',price:14.99,stores:{continente:14.99,pingo_doce:15.49},emoji:'🥃',cat:'bebidas'},
 ];
 CATALOG.push(...EXTRA_CATALOG);
+
+// ══════════════════════════════════════════════════════
+// CATÁLOGO MARCA PRÓPRIA (gerado) — artigos típicos de cada loja
+// ══════════════════════════════════════════════════════
+(function buildStoreBrandCatalog(){
+  const SBRAND = {
+    pingo_doce: {b:'Pingo Doce'},
+    continente: {b:'Continente'},
+    auchan:     {b:'Auchan'},
+    intermarche:{b:'Intermarché'},
+    lidl:       {b:'Lidl', by:{leite:'Pilos',manteiga:'Pilos',iogurte:'Pilos',queijo:'Pilos',laticínio:'Pilos',higiene:'Cien',limpeza:'W5',bebidas:'Bellsoda',snacks:'Gourmet'}},
+    aldi:       {b:'Aldi', by:{leite:'Lacur',iogurte:'Milfina',manteiga:'Milfina',queijo:'Milfina',laticínio:'Milfina',higiene:'Osmose',limpeza:'Osmose',mercearia:'Bon Appetit'}},
+    mercadona:  {b:'Mercadona', by:{limpeza:'Bosque Verde',higiene:'Deliplus',leite:'Hacendado',iogurte:'Hacendado',queijo:'Hacendado',laticínio:'Hacendado',mercearia:'Hacendado',arroz:'Hacendado',massa:'Hacendado',azeite:'Hacendado',ovos:'Hacendado',café:'Hacendado',fruta:'Hacendado',legumes:'Hacendado',padaria:'Hacendado',snacks:'Hacendado'}}
+  };
+  const T = [
+    ['Arroz Carolino',1,'kg',2.19,'arroz','🍚'],
+    ['Arroz Agulha',1,'kg',1.89,'arroz','🍚'],
+    ['Azeite Virgem Extra',1,'L',6.49,'azeite','🫒'],
+    ['Azeite Virgem Extra',0.75,'L',5.19,'azeite','🫒'],
+    ['Azeite Suave',0.5,'L',3.49,'azeite','🫒'],
+    ['Massa Esparguete',0.5,'kg',0.89,'massa','🍝'],
+    ['Massa Penne',0.5,'kg',0.89,'massa','🍝'],
+    ['Massa Cotovelo',0.5,'kg',0.85,'massa','🍝'],
+    ['Leite UHT Meio Gordo',1,'L',0.65,'leite','🥛'],
+    ['Leite UHT Gordo',1,'L',0.67,'leite','🥛'],
+    ['Leite UHT Magro',1,'L',0.65,'leite','🥛'],
+    ['Leite Meio Gordo Sem Lactose',1,'L',0.99,'leite','🥛'],
+    ['Leite Chocolate',1,'L',1.29,'leite','🥛'],
+    ['Manteiga com Sal',250,'g',1.69,'manteiga','🧈'],
+    ['Manteiga sem Sal',250,'g',1.69,'manteiga','🧈'],
+    ['Margarina',500,'g',1.19,'manteiga','🧈'],
+    ['Iogurte Natural Líquido',0.75,'L',0.99,'iogurte','🥛'],
+    ['Iogurte de Morango 6un',500,'g',1.19,'iogurte','🥛'],
+    ['Iogurte Grego 4un',400,'g',1.49,'iogurte','🥛'],
+    ['Queijo Flamengo',0.3,'kg',3.49,'queijo','🧀'],
+    ['Queijo Fatiado',0.2,'kg',1.99,'queijo','🧀'],
+    ['Queijo Fresco',0.2,'kg',0.99,'queijo','🧀'],
+    ['Requeijão',0.2,'kg',1.09,'laticínio','🥛'],
+    ['Bebida de Soja',1,'L',1.19,'laticínio','🥛'],
+    ['Ovos M 12un',12,'un',2.29,'ovos','🥚'],
+    ['Ovos XL 12un',12,'un',2.99,'ovos','🥚'],
+    ['Pão de Forma',0.5,'kg',1.29,'padaria','🍞'],
+    ['Baguete',0.25,'kg',0.49,'padaria','🍞'],
+    ['Croissant 2un',0.15,'kg',1.09,'padaria','🍞'],
+    ['Pizza Margherita',0.4,'kg',2.49,'pronta','🍗'],
+    ['Lasanha Bolonhesa',0.4,'kg',2.29,'pronta','🍗'],
+    ['Frango Assado inteiro',1,'kg',4.99,'pronta','🍗'],
+    ['Empanadas de Atum 2un',0.3,'kg',2.19,'pronta','🍗'],
+    ['Costeletas de Porco',1,'kg',5.49,'carne','🍗'],
+    ['Peito de Frango',1,'kg',6.99,'carne','🍗'],
+    ['Carne Picada de Vaca',0.5,'kg',3.49,'carne','🍗'],
+    ['Hambúrguer de Vaca 4un',0.4,'kg',3.29,'carne','🍗'],
+    ['Salsicha Frankfurt',0.3,'kg',1.89,'charcutaria','🥓'],
+    ['Fiambre de Peru',0.2,'kg',2.29,'charcutaria','🥓'],
+    ['Presunto Cozido',0.2,'kg',2.59,'charcutaria','🥓'],
+    ['Bacon Fatiado',0.15,'kg',1.79,'charcutaria','🥓'],
+    ['Salmão Fumado',0.1,'kg',4.99,'peixe','🐟'],
+    ['Bacalhau Desfiado',0.5,'kg',9.99,'peixe','🐟'],
+    ['Filetes de Pescada',0.5,'kg',3.99,'peixe','🐟'],
+    ['Gambas 20/30',1,'kg',9.99,'peixe','🐟'],
+    ['Atum ao Natural',0.4,'kg',1.49,'conservas','🐟'],
+    ['Sardinhas em Óleo',0.12,'kg',0.89,'conservas','🐟'],
+    ['Grão-de-Bico Cozido',0.4,'kg',0.69,'conservas','🐟'],
+    ['Feijão Encarnado',0.4,'kg',0.69,'conservas','🐟'],
+    ['Banana',1,'kg',1.49,'fruta','🍌'],
+    ['Maçã Gala',1,'kg',1.79,'fruta','🍌'],
+    ['Laranja',1,'kg',1.19,'fruta','🍌'],
+    ['Batata',1,'kg',1.09,'legumes','🍅'],
+    ['Cenoura',1,'kg',0.99,'legumes','🍅'],
+    ['Cebola',1,'kg',0.89,'legumes','🍅'],
+    ['Tomate Rama',1,'kg',1.99,'legumes','🍅'],
+    ['Alface Iceberg',0.3,'kg',0.99,'legumes','🍅'],
+    ['Café Torrado Moído',0.5,'kg',4.49,'café','☕'],
+    ['Cápsulas de Café 10un',0.1,'kg',2.99,'café','☕'],
+    ['Água Mineral 6x1.5L',9,'L',1.79,'bebidas','💧'],
+    ['Água com Gás',1.5,'L',0.59,'bebidas','💧'],
+    ['Sumo de Laranja',1,'L',1.19,'bebidas','💧'],
+    ['Refrigerante Cola 2L',2,'L',1.29,'bebidas','💧'],
+    ['Refrigerante Laranja 2L',2,'L',1.19,'bebidas','💧'],
+    ['Cerveja Lager (2L)',2,'L',4.49,'bebidas','💧'],
+    ['Papel Higiénico 6un',6,'un',2.99,'higiene','🧻'],
+    ['Sabonete Líquido',0.5,'L',1.49,'higiene','🧻'],
+    ['Gel de Banho',0.5,'L',1.59,'higiene','🧻'],
+    ['Champô',0.4,'L',1.99,'higiene','🧻'],
+    ['Pasta de Dentes',0.1,'kg',1.29,'higiene','🧻'],
+    ['Detergente Roupa',1.5,'L',4.99,'limpeza','🫧'],
+    ['Lava-loiça',0.75,'L',1.29,'limpeza','🫧'],
+    ['Detergente Pratos',0.5,'L',1.09,'limpeza','🫧'],
+    ['Toalhitas Multiusos',1,'un',1.49,'limpeza','🫧'],
+    ['Sacos de Lixo 30L',30,'un',2.29,'limpeza','🫧'],
+    ['Batatas Fritas',0.15,'kg',0.99,'snacks','🍪'],
+    ['Bolachas de Água e Sal',0.2,'kg',0.89,'snacks','🍪'],
+    ['Barras de Cereais 4un',0.2,'kg',1.49,'snacks','🍪'],
+    ['Chocolate de Leite',0.2,'kg',1.29,'mercearia','🍬'],
+    ['Açúcar',1,'kg',0.99,'mercearia','🍬'],
+    ['Sal de Cozinha',1,'kg',0.59,'mercearia','🍬'],
+    ['Farinha de Trigo',1,'kg',0.79,'mercearia','🍬'],
+    ['Cereais de Trigo',0.5,'kg',1.79,'mercearia','🍬'],
+    ['Fraldas T4 40un',40,'un',12.99,'bebés','🍼'],
+    ['Leite em Pó Infantil',0.8,'kg',11.49,'bebés','🍼'],
+    ['Toalhitas Bebé 3x80un',240,'un',3.49,'bebés','🍼'],
+    ['Ração de Cão',2,'kg',5.99,'animais','🐶'],
+    ['Ração de Gato',1.5,'kg',5.49,'animais','🐶']
+  ];
+  const keys = ['pingo_doce','continente','auchan','intermarche','lidl','aldi','mercadona'];
+  const discount = {pingo_doce:0.8,continente:0.79,auchan:0.77,intermarche:0.78,lidl:0.72,aldi:0.71,mercadona:0.74};
+  const existing = new Set(CATALOG.map(p=>p.name));
+  T.forEach(t=>{
+    keys.forEach(st=>{
+      const s = SBRAND[st];
+      const brand = (s.by && s.by[t[4]]) ? s.by[t[4]] : s.b;
+      const name = t[0]+' '+brand+' '+t[1]+t[2];
+      if(existing.has(name)) return;
+      existing.add(name);
+      const price = Math.round(t[3]*discount[st]*100)/100;
+      CATALOG.push({name, price, stores:{}, emoji:t[5], cat:t[4]});
+    });
+  });
+})();
 
 // ══════════════════════════════════════════════════════
 // CAMPANHAS
@@ -3483,8 +3610,11 @@ function doBarcodeSearch(){
   }
   if(matches.length){
     renderResults(el, matches, `Código de barras (EAN ${digits})`);
+  } else if(digits.length===13){
+    el.innerHTML = `<div class="empty-state"><span class="empty-icon">🔎</span>A procurar no OpenFoodFacts o EAN <b>${digits}</b>...<br><span style="font-size:.65rem;color:var(--muted)">Este código não está no catálogo local; a consultar a base real.</span></div>`;
+    ofLookupAndShow(digits);
   } else {
-    el.innerHTML = `<div class="empty-state"><span class="empty-icon">🏷️</span>Nenhum produto com o código <b>${digits}</b> no catálogo.<br><span style="font-size:.65rem;color:var(--muted)">Tenta introduzir o código completo de 13 dígitos.</span><br><button class="btn-green" onclick="ofLookupAndShow('${digits}')" style="margin-top:10px">🔎 Procurar no OpenFoodFacts</button></div>`;
+    el.innerHTML = `<div class="empty-state"><span class="empty-icon">🏷️</span>Nenhum produto com o código <b>${digits}</b> no catálogo.<br><span style="font-size:.65rem;color:var(--muted)">Introduz o código completo de 13 dígitos para procurar nos dados reais.</span></div>`;
   }
 }
 
@@ -3577,7 +3707,10 @@ function startBarcodeScan(){
   if(ov) ov.classList.add('show');
   if(!('BarcodeDetector' in window)){
     if(area) area.style.display='none';
-    if(fallback) fallback.style.display='block';
+    if(fallback){
+      fallback.style.display='block';
+      fallback.innerHTML = '📵 O leitor automático não é suportado neste navegador.<br><span style="font-size:.65rem">Abre o separador Pesquisa e introduz o código de 13 dígitos — o catálogo e os dados reais procuram automaticamente.</span><br><button class="btn-green" onclick="closeScanner();setTimeout(function(){var i=document.getElementById(\'search-barcode\');if(i)i.focus();},50)" style="margin-top:10px">⌨️ Introduzir código manualmente</button>';
+    }
     return;
   }
   try{ _scannerDetector = new BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e']}); }
@@ -3610,7 +3743,10 @@ function startBarcodeScan(){
     }, 350);
   }).catch(err=>{
     if(area) area.style.display='none';
-    if(fallback){ fallback.style.display='block'; fallback.textContent='📵 Sem permissão de câmara. Introduz o código manualmente.'; }
+    if(fallback){
+      fallback.style.display='block';
+      fallback.innerHTML = '📵 Sem permissão de câmara. Introduz o código manualmente.<br><button class="btn-green" onclick="closeScanner();setTimeout(function(){var i=document.getElementById(\'search-barcode\');if(i)i.focus();},50)" style="margin-top:10px">⌨️ Introduzir código manualmente</button>';
+    }
   });
 }
 
@@ -4786,7 +4922,7 @@ function loadPredefToList(){
 if('serviceWorker' in navigator){
   // Inline SW as blob so it works no matter o caminho no GitHub Pages
   const swCode = `
-const CACHE = 'poupa-facil-v5';
+const CACHE = 'poupa-facil-v6';
 const ASSETS = [self.location.pathname];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
@@ -4918,6 +5054,19 @@ function forceAppUpdate(){
     ? caches.keys().then(keys=>Promise.all((keys||[]).map(k=>caches.delete(k)))).catch(()=>{})
     : Promise.resolve();
   Promise.all([p1,p2]).then(reload).catch(reload);
+}
+async function checkNowAndUpdate(){
+  const bar = document.getElementById('sw-update-bar');
+  if(bar && bar.style.display==='flex'){ forceAppUpdate(); return; }
+  showNotif('🔍 A verificar atualizações...');
+  await checkForUpdate();
+  const bar2 = document.getElementById('sw-update-bar');
+  if(bar2 && bar2.style.display==='flex'){
+    showNotif('⬆️ Nova versão encontrada! A atualizar...');
+    forceAppUpdate();
+  } else {
+    showNotif('✅ Já tens a versão mais recente.');
+  }
 }
 
  (function init(){
