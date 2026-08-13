@@ -380,7 +380,8 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
 <!-- ══════════════════════════════════════
      TAB: INÍCIO
 ══════════════════════════════════════ -->
-<div class="content active" id="tab-inicio">
+ <div class="content active" id="tab-inicio">
+  <div id="home-alerts"></div>
   <div id="home-root"></div>
 </div>
 
@@ -670,10 +671,16 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
     </div>
   </div>
   <div class="card">
+    <div class="card-title">💶 Dashboard de poupança</div>
+    <div id="savings-dash">
+      <div style="font-size:.7rem;color:var(--muted)">Adiciona produtos com preços por loja na tua lista para veres onde poupas mais.</div>
+    </div>
+  </div>
+  <div class="card">
     <div class="card-title">ℹ️ Sobre a app</div>
     <div style="font-size:.74rem;line-height:1.6;color:var(--muted)">
       <div><strong style="color:var(--text)">Poupa Fácil</strong> · v2.0</div>
-      <div style="margin-top:4px">Preços de referência de Jun 2026 recolhidos dos folhetos e apps das lojas. Fotos de produto © Wikimedia Commons (licença livre).</div>
+      <div style="margin-top:4px">Preços de referência de Jun 2026 recolhidos dos folhetos e apps das lojas. Produtos ilustrados com emojis.</div>
       <div style="margin-top:4px">Disponível offline via service worker. Instala a app a partir do menu do navegador.</div>
     </div>
     <button class="btn-dark" style="margin-top:10px;margin-bottom:0" onclick="shareApp()">📤 Partilhar a app</button>
@@ -693,6 +700,25 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
 
   <!-- SUB-TAB: Lista Atual -->
   <div id="subtab-atual">
+
+  <!-- Gerir listas -->
+  <div class="card">
+    <div class="card-title">📚 As minhas listas</div>
+    <div class="search-row" style="margin-bottom:4px">
+      <select class="sel" id="list-switch" onchange="switchList(this.value)" style="flex:1"></select>
+      <button class="btn-green" onclick="newListPrompt()" title="Nova lista" style="white-space:nowrap;padding:9px 11px">➕ Nova</button>
+      <button class="btn-green" id="list-delete-btn" onclick="deleteActiveList()" title="Apagar esta lista" style="white-space:nowrap;padding:9px 11px">🗑️</button>
+    </div>
+    <div style="font-size:.62rem;color:var(--muted);padding:0 2px">Cria várias listas (ex.: "Semana", "Churrasco") e alterna entre elas.</div>
+  </div>
+
+  <!-- Comparar supermercados -->
+  <div class="card">
+    <div class="card-title">⚖️ Onde poupas mais nesta lista</div>
+    <div id="store-compare">
+      <div style="font-size:.7rem;color:var(--muted)">Adiciona produtos com preços por loja para veres a comparação.</div>
+    </div>
+  </div>
 
   <!-- Seletor supermercado -->
   <div class="card">
@@ -737,7 +763,10 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px">
       <div class="card-title" style="margin-bottom:0">Produtos na lista</div>
-      <button onclick="clearList()" style="font-size:.65rem;color:var(--muted);background:none;border:none;cursor:pointer">Limpar</button>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button onclick="shareList()" style="font-size:.65rem;font-weight:700;color:var(--green);background:none;border:none;cursor:pointer">📤 Partilhar</button>
+        <button onclick="clearList()" style="font-size:.65rem;color:var(--muted);background:none;border:none;cursor:pointer">Limpar</button>
+      </div>
     </div>
     <div id="list-items">
       <div class="empty-state"><span class="empty-icon">📋</span>Lista vazia.<br>Pesquisa ou adiciona produtos acima.</div>
@@ -816,6 +845,13 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
         <div class="rw-txt" id="reward-text">🎉 Meta atingida!</div>
       </div>
     </div>
+    <div id="budget-section" style="display:none;margin-top:8px">
+      <div style="display:flex;justify-content:space-between;font-size:.66rem;margin-bottom:3px">
+        <span style="font-weight:700;color:var(--text)" id="budget-left"></span>
+        <span style="color:var(--muted)" id="budget-right"></span>
+      </div>
+      <div class="prog-track"><div class="prog-fill pf-warn" id="budget-bar" style="width:0%"></div></div>
+    </div>
   </div>
 </div>
 
@@ -855,6 +891,18 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
         <button class="fs-btn" data-fs="20" onclick="setFontSize(20)" style="font-size:1.15rem">A</button>
       </div>
     </div>
+
+    <div class="settings-row" style="display:block">
+      <div style="margin-bottom:9px">
+        <div class="settings-lbl">💶 Orçamento mensal de compras</div>
+        <div class="settings-desc">Define um limite; o total da lista mostra quanto já gastaste</div>
+      </div>
+      <div class="add-row">
+        <input type="number" class="inp" id="budget-input" min="0" step="5" placeholder="€ 0,00" style="text-align:center" onchange="saveBudget()">
+        <button class="btn-green" onclick="saveBudget()" style="white-space:nowrap">Guardar</button>
+      </div>
+      <button class="btn-dark" style="margin-top:8px;margin-bottom:0;width:100%" onclick="clearBudget()">Remover orçamento</button>
+    </div>
   </div>
 </div>
 
@@ -891,11 +939,12 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
       <div>
         <div style="font-size:.65rem;color:var(--muted)">A poupança certa começa aqui</div>
         <div style="font-size:.7rem;font-weight:700;color:var(--green);margin-top:2px" id="pm-bestnote"></div>
-        <div style="font-size:.6rem;color:var(--muted);margin-top:3px">Código de barras: <b id="pm-ean" style="letter-spacing:1.5px;color:var(--text)"></b></div>
+        <div style="font-size:.6rem;color:var(--muted);margin-top:3px">Código de barras: <b id="pm-ean" style="letter-spacing:1.5px;color:var(--text)"></b> <span id="pm-unit"></span></div>
       </div>
     </div>
     <div class="pm-actions" id="pm-actions"></div>
     <div id="pm-stores"></div>
+    <div id="pm-of"></div>
   </div>
 </div>
 
@@ -1522,10 +1571,40 @@ function productEan(p){
   p.ean = ean;
   return ean;
 }
-function searchByBarcode(digits){
+ function searchByBarcode(digits){
   const d = (digits||'').replace(/\D/g,'');
   if(d.length < 4) return [];
   return CATALOG.filter(p => productEan(p).indexOf(d) !== -1).slice(0,8);
+}
+
+// ══════════════════════════════════════════════════════
+// PREÇO POR UNIDADE (€/kg, €/L, €/un) — extraído do nome
+// ══════════════════════════════════════════════════════
+function productUnit(p){
+  if(!p || p._unit) return p ? p._unit : null;
+  const n = (p.name||'');
+  const m = n.match(/(\d+(?:[.,]\d+)?)\s*(kg|kgs|quilograma|g|gr|gramas|l|litro|litros|ml|cl|un|unidades|unidade|sacos?|rolos?|folhas|pacotes?|lata)/i);
+  if(!m){ p._unit = null; return null; }
+  const raw = parseFloat(m[1].replace(',','.'));
+  if(!raw || raw<=0){ p._unit = null; return null; }
+  const u = m[2].toLowerCase();
+  let base = null, qty = raw;
+  if(u==='kg'||u==='kgs'||u==='quilograma'){ base='kg'; }
+  else if(u==='g'||u==='gr'||u==='gramas'){ base='kg'; qty=raw/1000; }
+  else if(u==='l'||u==='litro'||u==='litros'){ base='L'; }
+  else if(u==='ml'){ base='L'; qty=raw/1000; }
+  else if(u==='cl'){ base='L'; qty=raw/100; }
+  else { base='un'; qty=raw; }
+  p._unit = {qty, base};
+  return p._unit;
+}
+function unitPriceHtml(p, price){
+  const u = productUnit(p);
+  if(!u || !u.qty) return '';
+  const per = price / u.qty;
+  if(per<=0 || !isFinite(per)) return '';
+  const sym = u.base==='un' ? '/un' : '/'+u.base;
+  return `<span class="unit-price" style="font-size:.6rem;color:var(--muted);background:var(--input-bg);border-radius:6px;padding:1px 6px;margin-left:4px;white-space:nowrap">${fmtEur(per)}${sym}</span>`;
 }
 
 // ══════════════════════════════════════════════════════
@@ -2467,6 +2546,8 @@ function openProductModal(product){
 
   const minPrice = Math.min(...entries.map(e=>e[1]));
   const maxPrice = Math.max(...entries.map(e=>e[1]));
+  const unitEl = document.getElementById('pm-unit');
+  if(unitEl) unitEl.innerHTML = unitPriceHtml(product, minPrice);
   const cheapStore = entries.find(e=>e[1]===minPrice)[0];
   const saving = entries.length>1 ? maxPrice - minPrice : 0;
   document.getElementById('pm-bestnote').textContent = `💰 Mais barato em ${storeName(cheapStore)}: ${fmtEur(minPrice)}${saving>0.01?' · Poupa até '+fmtEur(saving):''}`;
@@ -2564,10 +2645,11 @@ function openProductModal(product){
 // AÇÕES DO PRODUTO — favoritos + partilha
 // ══════════════════════════════════════════════════════
 function isFavProduct(name){ return favProducts.some(f=>f.name===name); }
-function pmActionsHtml(p){
+ function pmActionsHtml(p){
   const on = isFavProduct(p.name);
   return `<button class="pm-act${on?' on':''}" onclick="toggleFavFromModal()">${on?'❤️':'🤍'} <span>${on?'Nos favoritos':'Adicionar aos favoritos'}</span></button>
-  <button class="pm-act" onclick="shareProduct()">📤 <span>Partilhar</span></button>`;
+  <button class="pm-act" onclick="shareProduct()">📤 <span>Partilhar</span></button>
+  <button class="pm-act" onclick="ofLookupAndShow('${productEan(p)}')">🔎 <span>Dados reais</span></button>`;
 }
 function toggleFavFromModal(){
   const p = window.__openProduct;
@@ -2657,14 +2739,80 @@ function loadFontSize(){
 // ══════════════════════════════════════════════════════
 // STATE
 // ══════════════════════════════════════════════════════
-let listItems = JSON.parse(localStorage.getItem('pf_list')||'[]');
+// ══════════════════════════════════════════════════════
+// LISTAS MÚLTIPLAS
+// ─ listItems aponta sempre para a lista ativa (allLists[name])
+// ══════════════════════════════════════════════════════
+let allLists = (function(){
+  let m = null;
+  try{ m = JSON.parse(localStorage.getItem('pf_lists')||'null'); }catch(e){ m=null; }
+  if(!m || typeof m!=='object' || Object.keys(m).length===0){
+    let old = [];
+    try{ old = JSON.parse(localStorage.getItem('pf_list')||'[]'); }catch(e){ old=[]; }
+    m = {'Minha Lista': old};
+  }
+  return m;
+})();
+let activeListName = localStorage.getItem('pf_active_list') || Object.keys(allLists)[0];
+if(!allLists[activeListName]) activeListName = Object.keys(allLists)[0];
+let listItems = allLists[activeListName] || [];
 let activeCampaign = JSON.parse(localStorage.getItem('pf_camp')||'null');
 let currentTab = 'inicio';
 let favStores = JSON.parse(localStorage.getItem('pf_fav_stores')||'[]');
 let favProducts = JSON.parse(localStorage.getItem('pf_fav_prods')||'[]');
 let currentStoreTab = null;
 
-function save(){localStorage.setItem('pf_list',JSON.stringify(listItems))}
+function save(){
+  allLists[activeListName] = listItems;
+  localStorage.setItem('pf_lists', JSON.stringify(allLists));
+}
+function getListNames(){ return Object.keys(allLists); }
+function switchList(name){
+  if(!allLists[name]) return;
+  activeListName = name;
+  listItems = allLists[name] || [];
+  localStorage.setItem('pf_active_list', name);
+  renderListSwitch();
+  renderList();
+  calcTotal();
+}
+function createList(name){
+  const n = (name||'').trim();
+  if(!n) return false;
+  if(allLists[n]) { showNotif('⚠️ Já existe uma lista com esse nome.'); return false; }
+  allLists[n] = [];
+  switchList(n);
+  showNotif(`✅ Lista "${n}" criada.`);
+  return true;
+}
+function deleteList(name){
+  if(getListNames().length <= 1){ showNotif('⚠️ Tens de manter pelo menos uma lista.'); return; }
+  if(!allLists[name]) return;
+  delete allLists[name];
+  if(activeListName === name){
+    activeListName = Object.keys(allLists)[0];
+    listItems = allLists[activeListName];
+    localStorage.setItem('pf_active_list', activeListName);
+  }
+  save();
+  renderListSwitch();
+  renderList();
+  calcTotal();
+}
+function renderListSwitch(){
+  const el = document.getElementById('list-switch');
+  if(!el) return;
+  el.innerHTML = getListNames().map(n=>`<option value="${n.replace(/"/g,'&quot;')}" ${n===activeListName?'selected':''}>${n}</option>`).join('');
+  const del = document.getElementById('list-delete-btn');
+  if(del) del.disabled = getListNames().length <= 1;
+}
+function newListPrompt(){
+  const name = window.prompt('Nome da nova lista:', 'Compras '+(getListNames().length+1));
+  if(name) createList(name);
+}
+function deleteActiveList(){
+  if(window.confirm(`Apagar a lista "${activeListName}"?`)) deleteList(activeListName);
+}
 function fmtEur(v){return v.toFixed(2).replace('.',',')+'\u20AC'}
 
 // ══════════════════════════════════════════════════════
@@ -2919,7 +3067,62 @@ function renderFeatured(){
 // ══════════════════════════════════════════════════════
 // INÍCIO — landing app (destaques, melhores preços, ofertas)
 // ══════════════════════════════════════════════════════
+ // ══════════════════════════════════════════════════════
+// ALERTAS — quebras de preço nos favoritos + campanhas
+// ══════════════════════════════════════════════════════
+function computeAlerts(){
+  const alerts = [];
+  const favStoreKeys = favStores.length ? favStores : Object.keys(STORE_META).slice(0,3);
+  favProducts.forEach(f=>{
+    favStoreKeys.forEach(k=>{
+      if(f.stores && f.stores[k]!=null){
+        const cur = effPriceOf(f, k);
+        const hist = priceHistory(f.name, k, cur);
+        if(hist && hist.length>=2){
+          const prev = hist[hist.length-2].v;
+          if(prev>0 && cur < prev*0.99){
+            const dropPct = Math.round((1-cur/prev)*100);
+            alerts.push({icon:'📉', text:`<strong>${f.name}</strong> baixou para <strong>${fmtEur(cur)}</strong> no ${storeName(k)} (−${dropPct}% vs mês passado)`});
+          }
+          const allMin = Math.min.apply(null, hist.map(h=>h.v));
+          if(cur <= allMin+0.001 && prev>0 && cur < prev*0.995){
+            alerts.push({icon:'🏷️', text:`<strong>${f.name}</strong> está no <strong>preço mais baixo em 6 meses</strong> no ${storeName(k)} (${fmtEur(cur)})`});
+          }
+        }
+      }
+    });
+  });
+  favStoreKeys.forEach(k=>{
+    const camps = (CAMPAIGNS[k]||[]).filter(c=>c.id!=='none');
+    if(camps.length && (!activeCampaign || activeCampaign.id==='none')){
+      const c = camps[0];
+      alerts.push({icon:'🔔', text:`Campanha ativa no <strong>${storeName(k)}</strong>: ${c.name} <a onclick="activateCampaign('${k}','${c.id}')" style="color:var(--green);font-weight:700;text-decoration:underline;cursor:pointer">Ativar →</a>`});
+    }
+  });
+  return alerts.slice(0,5);
+}
+function renderHomeAlerts(){
+  const el = document.getElementById('home-alerts');
+  if(!el) return;
+  const alerts = computeAlerts();
+  if(!alerts.length){ el.innerHTML=''; return; }
+  el.innerHTML = `<div class="card" style="border:1px solid #fbbf24;background:var(--card)">
+    <div class="card-title" style="margin-bottom:6px">🔔 Alertas para ti</div>
+    ${alerts.map(a=>`<div style="display:flex;gap:8px;padding:7px 9px;border-radius:9px;background:var(--green-l);margin-bottom:5px;font-size:.72rem;line-height:1.4;color:var(--text)"><span>${a.icon}</span><span>${a.text}</span></div>`).join('')}
+  </div>`;
+}
+function maybeNotifyAlerts(){
+  const today = new Date().toDateString();
+  if(localStorage.getItem('pf_alerts_seen') === today) return;
+  localStorage.setItem('pf_alerts_seen', today);
+  const alerts = computeAlerts();
+  if(alerts.length){
+    setTimeout(()=>showNotif(`🔔 Tens ${alerts.length} alerta${alerts.length>1?'s':''} — vê no início`), 2500);
+  }
+}
+
 function renderHome(){
+  renderHomeAlerts();
   const root = document.getElementById('home-root');
   if(!root) return;
   const h = new Date().getHours();
@@ -3228,8 +3431,76 @@ function doBarcodeSearch(){
   if(matches.length){
     renderResults(el, matches, `Código de barras (EAN ${digits})`);
   } else {
-    el.innerHTML = `<div class="empty-state"><span class="empty-icon">🏷️</span>Nenhum produto com o código <b>${digits}</b> no catálogo.<br><span style="font-size:.65rem;color:var(--muted)">Tenta introduzir o código completo de 13 dígitos.</span></div>`;
+    el.innerHTML = `<div class="empty-state"><span class="empty-icon">🏷️</span>Nenhum produto com o código <b>${digits}</b> no catálogo.<br><span style="font-size:.65rem;color:var(--muted)">Tenta introduzir o código completo de 13 dígitos.</span><br><button class="btn-green" onclick="ofLookupAndShow('${digits}')" style="margin-top:10px">🔎 Procurar no OpenFoodFacts</button></div>`;
   }
+}
+
+// ══════════════════════════════════════════════════════
+// OPENFOODFACTS — dados reais a partir do EAN
+// ══════════════════════════════════════════════════════
+async function ofLookup(ean){
+  try{
+    const r = await fetch('https://world.openfoodfacts.org/api/v2/product/'+String(ean).replace(/\D/g,'')+'.json');
+    if(!r.ok) return null;
+    const d = await r.json();
+    return (d && d.status===1 && d.product) ? d.product : null;
+  }catch(e){ return null; }
+}
+function ofResultHtml(pr, ean){
+  const img = pr.image_front_small_url || pr.image_front_url || pr.image_url || '';
+  const o = {name:(pr.product_name||'Produto OpenFoodFacts'), price:0, stores:{}, emoji:'🛒', promo:null, qty:1, ofEan:String(ean).replace(/\D/g,'')};
+  return `<div style="display:flex;gap:10px;align-items:center;padding:9px;border:1px solid var(--border);border-radius:11px;background:var(--card);margin-top:10px;max-width:640px">
+    ${img?`<img src="${img}" alt="" style="width:46px;height:46px;object-fit:contain;border-radius:8px;background:#fff" loading="lazy" onerror="this.remove()">`:''}
+    <div style="flex:1;min-width:0">
+      <div style="font-size:.58rem;color:var(--muted);letter-spacing:.5px">DADOS REAIS · OPENFOODFACTS · EAN ${String(ean).replace(/\D/g,'')}</div>
+      <div style="font-size:.78rem;font-weight:700;color:var(--text);line-height:1.3">${pr.product_name||pr.product_name_en||'Produto'}</div>
+      ${pr.brands?`<div style="font-size:.62rem;color:var(--muted)">🏭 ${pr.brands}</div>`:''}
+      ${pr.quantity?`<div style="font-size:.62rem;color:var(--muted)">📦 ${pr.quantity}</div>`:''}
+    </div>
+    <button class="add-btn-sm" onclick='addToList(${JSON.stringify(o)})' title="Adicionar à lista">+</button>
+  </div>`;
+}
+async function ofLookupAndShow(ean){
+  const d = String(ean||'').replace(/\D/g,'');
+  if(d.length < 8){ showNotif('⚠️ Código de barras inválido (mín. 8 dígitos).'); return; }
+  showNotif('🔎 A consultar OpenFoodFacts...');
+  const pr = await ofLookup(d);
+  const html = pr
+    ? ofResultHtml(pr,d)
+    : `<div class="empty-state"><span class="empty-icon">😕</span>Nenhum produto real encontrado para EAN ${d}.<br><span style="font-size:.62rem;color:var(--muted)">O catálogo usa preços estimados — este código pode não existir na base.</span></div>`;
+  const modal = document.getElementById('product-modal');
+  const pmOf = document.getElementById('pm-of');
+  if(modal && modal.classList.contains('show') && pmOf){
+    pmOf.innerHTML = html;
+  } else {
+    const sr = document.getElementById('search-results');
+    if(sr) sr.innerHTML = html;
+  }
+  showNotif(pr ? '🔎 Produto real encontrado!' : '😕 Não encontrado no OpenFoodFacts.');
+}
+
+function shareList(){
+  if(!listItems.length){ showNotif('⚠️ A lista está vazia.'); return; }
+  const market = (document.getElementById('list-market')||{}).value || 'pingo_doce';
+  const priceOf = (i)=>(i.stores && Object.keys(i.stores).length) ? effPriceOf(i,market) : (i.price||0);
+  const lines = listItems.map(i=>{
+    const q = i.qty||1;
+    return `• ${i.emoji||'🛒'} ${i.name} — ${q}× ${fmtEur(priceOf(i))} = ${fmtEur(priceOf(i)*q)}`;
+  });
+  const total = listItems.reduce((s,i)=>{ const q=i.qty||1; return s + priceOf(i)*q; },0);
+  const text = `🛒 Lista de compras "${activeListName}" — ${storeName(market)}\n\n${lines.join('\n')}\n\n💰 Total estimado: ${fmtEur(total)}\n— via Poupa Fácil`;
+  if(navigator.share){
+    navigator.share({title:'Lista de compras', text}).catch(()=>{});
+    return;
+  }
+  try{
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showNotif('📋 Lista copiada para a área de transferência!');
+  }catch(e){ showNotif('⚠️ Não foi possível partilhar a lista.'); }
 }
 
 function stopScanner(){
@@ -3423,7 +3694,7 @@ function renderResults(el, products, source){
     <div class="prod-card">
       <div onclick="openProductModal(window.__searchResults[${idx}])">${productPhotoHtml(p,false)}</div>
       <div class="prod-info">
-        <div class="prod-name">${p.name}</div>
+        <div class="prod-name">${p.name}${unitPriceHtml(p, dPrice)}</div>
         <div class="prod-store" style="font-size:.6rem;color:var(--muted);letter-spacing:1px">EAN ${productEan(p)}</div>
         <div class="prod-store">${formatStores(p.stores, p.name)}</div>
         ${p.promo?`<div class="prod-promo">ℹ️ ${p.promo}</div>`:''}
@@ -3604,7 +3875,7 @@ function renderList(){
   }).join('');
 }
 
-function calcTotal(){
+ function calcTotal(){
   const market = document.getElementById('list-market') ? document.getElementById('list-market').value : null;
   const total = listItems.reduce((s,i)=>{
     const p = (i.stores && Object.keys(i.stores).length>0) ? effPriceOf(i, market) : i.price;
@@ -3620,33 +3891,196 @@ function calcTotal(){
 
   if(!c||c.id==='none'){
     sb.textContent='Sem campanha'; sb.className='status-badge sb-none';
-    ps.style.display='none'; return;
-  }
-  if(c.pctOnly){
+    ps.style.display='none';
+  } else if(c.pctOnly){
     const disc = total*c.pct;
     sb.textContent=`💳 Poupas ${fmtEur(disc)}`; sb.className='status-badge sb-done';
-    ps.style.display='none'; return;
-  }
-  ps.style.display='block';
-  const pct = Math.min((total/c.target)*100,100);
-  pb.style.width=pct+'%';
-  if(total>=c.target){
-    let rw = c.reward;
-    if(c.multi&&total>=c.t2) rw=c.r2;
-    pb.className='prog-fill pf-done';
-    sb.textContent='🎉 Meta atingida!'; sb.className='status-badge sb-done';
-    rb.style.display='block';
-    document.getElementById('reward-text').textContent=`🏆 ${rw}  ·  ${c.valid||''}`;
-    document.getElementById('prog-left').textContent='Meta atingida ✔️';
-    document.getElementById('prog-right').textContent='Meta: '+fmtEur(c.target);
+    ps.style.display='none';
   } else {
-    const miss = c.target-total;
-    pb.className='prog-fill '+(pct>=70?'pf-ok':'pf-warn');
-    sb.textContent=`Faltam ${fmtEur(miss)}`; sb.className='status-badge sb-prog';
-    rb.style.display='none';
-    document.getElementById('prog-left').textContent=`Faltam ${fmtEur(miss)} para o prémio`;
-    document.getElementById('prog-right').textContent='Meta: '+fmtEur(c.target);
+    ps.style.display='block';
+    const pct = Math.min((total/c.target)*100,100);
+    pb.style.width=pct+'%';
+    if(total>=c.target){
+      let rw = c.reward;
+      if(c.multi&&total>=c.t2) rw=c.r2;
+      pb.className='prog-fill pf-done';
+      sb.textContent='🎉 Meta atingida!'; sb.className='status-badge sb-done';
+      rb.style.display='block';
+      document.getElementById('reward-text').textContent=`🏆 ${rw}  ·  ${c.valid||''}`;
+      document.getElementById('prog-left').textContent='Meta atingida ✔️';
+      document.getElementById('prog-right').textContent='Meta: '+fmtEur(c.target);
+    } else {
+      const miss = c.target-total;
+      pb.className='prog-fill '+(pct>=70?'pf-ok':'pf-warn');
+      sb.textContent=`Faltam ${fmtEur(miss)}`; sb.className='status-badge sb-prog';
+      rb.style.display='none';
+      document.getElementById('prog-left').textContent=`Faltam ${fmtEur(miss)} para o prémio`;
+      document.getElementById('prog-right').textContent='Meta: '+fmtEur(c.target);
+    }
   }
+
+  renderBudget(total);
+  renderStoreCompare();
+  updateSavingsHistory(total);
+}
+
+// ══════════════════════════════════════════════════════
+// COMPARAR SUPERMERCADOS — total da lista em cada loja
+// ══════════════════════════════════════════════════════
+function storeTotals(){
+  const out = {};
+  Object.keys(STORE_META).forEach(k=>{
+    let t = 0, withStores = 0;
+    listItems.forEach(i=>{
+      const q = i.qty||1;
+      if(i.stores && i.stores[k]!=null){ t += effPriceOf(i,k)*q; withStores++; }
+      else t += (i.price||0)*q;
+    });
+    out[k] = {total:t, withStores};
+  });
+  return out;
+}
+function renderStoreCompare(){
+  const el = document.getElementById('store-compare');
+  if(!el) return;
+  const totals = storeTotals();
+  const rows = Object.entries(totals)
+    .map(([k,v])=>({k, total:v.total, withStores:v.withStores}))
+    .filter(r=>r.withStores>0 || listItems.length===0)
+    .sort((a,b)=>a.total-b.total);
+  if(!listItems.length){
+    el.innerHTML = '<div style="font-size:.7rem;color:var(--muted)">Lista vazia — adiciona produtos para comparar.</div>';
+    return;
+  }
+  if(!rows.filter(r=>r.withStores>0).length){
+    el.innerHTML = '<div style="font-size:.7rem;color:var(--muted)">Adiciona produtos com preços por loja (pesquisa no catálogo) para veres a comparação.</div>';
+    return;
+  }
+  const market = document.getElementById('list-market') ? document.getElementById('list-market').value : '';
+  const min = rows[0].total;
+  const max = rows[rows.length-1].total;
+  const save = max - min;
+  const bestName = storeName(rows[0].k);
+  let barTop = '';
+  if(save > 0.005){
+    const pct = min>0 ? Math.round(min/max*100) : 0;
+    barTop = `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <div style="font-size:.7rem;font-weight:700;color:var(--green);flex:1">🛒 Comprar no <strong>${bestName}</strong> poupa <strong>${fmtEur(save)}</strong> face ao mais caro</div>
+      <span style="font-size:.62rem;color:var(--muted)">mín. ${pct}%</span>
+    </div>
+    <div class="prog-track" style="margin-bottom:9px"><div class="prog-fill pf-ok" style="width:${pct}%"></div></div>`;
+  }
+  el.innerHTML = barTop + rows.map(r=>{
+    const isMin = r.total<=min+0.001;
+    const isSel = r.k===market;
+    const diff = r.total - min;
+    const pctW = max>0 ? Math.max(8, Math.round(r.total/max*100)) : 8;
+    const color = STORE_META[r.k] ? STORE_META[r.k].color : '#64748b';
+    return `<div style="display:flex;align-items:center;gap:9px;padding:6px 2px;border-bottom:1px solid var(--border);${isSel?'background:var(--green-l);border-radius:8px;padding-left:7px':''}">
+      <span class="st-logo" style="width:22px;height:22px;flex-shrink:0">${storeLogoSvg(r.k)}</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.7rem;font-weight:700;color:var(--text)">${storeName(r.k)}${isSel?' <span style="color:var(--green);font-weight:800">· a visitar</span>':''}${isMin?' <span class="chip-best">✓ mais barato</span>':''}</div>
+        <div style="height:5px;background:var(--input-bg);border-radius:99px;margin-top:3px;overflow:hidden"><div style="height:100%;width:${pctW}%;background:${color};border-radius:99px"></div></div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-size:.82rem;font-weight:800;color:${isMin?'var(--green)':'var(--text)'}">${fmtEur(r.total)}</div>
+        ${diff>0.005?`<div style="font-size:.58rem;color:var(--muted)">+${fmtEur(diff)} vs min</div>`:'<div style="font-size:.58rem;color:var(--green)">melhor preço</div>'}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// ORÇAMENTO MENSAL
+// ══════════════════════════════════════════════════════
+function loadBudget(){
+  const v = parseFloat(localStorage.getItem('pf_budget')||'0');
+  const inp = document.getElementById('budget-input');
+  if(inp) inp.value = v>0 ? v : '';
+  return v;
+}
+function saveBudget(){
+  const inp = document.getElementById('budget-input');
+  const v = parseFloat((inp?inp.value:'0').replace(',','.'));
+  if(!isNaN(v) && v>0){ localStorage.setItem('pf_budget', String(Math.round(v*100)/100)); }
+  else { localStorage.removeItem('pf_budget'); }
+  loadBudget();
+  calcTotal();
+  showNotif(v>0 ? `💶 Orçamento definido: ${fmtEur(v)}` : '💶 Orçamento removido.');
+}
+function clearBudget(){ localStorage.removeItem('pf_budget'); loadBudget(); calcTotal(); showNotif('💶 Orçamento removido.'); }
+function renderBudget(total){
+  const sec = document.getElementById('budget-section');
+  if(!sec) return;
+  const budget = parseFloat(localStorage.getItem('pf_budget')||'0');
+  if(!budget || budget<=0){ sec.style.display='none'; return; }
+  sec.style.display='block';
+  const pct = Math.min((total/budget)*100, 100);
+  const bar = document.getElementById('budget-bar');
+  bar.style.width = pct+'%';
+  bar.className = 'prog-fill ' + (pct>=100?'pf-done':(pct>=80?'pf-ok':'pf-warn'));
+  document.getElementById('budget-left').textContent = pct>=100 ? `🚨 Orçamento excedido!` : `💶 Gasto: ${fmtEur(total)} de ${fmtEur(budget)}`;
+  document.getElementById('budget-right').textContent = pct>=100 ? `+${fmtEur(total-budget)}` : `Restam ${fmtEur(Math.max(0,budget-total))} · ${Math.round(pct)}%`;
+}
+
+// ══════════════════════════════════════════════════════
+// DASHBOARD DE POUPANÇA (semanal)
+// ══════════════════════════════════════════════════════
+function updateSavingsHistory(total){
+  const weekKey = getWeekKey();
+  const totals = storeTotals();
+  const entries = Object.entries(totals).filter(([k,v])=>v.withStores>0).map(([k,v])=>({k,total:v.total}));
+  if(!entries.length) return;
+  entries.sort((a,b)=>a.total-b.total);
+  const save = entries[entries.length-1].total - entries[0].total;
+  const hist = JSON.parse(localStorage.getItem('pf_savings_hist')||'{}');
+  if(!hist[weekKey] || Math.abs(hist[weekKey].save - save) > 0.001){
+    hist[weekKey] = {save, cheapest:entries[0].k, dearest:entries[entries.length-1].k, total};
+    localStorage.setItem('pf_savings_hist', JSON.stringify(hist));
+  }
+}
+function renderSavingsDash(){
+  const el = document.getElementById('savings-dash');
+  if(!el) return;
+  const hist = JSON.parse(localStorage.getItem('pf_savings_hist')||'{}');
+  const weekKey = getWeekKey();
+  const prevKey = getPrevWeekKey();
+  const thisWeek = hist[weekKey];
+  const prevWeek = hist[prevKey];
+  const totals = storeTotals();
+  const entries = Object.entries(totals).filter(([k,v])=>v.withStores>0).map(([k,v])=>({k,total:v.total}));
+  if(!entries.length){
+    el.innerHTML = '<div style="font-size:.7rem;color:var(--muted)">Adiciona produtos com preços por loja na tua lista para veres onde poupas mais.</div>';
+    return;
+  }
+  entries.sort((a,b)=>a.total-b.total);
+  const min = entries[0], max = entries[entries.length-1];
+  const save = max.total - min.total;
+  const totalSavings = Object.values(hist).reduce((s,h)=>s+(h.save||0),0);
+  const prevNote = prevWeek ? (prevWeek.save!=null ?
+    `<div style="font-size:.62rem;color:var(--muted);margin-top:2px">Semana anterior: poupavas ${fmtEur(prevWeek.save)} (${storeName(prevWeek.cheapest)})</div>` : '') : '';
+  let trend = '';
+  if(thisWeek && prevWeek && prevWeek.save!=null){
+    const d = thisWeek.save - prevWeek.save;
+    trend = d>0.005 ? `<div style="font-size:.66rem;font-weight:700;color:var(--green)">▲ +${fmtEur(d)} face à semana anterior</div>`
+          : d<-0.005 ? `<div style="font-size:.66rem;font-weight:700;color:var(--amber)">▼ −${fmtEur(Math.abs(d))} face à semana anterior</div>`
+          : `<div style="font-size:.66rem;font-weight:700;color:var(--muted)">= Igual à semana anterior</div>`;
+  }
+  el.innerHTML = `
+    <div class="home-stats" style="margin-bottom:8px">
+      <div class="hs-card grad"><span class="hs-ico">💶</span><span class="hs-val">${fmtEur(save)}</span><span class="hs-lbl">Poupas agora</span></div>
+      <div class="hs-card"><span class="hs-ico">🏆</span><span class="hs-val">${storeName(min.k)}</span><span class="hs-lbl">Mais barato</span></div>
+      <div class="hs-card"><span class="hs-ico">💾</span><span class="hs-val">${fmtEur(totalSavings)}</span><span class="hs-lbl">Poupado (hist.)</span></div>
+    </div>
+    <div class="prog-track" style="margin-bottom:6px">
+      <div class="prog-fill pf-ok" style="width:${max.total>0?Math.max(10,Math.round(min.total/max.total*100)):10}%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted)">
+      <span>${storeName(min.k)} · ${fmtEur(min.total)}</span>
+      <span>${storeName(max.k)} · ${fmtEur(max.total)}</span>
+    </div>
+    ${trend}
+    ${prevNote}`;
 }
 
 // ══════════════════════════════════════════════════════
@@ -3889,7 +4323,8 @@ function removeFav(i){
   saveFavProds();
   renderPerfil();
 }
-function renderPerfil(){
+ function renderPerfil(){
+  renderSavingsDash();
   const ps = document.getElementById('perfil-stats');
   if(ps){
     const market = document.getElementById('list-market') ? document.getElementById('list-market').value : null;
@@ -4192,7 +4627,7 @@ function loadPredefToList(){
 if('serviceWorker' in navigator){
   // Inline SW as blob so it works no matter o caminho no GitHub Pages
   const swCode = `
-const CACHE = 'poupa-facil-v3';
+const CACHE = 'poupa-facil-v4';
 const ASSETS = [self.location.pathname];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
@@ -4242,12 +4677,13 @@ function addManifest(){
   }catch(e){}
 }
 
-(function init(){
+ (function init(){
   loadDarkMode();
   loadFontSize();
   renderList();
   showCampAlert();
   calcTotal();
+  loadBudget();
   updatePredefPrices();
   renderHome();
   renderFeatured();
