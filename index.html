@@ -1511,9 +1511,9 @@ CATALOG.push(...EXTRA_CATALOG);
     continente: {b:'Continente'},
     auchan:     {b:'Auchan'},
     intermarche:{b:'Intermarché'},
-    lidl:       {b:'Lidl', by:{leite:'Pilos',manteiga:'Pilos',iogurte:'Pilos',queijo:'Pilos',laticínio:'Pilos',higiene:'Cien',limpeza:'W5',bebidas:'Bellsoda',snacks:'Gourmet'}},
-    aldi:       {b:'Aldi', by:{leite:'Lacur',iogurte:'Milfina',manteiga:'Milfina',queijo:'Milfina',laticínio:'Milfina',higiene:'Osmose',limpeza:'Osmose',mercearia:'Bon Appetit'}},
-    mercadona:  {b:'Mercadona', by:{limpeza:'Bosque Verde',higiene:'Deliplus',leite:'Hacendado',iogurte:'Hacendado',queijo:'Hacendado',laticínio:'Hacendado',mercearia:'Hacendado',arroz:'Hacendado',massa:'Hacendado',azeite:'Hacendado',ovos:'Hacendado',café:'Hacendado',fruta:'Hacendado',legumes:'Hacendado',padaria:'Hacendado',snacks:'Hacendado'}}
+    lidl:       {b:'Lidl', by:{leite:'Pilos',manteiga:'Pilos',iogurte:'Pilos',queijo:'Pilos',laticínio:'Pilos',higiene:'Cien',limpeza:'W5',bebidas:'Bellsoda',snacks:'Gourmet',congelados:'Gelatelli'}},
+    aldi:       {b:'Aldi', by:{leite:'Lacur',iogurte:'Milfina',manteiga:'Milfina',queijo:'Milfina',laticínio:'Milfina',higiene:'Osmose',limpeza:'Osmose',mercearia:'Bon Appetit',congelados:'Milfina'}},
+    mercadona:  {b:'Mercadona', by:{limpeza:'Bosque Verde',higiene:'Deliplus',leite:'Hacendado',iogurte:'Hacendado',queijo:'Hacendado',laticínio:'Hacendado',mercearia:'Hacendado',arroz:'Hacendado',massa:'Hacendado',azeite:'Hacendado',ovos:'Hacendado',café:'Hacendado',fruta:'Hacendado',legumes:'Hacendado',padaria:'Hacendado',snacks:'Hacendado',congelados:'Hacendado'}}
   };
   const T = [
     ['Arroz Carolino',1,'kg',2.19,'arroz','🍚'],
@@ -1603,20 +1603,38 @@ CATALOG.push(...EXTRA_CATALOG);
     ['Leite em Pó Infantil',0.8,'kg',11.49,'bebés','🍼'],
     ['Toalhitas Bebé 3x80un',240,'un',3.49,'bebés','🍼'],
     ['Ração de Cão',2,'kg',5.99,'animais','🐶'],
-    ['Ração de Gato',1.5,'kg',5.49,'animais','🐶']
+    ['Ração de Gato',1.5,'kg',5.49,'animais','🐶'],
+    ['Gelado de Baunilha',1,'L',3.29,'congelados','🍦'],
+    ['Gelado de Chocolate',1,'L',3.29,'congelados','🍦'],
+    ['Gelado de Morango',1,'L',3.29,'congelados','🍦'],
+    ['Gelado de Caramelo Salgado',0.9,'L',3.79,'congelados','🍦'],
+    ['Gelado de Nata',1,'L',3.49,'congelados','🍦'],
+    ['Gelado de Stracciatella',0.9,'L',3.59,'congelados','🍦'],
+    ['Gelado de Café',1,'L',3.49,'congelados','🍦'],
+    ['Gelado de Frutos Vermelhos',0.9,'L',3.49,'congelados','🍦'],
+    ['Gelado de Manga Sorbet',0.9,'L',3.29,'congelados','🍦'],
+    ['Gelado de Limão Sorbet',0.9,'L',3.29,'congelados','🍦'],
+    ['Picolé de Limão 6un',6,'un',2.19,'congelados','🍦'],
+    ['Picolé de Morango 6un',6,'un',2.29,'congelados','🍦'],
+    ['Picolé de Chocolate 4un',4,'un',2.49,'congelados','🍦'],
+    ['Cone de Baunilha e Chocolate 6un',6,'un',2.99,'congelados','🍦'],
+    ['Gelado Proteico de Baunilha',0.9,'L',4.99,'congelados','🍦']
   ];
   const keys = ['pingo_doce','continente','auchan','intermarche','lidl','aldi','mercadona'];
+  const sname = {pingo_doce:'Pingo Doce',continente:'Continente',auchan:'Auchan',intermarche:'Intermarché',lidl:'Lidl',aldi:'Aldi',mercadona:'Mercadona'};
   const discount = {pingo_doce:0.8,continente:0.79,auchan:0.77,intermarche:0.78,lidl:0.72,aldi:0.71,mercadona:0.74};
   const existing = new Set(CATALOG.map(p=>p.name));
   T.forEach(t=>{
     keys.forEach(st=>{
       const s = SBRAND[st];
       const brand = (s.by && s.by[t[4]]) ? s.by[t[4]] : s.b;
-      const name = t[0]+' '+brand+' '+t[1]+t[2];
+      const suffix = brand!==sname[st] ? ' ('+sname[st]+')' : '';
+      const name = t[0]+' '+brand+suffix+' '+t[1]+t[2];
       if(existing.has(name)) return;
       existing.add(name);
       const price = Math.round(t[3]*discount[st]*100)/100;
-      CATALOG.push({name, price, stores:{}, emoji:t[5], cat:t[4]});
+      const stores = {}; stores[st] = price;
+      CATALOG.push({name, price, stores, emoji:t[5], cat:t[4]});
     });
   });
 })();
@@ -3762,7 +3780,7 @@ async function doSearch(){
   const q = document.getElementById('search-q').value.trim().toLowerCase();
   const storeFilter = document.getElementById('search-store-filter') ? document.getElementById('search-store-filter').value : '';
   const catFilter = document.getElementById('search-cat-filter') ? document.getElementById('search-cat-filter').value : '';
-  if(!q && !catFilter) return;
+  if(!q && !catFilter && !storeFilter) return;
   const btn = document.getElementById('search-btn');
   const el = document.getElementById('search-results');
   const featSec = document.getElementById('featured-section');
@@ -3770,40 +3788,52 @@ async function doSearch(){
   document.getElementById('search-suggestions').style.display='none';
   featSec.style.display='none';
 
-  // local match — scored fuzzy search
+  // local match — scored search por prefixo de palavra
   const qWords = q ? q.split(/\s+/).filter(w=>w.length>=2) : [];
   const isDigits = /^\d{6,}$/.test(q); // query looks like a barcode
+  function wordMatch(word, words){
+    for(let i=0;i<words.length;i++){
+      const w = words[i];
+      if(w===word || w.startsWith(word) || (word.length>=3 && word.startsWith(w))) return true;
+    }
+    return false;
+  }
   function scoreProduct(p){
     const n = p.name.toLowerCase();
     const c = (p.cat||'').toLowerCase();
-    // category filter hard-gate
+    // hard-gates: categoria e supermercado
     if(catFilter && c !== catFilter) return 0;
-    // if no text query, all products in category pass
+    if(storeFilter && !(p.stores && p.stores[storeFilter]!=null)) return 0;
     if(!q) return 50;
     let score = 0;
     if(isDigits){
-      // barcode-style query: rank EAN matches on top
       const ean = productEan(p);
-      if(ean === q) score += 500;          // código completo
+      if(ean === q) score += 500;
       else if(ean.startsWith(q)) score += 300;
       else if(ean.indexOf(q) !== -1) score += 150;
+      if(n.indexOf(q)!==-1) score += 20;
     }
-    if(n.includes(q)) score += 100;
-    if(qWords.every(w=>n.includes(w)||c.includes(w))) score += 60;
-    const matched = qWords.filter(w=>n.includes(w)||c.includes(w)).length;
-    score += matched * 20;
-    if(qWords.some(w=>c.includes(w))) score += 15;
+    const nameWords = n.split(/[^a-zà-ÿ0-9]+/i).filter(Boolean);
+    const catTok = c.split(/[^a-zà-ÿ0-9]+/i).filter(Boolean);
+    let matched = 0;
+    qWords.forEach(w=>{
+      if(wordMatch(w, nameWords)){
+        score += 80; matched++;
+      } else if(wordMatch(w, catTok)){
+        score += 55; matched++;
+      } else if(n.includes(w)){
+        score += 20;
+      }
+    });
+    score += matched * 15;
+    if(qWords.length && n.startsWith(qWords[0])) score += 25;
     return score;
   }
   let local = CATALOG.map(p=>({p, score:scoreProduct(p)}))
     .filter(({score})=>score>0)
     .sort((a,b)=>b.score-a.score)
     .map(({p})=>p);
-  if(storeFilter){
-    const withStore = local.filter(p => p.stores && p.stores[storeFilter]!=null);
-    if(withStore.length) local = withStore;
-  }
-  local = local.slice(0, catFilter && !q ? 20 : 8);
+  local = local.slice(0, catFilter && !q ? 20 : 10);
 
   const sourceLabel = [
     storeFilter ? storeName(storeFilter) : '',
@@ -4670,10 +4700,11 @@ function showNotif(msg){
 // ══════════════════════════════════════════════════════
 // SEARCH STORE FILTER
 // ══════════════════════════════════════════════════════
-function doSearchFilter(){
+ function doSearchFilter(){
   const q = document.getElementById('search-q').value.trim();
   const catFilter = document.getElementById('search-cat-filter') ? document.getElementById('search-cat-filter').value : '';
-  if(q || catFilter){
+  const storeFilter = document.getElementById('search-store-filter') ? document.getElementById('search-store-filter').value : '';
+  if(q || catFilter || storeFilter){
     doSearch();
   } else {
     renderFeatured();
@@ -4916,7 +4947,7 @@ function loadPredefToList(){
 if('serviceWorker' in navigator){
   // Inline SW as blob so it works no matter o caminho no GitHub Pages
   const swCode = `
-const CACHE = 'poupa-facil-v7';
+const CACHE = 'poupa-facil-v8';
 const ASSETS = [self.location.pathname];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
