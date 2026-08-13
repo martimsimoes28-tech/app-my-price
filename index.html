@@ -397,6 +397,12 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
       <input type="text" class="inp" id="search-q" placeholder="Ex: leite milhafre, azeite gallo, skip..." onkeydown="if(event.key==='Enter')doSearch()" oninput="onSearchInput()">
       <button class="btn-green" onclick="doSearch()" id="search-btn" style="white-space:nowrap">Pesquisar</button>
     </div>
+    <div class="search-row" style="margin-top:7px">
+      <input type="text" class="inp" id="search-barcode" inputmode="numeric" placeholder="🔢 Código de barras (EAN)..." onkeydown="if(event.key==='Enter')doBarcodeSearch()" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+      <button class="btn-green" onclick="doBarcodeSearch()" style="white-space:nowrap;padding:9px 10px;font-size:.7rem">Procurar código</button>
+      <button class="btn-green" onclick="startBarcodeScan()" title="Escanear com a câmara" style="white-space:nowrap;padding:9px 10px;font-size:.7rem">📷 Scan</button>
+    </div>
+    <div id="barcode-hint" style="display:none;font-size:.62rem;color:var(--muted);margin:5px 0 0 1px"></div>
     <div style="margin-bottom:10px">
       <div class="card-title" style="margin-bottom:5px">🏪 Filtrar por supermercado</div>
       <select class="sel" id="search-store-filter" onchange="doSearchFilter()">
@@ -857,6 +863,22 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
 <!-- ══════════════════════════════════════
      MODAL: DETALHE DO PRODUTO / HISTÓRICO
 ══════════════════════════════════════ -->
+ <div class="modal-overlay" id="scanner-modal" onclick="closeScanner()">
+  <div class="modal-box" style="text-align:center" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <button class="modal-close" onclick="closeScanner()" style="order:2">✕</button>
+      <div style="order:1;flex:1"><div class="modal-title">📷 Escanear código de barras</div></div>
+    </div>
+    <div id="scanner-area">
+      <video id="scanner-video" playsinline muted style="width:100%;border-radius:12px;background:#000;max-height:240px;object-fit:cover"></video>
+      <div id="scanner-status" style="font-size:.7rem;color:var(--muted);margin-top:8px">A apontar a câmara para o código de barras...</div>
+    </div>
+    <div id="scanner-fallback" style="display:none;font-size:.75rem;color:var(--muted);padding:10px 0">
+      📵 Scanner não suportado neste navegador.<br>Introduz o código manualmente no campo acima.
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="product-modal" onclick="closeModalBg(event,'product-modal')">
   <div class="modal-box" onclick="event.stopPropagation()">
     <div class="modal-head">
@@ -871,6 +893,7 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
       <div>
         <div style="font-size:.65rem;color:var(--muted)">A poupança certa começa aqui</div>
         <div style="font-size:.7rem;font-weight:700;color:var(--green);margin-top:2px" id="pm-bestnote"></div>
+        <div style="font-size:.6rem;color:var(--muted);margin-top:3px">Código de barras: <b id="pm-ean" style="letter-spacing:1.5px;color:var(--text)"></b></div>
       </div>
     </div>
     <div class="pm-actions" id="pm-actions"></div>
@@ -1468,6 +1491,43 @@ function productPhotoHtml(p, big){
   const src = url || emojiImgUrl(p.emoji);
   const img = src ? `<img class="prod-img${url?'':' emoji-img'}" src="${src}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : '';
   return `<div class="prod-photo${big?' lg':''}" style="background:${grad}" title="Imagem ilustrativa">${p.emoji||'🛒'}${img}${p.cat?`<span class="cat-tag">${p.cat}</span>`:''}</div>`;
+}
+
+// ══════════════════════════════════════════════════════
+// CÓDIGO DE BARRAS (EAN-13 determinístico, prefixo 560 PT)
+// Cada produto tem um código EAN-13 único e estável gerado
+// a partir do nome — permite pesquisar por código de barras.
+// ══════════════════════════════════════════════════════
+const _usedEans = new Set();
+function eanCheckDigit(first12){
+  let s=0;
+  for(let i=0;i<12;i++){ const d=+first12[i]; s += (i%2===0)?d:d*3; }
+  return (10-(s%10))%10;
+}
+function productEan(p){
+  if(p.ean) return p.ean;
+  let str = (p.name||'') + '|' + (p.cat||'') + '|' + (p.price||0);
+  let h = 0;
+  for(let i=0;i<str.length;i++) h = (h*31 + str.charCodeAt(i)) & 0x7fffffff;
+  let data = ('000000000'+ (h % 1000000000)).slice(-9);
+  let first12 = '560'+data;
+  let ck = eanCheckDigit(first12);
+  let ean = first12 + ck;
+  let guard = 0;
+  while(_usedEans.has(ean) && guard < 1000){
+    data = ('000000000'+ ((h + (++guard)*7919) % 1000000000)).slice(-9);
+    first12 = '560'+data;
+    ck = eanCheckDigit(first12);
+    ean = first12 + ck;
+  }
+  _usedEans.add(ean);
+  p.ean = ean;
+  return ean;
+}
+function searchByBarcode(digits){
+  const d = (digits||'').replace(/\D/g,'');
+  if(d.length < 4) return [];
+  return CATALOG.filter(p => productEan(p).indexOf(d) !== -1).slice(0,8);
 }
 
 // ══════════════════════════════════════════════════════
@@ -2371,6 +2431,9 @@ function priceHistory(productName, store, currentPrice){
   // console.log('gerados:', CATALOG.length - before, 'total:', CATALOG.length);
 })();
 
+// Atribui um EAN-13 único e determinístico a todos os produtos
+CATALOG.forEach(p => productEan(p));
+
 // ══════════════════════════════════════════════════════
 // MODAL: produto / histórico de preços
 // ══════════════════════════════════════════════════════
@@ -2382,6 +2445,7 @@ function openProductModal(product){
   if(!product) return;
   window.__openProduct = product;
   document.getElementById('pm-title').textContent = product.name;
+  document.getElementById('pm-ean').textContent = productEan(product);
   recordView(product);
   const actEl = document.getElementById('pm-actions');
   if(actEl) actEl.innerHTML = pmActionsHtml(product);
@@ -3136,6 +3200,99 @@ function clearSearchHistory(){
 }
 
 // ══════════════════════════════════════════════════════
+// PESQUISA POR CÓDIGO DE BARRAS
+// ══════════════════════════════════════════════════════
+let _barcodeScanTimer = null;
+let _scannerStream = null;
+let _scannerDetector = null;
+
+function doBarcodeSearch(){
+  const inp = document.getElementById('search-barcode');
+  const digits = (inp ? inp.value : '').replace(/\D/g,'');
+  const hint = document.getElementById('barcode-hint');
+  if(digits.length < 4){
+    if(hint) hint.textContent = 'Introduz pelo menos 4 dígitos do código de barras.';
+    if(hint) hint.style.display = digits.length ? 'block' : 'none';
+    return;
+  }
+  const featSec = document.getElementById('featured-section');
+  if(featSec) featSec.style.display='none';
+  const el = document.getElementById('search-results');
+  const matches = searchByBarcode(digits);
+  if(hint){
+    if(digits.length===13){
+      hint.textContent = `🔍 A procurar EAN ${digits} (código completo)...`;
+    } else {
+      hint.textContent = `🔍 Código parcial (${digits.length}/13 dígitos) — a mostrar correspondências...`;
+    }
+    hint.style.display='block';
+  }
+  if(matches.length){
+    renderResults(el, matches, `Código de barras (EAN ${digits})`);
+  } else {
+    el.innerHTML = `<div class="empty-state"><span class="empty-icon">🏷️</span>Nenhum produto com o código <b>${digits}</b> no catálogo.<br><span style="font-size:.65rem;color:var(--muted)">Tenta introduzir o código completo de 13 dígitos.</span></div>`;
+  }
+}
+
+function stopScanner(){
+  if(_barcodeScanTimer){ clearInterval(_barcodeScanTimer); _barcodeScanTimer=null; }
+  if(_scannerStream){ _scannerStream.getTracks().forEach(t=>t.stop()); _scannerStream=null; }
+  _scannerDetector=null;
+}
+function closeScanner(){
+  stopScanner();
+  const ov = document.getElementById('scanner-modal');
+  if(ov) ov.classList.remove('show');
+}
+function startBarcodeScan(){
+  const ov = document.getElementById('scanner-modal');
+  const fallback = document.getElementById('scanner-fallback');
+  const status = document.getElementById('scanner-status');
+  const area = document.getElementById('scanner-area');
+  const video = document.getElementById('scanner-video');
+  if(fallback) fallback.style.display='none';
+  if(area) area.style.display='';
+  if(ov) ov.classList.add('show');
+  if(!('BarcodeDetector' in window)){
+    if(area) area.style.display='none';
+    if(fallback) fallback.style.display='block';
+    return;
+  }
+  try{ _scannerDetector = new BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e']}); }
+  catch(e){ _scannerDetector = new BarcodeDetector(); }
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    if(area) area.style.display='none';
+    if(fallback) fallback.style.display='block';
+    return;
+  }
+  navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(stream=>{
+    _scannerStream = stream;
+    video.srcObject = stream;
+    if(status) status.textContent = 'A apontar a câmara para o código de barras...';
+    video.play().catch(()=>{});
+    _barcodeScanTimer = setInterval(async ()=>{
+      if(!_scannerDetector || !video.videoWidth) return;
+      try{
+        const codes = await _scannerDetector.detect(video);
+        if(codes && codes.length){
+          const raw = (codes[0].rawValue||'').replace(/\D/g,'');
+          if(raw.length>=8){
+            const inp = document.getElementById('search-barcode');
+            if(inp) inp.value = raw.slice(0,13);
+            closeScanner();
+            doBarcodeSearch();
+            showNotif('🏷️ Código detetado: '+raw.slice(0,13));
+          }
+        }
+      }catch(e){}
+    }, 350);
+  }).catch(err=>{
+    if(area) area.style.display='none';
+    if(fallback){ fallback.style.display='block'; fallback.textContent='📵 Sem permissão de câmara. Introduz o código manualmente.'; }
+  });
+}
+
+// ══════════════════════════════════════════════════════
 // PESQUISA
 // ══════════════════════════════════════════════════════
 function doSearchQ(q){
@@ -3163,6 +3320,7 @@ async function doSearch(){
 
   // local match — scored fuzzy search
   const qWords = q ? q.split(/\s+/).filter(w=>w.length>=2) : [];
+  const isDigits = /^\d{6,}$/.test(q); // query looks like a barcode
   function scoreProduct(p){
     const n = p.name.toLowerCase();
     const c = (p.cat||'').toLowerCase();
@@ -3171,6 +3329,13 @@ async function doSearch(){
     // if no text query, all products in category pass
     if(!q) return 50;
     let score = 0;
+    if(isDigits){
+      // barcode-style query: rank EAN matches on top
+      const ean = productEan(p);
+      if(ean === q) score += 500;          // código completo
+      else if(ean.startsWith(q)) score += 300;
+      else if(ean.indexOf(q) !== -1) score += 150;
+    }
     if(n.includes(q)) score += 100;
     if(qWords.every(w=>n.includes(w)||c.includes(w))) score += 60;
     const matched = qWords.filter(w=>n.includes(w)||c.includes(w)).length;
@@ -3203,6 +3368,13 @@ async function doSearch(){
 
   if(!q){
     el.innerHTML = '<div class="empty-state"><span class="empty-icon">🔍</span>Sem produtos nesta categoria.</div>';
+    btn.disabled = false;
+    return;
+  }
+
+  if(isDigits){
+    // barcode query with no local match — don't call the AI
+    el.innerHTML = `<div class="empty-state"><span class="empty-icon">🏷️</span>Nenhum produto com o código <b>${q}</b> no catálogo.<br><span style="font-size:.65rem;color:var(--muted)">Tenta o código completo de 13 dígitos.</span></div>`;
     btn.disabled = false;
     return;
   }
@@ -3254,6 +3426,7 @@ function renderResults(el, products, source){
       <div onclick="openProductModal(window.__searchResults[${idx}])">${productPhotoHtml(p,false)}</div>
       <div class="prod-info">
         <div class="prod-name">${p.name}</div>
+        <div class="prod-store" style="font-size:.6rem;color:var(--muted);letter-spacing:1px">EAN ${productEan(p)}</div>
         <div class="prod-store">${formatStores(p.stores, p.name)}</div>
         ${p.promo?`<div class="prod-promo">ℹ️ ${p.promo}</div>`:''}
         ${sel && p.stores && p.stores[sel]!=null?`<div class="prod-store" style="color:var(--green);font-weight:700">🛒 Preço em ${storeName(sel)} pré-selecionado</div>`:''}
@@ -3306,9 +3479,11 @@ async function listSearch(){
   const q = document.getElementById('list-search').value.trim().toLowerCase();
   if(!q) return;
   const el = document.getElementById('list-search-results');
+  const digits = q.replace(/\D/g,'');
   const local = CATALOG.filter(p =>
     q.split(' ').every(w => p.name.toLowerCase().includes(w)) ||
-    p.name.toLowerCase().includes(q)
+    p.name.toLowerCase().includes(q) ||
+    (/^\d{4,}$/.test(q) && productEan(p).indexOf(digits) !== -1)
   ).slice(0,4);
   if(local.length>0){
     renderListResults(el, local);
@@ -3327,6 +3502,7 @@ function renderListResults(el, products){
       <div onclick="openProductModal(window.__listSearchResults[${idx}])">${productPhotoHtml(p,false)}</div>
       <div class="prod-info">
         <div class="prod-name" style="font-size:.76rem">${p.name}</div>
+        <div class="prod-store" style="font-size:.58rem;color:var(--muted);letter-spacing:1px">EAN ${productEan(p)}</div>
         <div class="prod-store" style="font-size:.62rem">${sel && p.stores && p.stores[sel]!=null ? `${storeName(sel)}: ${fmtEur(dPrice)}` : `${fmtEur(dPrice)} (preço médio)`}</div>
       </div>
       <button class="add-btn-sm" onclick='addToList(${JSON.stringify({name:p.name,price:dPrice,stores:p.stores||{},emoji:p.emoji||"🛒",promo:p.promo||null})})'>+</button>
@@ -4018,7 +4194,7 @@ function loadPredefToList(){
 if('serviceWorker' in navigator){
   // Inline SW as blob so it works no matter o caminho no GitHub Pages
   const swCode = `
-const CACHE = 'poupa-facil-v2';
+const CACHE = 'poupa-facil-v3';
 const ASSETS = [self.location.pathname];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
