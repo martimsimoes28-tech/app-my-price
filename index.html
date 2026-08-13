@@ -997,7 +997,7 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
 
 <div id="sw-update-bar">
   <span>🆕 Nova versão da app disponível!</span>
-  <button onclick="location.reload()" style="background:#fff;color:var(--green);border:none;border-radius:8px;padding:7px 14px;font-weight:800;cursor:pointer;font-family:inherit;font-size:.8rem">Atualizar</button>
+  <button onclick="forceAppUpdate()" style="background:#fff;color:var(--green);border:none;border-radius:8px;padding:7px 14px;font-weight:800;cursor:pointer;font-family:inherit;font-size:.8rem">Atualizar</button>
 </div>
 
 <script>
@@ -4805,9 +4805,13 @@ self.addEventListener('fetch', e => {
 });`;
   const blob = new Blob([swCode], {type:'application/javascript'});
   const swUrl = URL.createObjectURL(blob);
-  navigator.serviceWorker.register(swUrl).then(()=>{
-    console.log('SW registado — lista disponível offline');
-  }).catch(()=>{});
+  navigator.serviceWorker.getRegistrations().then(regs=>Promise.all((regs||[]).map(r=>r.unregister()))).then(()=>{
+    navigator.serviceWorker.register(swUrl).then(()=>{
+      console.log('SW registado — lista disponível offline');
+    }).catch(()=>{});
+  }).catch(()=>{
+    navigator.serviceWorker.register(swUrl).catch(()=>{});
+  });
 }
 
 // ══════════════════════════════════════════════════════
@@ -4901,6 +4905,19 @@ async function checkForUpdate(){
       if(bar) bar.style.display='flex';
     }
   }catch(e){}
+}
+function forceAppUpdate(){
+  const reload = ()=>{
+    try{ showNotif('🔄 A atualizar...'); }catch(e){}
+    setTimeout(()=>{ try{ location.reload(); }catch(e){} }, 200);
+  };
+  const p1 = (typeof navigator!=='undefined' && navigator.serviceWorker && navigator.serviceWorker.getRegistrations)
+    ? navigator.serviceWorker.getRegistrations().then(regs=>Promise.all((regs||[]).map(r=>r.unregister()))).catch(()=>{})
+    : Promise.resolve();
+  const p2 = (typeof caches!=='undefined' && caches.keys)
+    ? caches.keys().then(keys=>Promise.all((keys||[]).map(k=>caches.delete(k)))).catch(()=>{})
+    : Promise.resolve();
+  Promise.all([p1,p2]).then(reload).catch(reload);
 }
 
  (function init(){
