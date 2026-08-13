@@ -162,8 +162,15 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
 .remove-btn{background:none;border:none;color:#cbd5e1;font-size:.9rem;cursor:pointer;padding:1px 5px}
 .remove-btn:hover{color:var(--red)}
 .li-qty{display:flex;align-items:center;gap:5px;margin-top:6px}
-.qty-btn{background:var(--border);border:none;border-radius:6px;width:22px;height:22px;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+ .qty-btn{background:var(--border);border:none;border-radius:6px;width:22px;height:22px;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .qty-label{font-size:.75rem;font-weight:700;min-width:18px;text-align:center}
+.done-btn{background:none;border:2px solid var(--border);border-radius:99px;width:27px;height:27px;font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);transition:all .15s}
+.done-btn.done{background:var(--green);border-color:var(--green);color:#fff}
+.li-done .li-name{text-decoration:line-through;opacity:.55}
+.li-done{opacity:.72}
+.edit-btn{background:none;border:none;color:var(--muted);font-size:.85rem;cursor:pointer;padding:1px 5px}
+.edit-btn:hover{color:var(--green)}
+#sw-update-bar{position:fixed;bottom:0;left:0;right:0;z-index:120;background:var(--green);color:#fff;padding:10px 14px;font-size:.8rem;font-weight:700;display:none;justify-content:space-between;align-items:center;gap:10px;box-shadow:0 -4px 14px rgba(0,0,0,.15)}
 
 .add-row{display:grid;grid-template-columns:1fr 80px;gap:7px;margin-bottom:7px}
 
@@ -764,9 +771,17 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px">
       <div class="card-title" style="margin-bottom:0">Produtos na lista</div>
       <div style="display:flex;gap:8px;align-items:center">
+        <button onclick="toggleShoppingMode()" id="shopping-mode-btn" style="font-size:.65rem;font-weight:700;color:var(--amber);background:none;border:none;cursor:pointer">🛒 Compras</button>
         <button onclick="shareList()" style="font-size:.65rem;font-weight:700;color:var(--green);background:none;border:none;cursor:pointer">📤 Partilhar</button>
         <button onclick="clearList()" style="font-size:.65rem;color:var(--muted);background:none;border:none;cursor:pointer">Limpar</button>
       </div>
+    </div>
+    <div id="shop-mode-bar" style="display:none;margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;font-size:.68rem;margin-bottom:4px">
+        <span style="font-weight:700;color:var(--text)" id="shop-left"></span>
+        <span style="color:var(--muted)" id="shop-right"></span>
+      </div>
+      <div class="prog-track"><div class="prog-fill pf-ok" id="shop-bar" style="width:0%"></div></div>
     </div>
     <div id="list-items">
       <div class="empty-state"><span class="empty-icon">📋</span>Lista vazia.<br>Pesquisa ou adiciona produtos acima.</div>
@@ -903,6 +918,18 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
       </div>
       <button class="btn-dark" style="margin-top:8px;margin-bottom:0;width:100%" onclick="clearBudget()">Remover orçamento</button>
     </div>
+
+    <div class="settings-row" style="display:block">
+      <div style="margin-bottom:9px">
+        <div class="settings-lbl">💾 Dados e backup</div>
+        <div class="settings-desc">Copia listas, favoritos, orçamento e histórico para outro dispositivo</div>
+      </div>
+      <div class="add-row" style="grid-template-columns:1fr 1fr">
+        <button class="btn-green" onclick="exportData()">📤 Exportar dados</button>
+        <button class="btn-dark" onclick="document.getElementById('backup-file').click()">📥 Importar</button>
+      </div>
+      <input type="file" id="backup-file" accept="application/json" style="display:none" onchange="if(this.files&&this.files[0])importData(this.files[0])">
+    </div>
   </div>
 </div>
 
@@ -946,6 +973,31 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
     <div id="pm-stores"></div>
     <div id="pm-of"></div>
   </div>
+</div>
+
+<!-- MODAL: EDITAR ITEM DA LISTA -->
+<div class="modal-overlay" id="edit-item-modal" onclick="closeModalBg(event,'edit-item-modal')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">✏️ Editar item</div>
+        <div class="modal-sub">Ajusta nome, preço e quantidade</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('edit-item-modal')">✕</button>
+    </div>
+    <label class="settings-lbl">Nome</label>
+    <input type="text" class="inp" id="edit-item-name" style="margin-bottom:8px">
+    <label class="settings-lbl">Preço por unidade (€)</label>
+    <input type="number" class="inp" id="edit-item-price" step="0.01" min="0" placeholder="€ 0,00" style="text-align:center;margin-bottom:8px">
+    <label class="settings-lbl">Quantidade</label>
+    <input type="number" class="inp" id="edit-item-qty" min="1" style="text-align:center;margin-bottom:10px">
+    <button class="btn-green" style="width:100%" onclick="saveItemEdit()">💾 Guardar alterações</button>
+  </div>
+</div>
+
+<div id="sw-update-bar">
+  <span>🆕 Nova versão da app disponível!</span>
+  <button onclick="location.reload()" style="background:#fff;color:var(--green);border:none;border-radius:8px;padding:7px 14px;font-weight:800;cursor:pointer;font-family:inherit;font-size:.8rem">Atualizar</button>
 </div>
 
 <script>
@@ -2761,6 +2813,7 @@ let currentTab = 'inicio';
 let favStores = JSON.parse(localStorage.getItem('pf_fav_stores')||'[]');
 let favProducts = JSON.parse(localStorage.getItem('pf_fav_prods')||'[]');
 let currentStoreTab = null;
+let shoppingMode = (localStorage.getItem('pf_shopping_mode')==='1');
 
 function save(){
   allLists[activeListName] = listItems;
@@ -3676,7 +3729,7 @@ async function doSearch(){
   btn.disabled = false;
 }
 
-function renderResults(el, products, source){
+ function renderResults(el, products, source){
   if(!products||!products.length){
     el.innerHTML='<div class="empty-state"><span class="empty-icon">🔍</span>Sem resultados.</div>';
     return;
@@ -3685,14 +3738,35 @@ function renderResults(el, products, source){
   window.__searchSource = source;
   const storeFilter = document.getElementById('search-store-filter') ? document.getElementById('search-store-filter').value : '';
   const sel = storeFilter || (document.getElementById('list-market') ? document.getElementById('list-market').value : null);
-  const prices = products.map(p=>effPriceOf(p, sel));
+  let list = products.slice();
+  const sortMode = window.__searchSort || '';
+  if(sortMode==='unit'){
+    list.sort((a,b)=>{
+      const ua = productUnit(a), ub = productUnit(b);
+      const va = ua && ua.qty ? effPriceOf(a, sel)/ua.qty : Infinity;
+      const vb = ub && ub.qty ? effPriceOf(b, sel)/ub.qty : Infinity;
+      return va-vb;
+    });
+  } else if(sortMode==='price'){
+    list.sort((a,b)=>effPriceOf(a,sel)-effPriceOf(b,sel));
+  } else if(sortMode==='price_desc'){
+    list.sort((a,b)=>effPriceOf(b,sel)-effPriceOf(a,sel));
+  }
+  const prices = list.map(p=>effPriceOf(p, sel));
   const min = Math.min(...prices), max = Math.max(...prices);
-  el.innerHTML = `<div style="font-size:.63rem;color:var(--muted);margin-bottom:6px;padding:0 1px">Fonte: ${source} · toca na imagem para ver histórico de preços</div>`+
-    products.map((p,idx)=>{
+  el.innerHTML = `<div style="font-size:.63rem;color:var(--muted);margin-bottom:6px;padding:0 1px;display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap">`+
+    `<span>Fonte: ${source} · toca na imagem para ver histórico</span>`+
+    `<select onchange="sortResults(this.value)" style="font-size:.62rem;background:var(--input-bg);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:3px 5px;font-family:inherit">
+      <option value="" ${sortMode===''?'selected':''}>Por relevância</option>
+      <option value="unit" ${sortMode==='unit'?'selected':''}>Preço por unidade (€/kg · €/L)</option>
+      <option value="price" ${sortMode==='price'?'selected':''}>Preço mais baixo</option>
+      <option value="price_desc" ${sortMode==='price_desc'?'selected':''}>Preço mais alto</option>
+    </select></div>`+
+    list.map((p,idx)=>{
       const dPrice = effPriceOf(p, sel);
       return `
     <div class="prod-card">
-      <div onclick="openProductModal(window.__searchResults[${idx}])">${productPhotoHtml(p,false)}</div>
+      <div onclick="openProductModal(window.__searchResults[${products.indexOf(p)}])">${productPhotoHtml(p,false)}</div>
       <div class="prod-info">
         <div class="prod-name">${p.name}${unitPriceHtml(p, dPrice)}</div>
         <div class="prod-store" style="font-size:.6rem;color:var(--muted);letter-spacing:1px">EAN ${productEan(p)}</div>
@@ -3707,6 +3781,12 @@ function renderResults(el, products, source){
         <button class="add-btn-sm" onclick='addToList(${JSON.stringify({name:p.name,price:dPrice,stores:p.stores||{},emoji:p.emoji||"🛒",promo:p.promo||null})})' title="Adicionar à lista">+</button>
       </div>
     </div>`;}).join('');
+}
+
+function sortResults(mode){
+  window.__searchSort = mode || '';
+  const el = document.getElementById('search-results');
+  if(el && window.__searchResults) renderResults(el, window.__searchResults, window.__searchSource||'');
 }
 
 function formatStores(stores, name){
@@ -3822,9 +3902,10 @@ function clearList(){
   calcTotal();
 }
 
-function renderList(){
+ function renderList(){
   const el = document.getElementById('list-items');
   const market = document.getElementById('list-market').value;
+  renderShopBar();
   if(!listItems.length){
     el.innerHTML='<div class="empty-state"><span class="empty-icon">📋</span>Lista vazia.</div>';
     return;
@@ -3837,7 +3918,7 @@ function renderList(){
     const linePrice = dPrice * qty;
     // cheaper elsewhere?
     let cheaperHtml = '';
-    if(hasStores && Object.keys(item.stores).length>1){
+    if(!shoppingMode && hasStores && Object.keys(item.stores).length>1){
       const others = Object.entries(item.stores).filter(([k])=>k!==market);
       if(others.length){
         const othersLive = others.map(([k])=>[k, effPriceOf(item, k)]);
@@ -3848,31 +3929,108 @@ function renderList(){
         }
       }
     }
+    const checkBtn = shoppingMode
+      ? `<button class="done-btn${item.done?' done':''}" onclick="toggleItemDone(${item.id})" title="${item.done?'Em falta':'No carrinho'}">${item.done?'✔':'○'}</button>`
+      : '';
+    const editBtn = shoppingMode
+      ? ''
+      : `<button class="edit-btn" onclick="openItemEdit(${item.id})" title="Editar">✏️</button>`;
     return `
-    <div class="list-item">
+    <div class="list-item${item.done?' li-done':''}">
       <div class="li-top">
         <div style="display:flex;gap:8px;align-items:flex-start">
+          ${checkBtn}
           <div ${hasStores?`onclick="openProductModal(window.__listItemsCache[${idx}])"`:''} style="${hasStores?'cursor:pointer':''}">${productPhotoHtml(item,false)}</div>
           <div>
             <div class="li-name">${item.name}</div>
             ${item.promo?`<div style="font-size:.63rem;color:var(--amber);font-weight:600;margin-top:1px">ℹ️ ${item.promo}</div>`:''}
-            ${hasStores?`<div style="font-size:.62rem;color:var(--muted);margin-top:1px">${storeBadgeHtml(market)} · toca na imagem p/ comparar</div>`:''}
+            ${hasStores&&!shoppingMode?`<div style="font-size:.62rem;color:var(--muted);margin-top:1px">${storeBadgeHtml(market)} · toca na imagem p/ comparar</div>`:''}
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:6px">
           <div class="li-price">${fmtEur(linePrice)}</div>
+          ${editBtn}
           <button class="remove-btn" onclick="removeItem(${item.id})">✕</button>
         </div>
       </div>
-      <div class="li-qty">
+      ${shoppingMode?'':`<div class="li-qty">
         <input type="number" inputmode="numeric" min="1" max="99" value="${qty}"
           style="width:52px;padding:4px 6px;border:1.5px solid var(--border);border-radius:8px;font-size:.85rem;font-weight:700;text-align:center;background:var(--input-bg);color:var(--text);font-family:inherit;-moz-appearance:textfield"
           onchange="setQty(${item.id},this.value)" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
         <span style="font-size:.65rem;color:var(--muted)">× ${fmtEur(dPrice)}/un</span>
-      </div>
+      </div>`}
       ${cheaperHtml}
     </div>`;
   }).join('');
+}
+
+function toggleShoppingMode(){
+  shoppingMode = !shoppingMode;
+  localStorage.setItem('pf_shopping_mode', shoppingMode?'1':'0');
+  renderList();
+  calcTotal();
+  showNotif(shoppingMode ? '🛒 Modo compras ativado — toca no círculo à medida que apanhas os itens.' : '📋 Modo compras desativado.');
+}
+function toggleItemDone(id){
+  const item = listItems.find(i=>i.id===id);
+  if(!item) return;
+  item.done = !item.done;
+  save();
+  renderList();
+  calcTotal();
+  if(shoppingMode){
+    const done = listItems.filter(i=>i.done).length;
+    if(done===listItems.length) showNotif('🎉 Lista concluída! Boas compras.');
+  }
+}
+function renderShopBar(){
+  const bar = document.getElementById('shop-mode-bar');
+  const btn = document.getElementById('shopping-mode-btn');
+  if(!bar) return;
+  if(!shoppingMode){
+    bar.style.display='none';
+    if(btn) btn.textContent='🛒 Compras';
+    return;
+  }
+  if(btn) btn.textContent='🛒 A comprar...';
+  bar.style.display='block';
+  const total = listItems.length;
+  const done = listItems.filter(i=>i.done).length;
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById('shop-left').textContent = `🛒 ${done}/${total} itens no carrinho`;
+  const market = document.getElementById('list-market').value;
+  const remain = listItems.reduce((s,i)=>{
+    if(i.done) return s;
+    const p = (i.stores && Object.keys(i.stores).length>0) ? effPriceOf(i, market) : i.price;
+    return s + (p*(i.qty||1));
+  },0);
+  document.getElementById('shop-right').textContent = `Pendente: ${fmtEur(remain)}`;
+  document.getElementById('shop-bar').style.width = pct+'%';
+}
+
+let _editingItemId = null;
+function openItemEdit(id){
+  const item = listItems.find(i=>i.id===id);
+  if(!item) return;
+  _editingItemId = id;
+  document.getElementById('edit-item-name').value = item.name;
+  document.getElementById('edit-item-price').value = item.price!=null ? item.price : '';
+  document.getElementById('edit-item-qty').value = item.qty||1;
+  openModal('edit-item-modal');
+}
+function saveItemEdit(){
+  const item = listItems.find(i=>i.id===_editingItemId);
+  if(!item) return;
+  const name = String(document.getElementById('edit-item-name').value||'').trim();
+  const price = parseFloat(String(document.getElementById('edit-item-price').value||'').replace(',','.'));
+  const qty = parseInt(String(document.getElementById('edit-item-qty').value||''),10);
+  if(!name){ showNotif('⚠️ Nome inválido.'); return; }
+  item.name = name;
+  if(!isNaN(price) && price>0) item.price = Math.round(price*100)/100;
+  if(qty && qty>=1) item.qty = qty;
+  save(); renderList(); calcTotal();
+  closeModal('edit-item-modal');
+  showNotif('✅ Item atualizado.');
 }
 
  function calcTotal(){
@@ -3922,6 +4080,7 @@ function renderList(){
   renderBudget(total);
   renderStoreCompare();
   updateSavingsHistory(total);
+  renderShopBar();
 }
 
 // ══════════════════════════════════════════════════════
@@ -4627,7 +4786,7 @@ function loadPredefToList(){
 if('serviceWorker' in navigator){
   // Inline SW as blob so it works no matter o caminho no GitHub Pages
   const swCode = `
-const CACHE = 'poupa-facil-v4';
+const CACHE = 'poupa-facil-v5';
 const ASSETS = [self.location.pathname];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
@@ -4654,7 +4813,7 @@ self.addEventListener('fetch', e => {
 // ══════════════════════════════════════════════════════
 // PWA MANIFEST (gerado inline, funciona em qualquer caminho)
 // ══════════════════════════════════════════════════════
-function addManifest(){
+ function addManifest(){
   try{
     if(typeof URL === 'undefined' || typeof URL.createObjectURL !== 'function') return;
     const icon = 'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512"><rect width="512" height="512" rx="112" fill="#16a34a"/><text x="256" y="292" font-size="290" text-anchor="middle" dominant-baseline="middle">🛒</text></svg>');
@@ -4677,6 +4836,73 @@ function addManifest(){
   }catch(e){}
 }
 
+// ══════════════════════════════════════════════════════
+// BACKUP / RESTAURO DE DADOS (JSON)
+// ══════════════════════════════════════════════════════
+function exportData(){
+  try{
+    const data = {__app:'poupa-facil', __version:4, __exported:new Date().toISOString()};
+    let count = 0;
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(k && k.indexOf('pf_')===0){ data[k] = localStorage.getItem(k); count++; }
+    }
+    const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'poupa-facil-backup-' + new Date().toISOString().slice(0,10) + '.json';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>{ URL.revokeObjectURL(a.href); if(a.remove) a.remove(); }, 0);
+    showNotif(`💾 Backup exportado (${count} definições).`);
+  }catch(e){ showNotif('⚠️ Não foi possível exportar.'); }
+}
+function importData(file){
+  const fr = new FileReader();
+  fr.onload = ()=>{
+    try{
+      const data = JSON.parse(fr.result);
+      if(!data || typeof data!=='object' || data.__app!=='poupa-facil'){
+        showNotif('⚠️ Ficheiro de backup inválido.'); return;
+      }
+      let count = 0;
+      Object.keys(data).forEach(k=>{
+        if(k.indexOf('pf_')!==0) return;
+        if(data[k]===null || data[k]===undefined) localStorage.removeItem(k);
+        else localStorage.setItem(k, String(data[k]));
+        count++;
+      });
+      showNotif(`✅ Backup restaurado (${count} definições). A recarregar...`);
+      setTimeout(()=>{ try{ location.reload(); }catch(e){} }, 900);
+    }catch(e){ showNotif('⚠️ Não foi possível ler o backup.'); }
+  };
+  fr.readAsText(file);
+}
+
+// ══════════════════════════════════════════════════════
+// VERIFICAÇÃO DE ATUALIZAÇÃO (Service Worker)
+// ══════════════════════════════════════════════════════
+function _hashStr(s){
+  let h = 5381;
+  for(let i=0;i<s.length;i++){ h = ((h*33) ^ s.charCodeAt(i)) >>> 0; }
+  return h;
+}
+async function checkForUpdate(){
+  try{
+    if(typeof fetch !== 'function') return;
+    const r = await fetch(location.pathname + '?swcheck=' + Date.now(), {cache:'no-store'});
+    if(!r.ok) return;
+    const text = await r.text();
+    if(!text) return;
+    const cur = document.documentElement ? document.documentElement.outerHTML : '';
+    const h1 = _hashStr(cur), h2 = _hashStr(text);
+    if(h2 !== h1 && h2 !== 0 && h1 !== 0){
+      const bar = document.getElementById('sw-update-bar');
+      if(bar) bar.style.display='flex';
+    }
+  }catch(e){}
+}
+
  (function init(){
   loadDarkMode();
   loadFontSize();
@@ -4688,6 +4914,7 @@ function addManifest(){
   renderHome();
   renderFeatured();
   addManifest();
+  checkForUpdate();
   document.getElementById('footer-bar').style.display='none';
 })();
 </script>
