@@ -170,7 +170,6 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
 .li-done{opacity:.72}
 .edit-btn{background:none;border:none;color:var(--muted);font-size:.85rem;cursor:pointer;padding:1px 5px}
 .edit-btn:hover{color:var(--green)}
-#sw-update-bar{position:fixed;bottom:0;left:0;right:0;z-index:120;background:var(--green);color:#fff;padding:10px 14px;font-size:.8rem;font-weight:700;display:none;justify-content:space-between;align-items:center;gap:10px;box-shadow:0 -4px 14px rgba(0,0,0,.15)}
 
 .add-row{display:grid;grid-template-columns:1fr 80px;gap:7px;margin-bottom:7px}
 
@@ -1001,12 +1000,7 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
     <input type="number" class="inp" id="edit-item-qty" min="1" style="text-align:center;margin-bottom:10px">
     <button class="btn-green" style="width:100%" onclick="saveItemEdit()">💾 Guardar alterações</button>
   </div>
-</div>
-
-<div id="sw-update-bar">
-  <span>🆕 Nova versão da app disponível!</span>
-  <button onclick="forceAppUpdate()" style="background:#fff;color:var(--green);border:none;border-radius:8px;padding:7px 14px;font-weight:800;cursor:pointer;font-family:inherit;font-size:.8rem">Atualizar</button>
-</div>
+ </div>
 
 <script>
 // ══════════════════════════════════════════════════════
@@ -4922,7 +4916,7 @@ function loadPredefToList(){
 if('serviceWorker' in navigator){
   // Inline SW as blob so it works no matter o caminho no GitHub Pages
   const swCode = `
-const CACHE = 'poupa-facil-v6';
+const CACHE = 'poupa-facil-v7';
 const ASSETS = [self.location.pathname];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
@@ -5029,18 +5023,15 @@ function _hashStr(s){
 }
 async function checkForUpdate(){
   try{
-    if(typeof fetch !== 'function') return;
+    if(typeof fetch !== 'function') return false;
     const r = await fetch(location.pathname + '?swcheck=' + Date.now(), {cache:'no-store'});
-    if(!r.ok) return;
+    if(!r.ok) return false;
     const text = await r.text();
-    if(!text) return;
+    if(!text) return false;
     const cur = document.documentElement ? document.documentElement.outerHTML : '';
     const h1 = _hashStr(cur), h2 = _hashStr(text);
-    if(h2 !== h1 && h2 !== 0 && h1 !== 0){
-      const bar = document.getElementById('sw-update-bar');
-      if(bar) bar.style.display='flex';
-    }
-  }catch(e){}
+    return (h2 !== h1 && h2 !== 0 && h1 !== 0);
+  }catch(e){ return false; }
 }
 function forceAppUpdate(){
   const reload = ()=>{
@@ -5056,12 +5047,9 @@ function forceAppUpdate(){
   Promise.all([p1,p2]).then(reload).catch(reload);
 }
 async function checkNowAndUpdate(){
-  const bar = document.getElementById('sw-update-bar');
-  if(bar && bar.style.display==='flex'){ forceAppUpdate(); return; }
   showNotif('🔍 A verificar atualizações...');
-  await checkForUpdate();
-  const bar2 = document.getElementById('sw-update-bar');
-  if(bar2 && bar2.style.display==='flex'){
+  const has = await checkForUpdate();
+  if(has){
     showNotif('⬆️ Nova versão encontrada! A atualizar...');
     forceAppUpdate();
   } else {
