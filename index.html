@@ -9,7 +9,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Poupa Fácil">
-<title>Poupa Fácil 🛒</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2064%2064%27%3E%3Crect%20width=%2764%27%20height=%2764%27%20rx=%2715%27%20fill=%27%2316a34a%27/%3E%3Cpath%20d=%27M12%2017h6l6%2026a3%203%200%200%200%203%202.6h19a3%203%200%200%200%202.9-2.3l4-14H19%27%20fill=%27none%27%20stroke=%27white%27%20stroke-width=%274.6%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27/%3E%3Ccircle%20cx=%2727%27%20cy=%2752%27%20r=%273.4%27%20fill=%27white%27/%3E%3Ccircle%20cx=%2746%27%20cy=%2752%27%20r=%273.4%27%20fill=%27white%27/%3E%3Ccircle%20cx=%2751%27%20cy=%2712%27%20r=%279%27%20fill=%27%23f59e0b%27/%3E%3Ctext%20x=%2751%27%20y=%2716.5%27%20text-anchor=%27middle%27%20font-size=%2711%27%20font-weight=%27900%27%20fill=%27white%27%20font-family=%27Arial%27%3E€%3C/text%3E%3C/svg%3E">
+<title>Poupa Fácil</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 <style>
@@ -67,7 +68,8 @@ body.dark .sb-none{background:#1e293b;color:var(--muted)}
 header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);color:#fff;padding:11px 16px;position:sticky;top:0;z-index:100;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 4px 18px rgba(6,45,24,.28)}
 .h-inner{max-width:480px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
 .h-brand{display:flex;align-items:center;gap:10px;min-width:0}
-.h-logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(145deg,#ffffff,#e6f6eb);display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 3px 10px rgba(0,0,0,.25),inset 0 0 0 1px rgba(255,255,255,.7);flex-shrink:0}
+.h-logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(145deg,#22c55e,#15803d);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.28),inset 0 0 0 1px rgba(255,255,255,.28);flex-shrink:0}
+.h-logo svg{width:32px;height:32px;display:block}
 .h-title{font-size:1.12rem;font-weight:900;letter-spacing:-.4px;line-height:1.02}
  .h-sub{font-size:.58rem;color:#bbf7d0;margin-top:3px;letter-spacing:.5px;text-transform:uppercase;font-weight:600}
 
@@ -99,6 +101,9 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
 .btn-green{background:var(--green);color:#fff;border:none;border-radius:10px;padding:9px 14px;font-size:.83rem;font-weight:700;cursor:pointer;font-family:inherit}
 .btn-green:disabled{opacity:.55;cursor:not-allowed}
 .btn-dark{background:#1e293b;color:#fff;border:none;border-radius:10px;padding:9px;font-size:.83rem;font-weight:700;cursor:pointer;width:100%;font-family:inherit;margin-bottom:8px}
+.mini-btn{background:var(--input-bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:4px 8px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit}
+.mini-btn:disabled{opacity:.4;cursor:not-allowed}
+.mini-btn:hover:not(:disabled){background:var(--green-l)}
 
 /* ── CAMPANHA BANNERS ── */
 .camp-banner{border-radius:14px;padding:13px;margin-bottom:11px;border-left:5px solid;cursor:pointer;transition:transform .15s,box-shadow .15s}
@@ -145,6 +150,18 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
 .add-btn-sm{background:var(--green-l);color:var(--green-d);border:none;border-radius:8px;width:30px;height:30px;font-size:1.2rem;cursor:pointer;margin-top:4px;display:flex;align-items:center;justify-content:center;font-family:inherit}
 .chip-best{background:var(--green-l);color:var(--green-d);font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:6px;display:inline-block;margin-top:3px}
 .chip-high{background:var(--red-l);color:#7f1d1d;font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:6px;display:inline-block;margin-top:3px}
+
+/* ── PROMOÇÕES (folheto real) ── */
+.pprice-wrap{display:flex;align-items:baseline;justify-content:flex-end;gap:4px;flex-wrap:wrap}
+.pprice-old{font-size:.68rem;font-weight:600;color:var(--muted);text-decoration:line-through}
+.ppct-badge{background:var(--red);color:#fff;font-size:.58rem;font-weight:800;padding:1px 5px;border-radius:5px;display:inline-block;margin-left:3px;line-height:1.5}
+.ptag-badge{background:var(--amber-l);color:#92400e;border:1px solid var(--amber);font-size:.58rem;font-weight:700;padding:1px 6px;border-radius:5px;display:inline-block;line-height:1.5}
+.promo-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px;justify-content:flex-end}
+.hc-price .pprice-old{font-size:.6rem}
+.hc-save{display:inline-flex;align-items:center;gap:3px;background:var(--red-l);color:#7f1d1d;font-size:.6rem;font-weight:800;padding:2px 7px;border-radius:99px;margin-top:3px}
+.hc-tag{background:var(--amber-l);color:#92400e;border:1px solid var(--amber);font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:99px;margin-top:3px}
+.dept-head{display:flex;align-items:center;gap:8px;margin:14px 0 7px;font-size:.72rem;font-weight:800;color:var(--text);text-transform:uppercase;letter-spacing:.5px}
+.dept-head::after{content:'';flex:1;height:1px;background:var(--border)}
 
 /* ── LISTA ── */
 .market-bar{background:linear-gradient(135deg,var(--green-d),var(--green));color:#fff;border-radius:12px;padding:11px 13px;margin-bottom:11px;display:flex;align-items:center;gap:10px}
@@ -360,7 +377,7 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
 <header>
   <div class="h-inner">
     <div class="h-brand">
-      <div class="h-logo">🛒</div>
+      <div class="h-logo" title="Poupa Fácil"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M12 17h6l6 26a3 3 0 0 0 3 2.6h19a3 3 0 0 0 2.9-2.3l4-14H19" fill="none" stroke="#fff" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="27" cy="52" r="3.4" fill="#fff"/><circle cx="46" cy="52" r="3.4" fill="#fff"/><circle cx="51" cy="12" r="9" fill="#f59e0b"/><text x="51" y="16.5" text-anchor="middle" font-size="11" font-weight="900" fill="#fff" font-family="Arial">€</text></svg></div>
       <div>
         <div class="h-title">Poupa Fácil</div>
         <div class="h-sub">Preços reais · Campanhas · Portugal</div>
@@ -373,14 +390,7 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
 </header>
 
 <div class="tabs">
-  <div class="tabs-inner">
-    <button class="tab-btn active" data-tab="inicio" onclick="switchTab('inicio')"><span class="ticon">🏠</span><span class="tlabel">Início</span></button>
-    <button class="tab-btn" data-tab="pesquisa" onclick="switchTab('pesquisa')"><span class="ticon">🔍</span><span class="tlabel">Produtos</span></button>
-    <button class="tab-btn" data-tab="supermercados" onclick="switchTab('supermercados')"><span class="ticon">🏪</span><span class="tlabel">Lojas</span></button>
-    <button class="tab-btn" data-tab="campanhas" onclick="switchTab('campanhas')"><span class="ticon">📣</span><span class="tlabel">Ofertas</span></button>
-    <button class="tab-btn" data-tab="lista" onclick="switchTab('lista')"><span class="ticon">📝</span><span class="tlabel">Lista</span></button>
-    <button class="tab-btn" data-tab="perfil" onclick="switchTab('perfil')"><span class="ticon">👤</span><span class="tlabel">Perfil</span></button>
-  </div>
+  <div class="tabs-inner" id="tabs-inner"></div>
 </div>
 
 <!-- ══════════════════════════════════════
@@ -403,7 +413,7 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
       <button class="btn-green" onclick="doSearch()" id="search-btn" style="white-space:nowrap">Pesquisar</button>
     </div>
     <div class="search-row" style="margin-top:7px">
-      <input type="text" class="inp" id="search-barcode" inputmode="numeric" placeholder="🔢 Código de barras (EAN)..." onkeydown="if(event.key==='Enter')doBarcodeSearch()" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+      <input type="text" class="inp" id="search-barcode" inputmode="numeric" placeholder="🔢 Código de barras (EAN)..." onkeydown="if(event.key==='Enter')doBarcodeSearch()" oninput="this.value=this.value.replace(/[^0-9]/g,'');onBarcodeInput()">
       <button class="btn-green" onclick="doBarcodeSearch()" style="white-space:nowrap;padding:9px 10px;font-size:.7rem">Procurar código</button>
       <button class="btn-green" onclick="startBarcodeScan()" title="Escanear com a câmara" style="white-space:nowrap;padding:9px 10px;font-size:.7rem">📷 Scan</button>
     </div>
@@ -419,6 +429,7 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
         <option value="lidl">🔴 Lidl</option>
         <option value="aldi">⚫ Aldi</option>
         <option value="mercadona">🟤 Mercadona</option>
+        <option value="eleclerc">🔴 E.Leclerc</option>
       </select>
     </div>
     <div style="margin-bottom:10px">
@@ -473,6 +484,12 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
   <div class="card" style="background:linear-gradient(135deg,#14532d,#16a34a);border:none;color:#fff;padding:14px">
     <div style="font-size:.62rem;font-weight:700;letter-spacing:.8px;opacity:.75;text-transform:uppercase">Campanhas desta semana</div>
     <div style="font-size:.88rem;font-weight:600;margin-top:3px;opacity:.9">26 – 29 de Junho 2026 · Atualizado hoje</div>
+  </div>
+
+  <!-- Calendário de campanhas -->
+  <div class="card" id="camp-calendar-card">
+    <div class="card-title">📅 Calendário de campanhas</div>
+    <div id="camp-calendar"></div>
   </div>
 
   <!-- PINGO DOCE hoje -->
@@ -928,6 +945,15 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
 
     <div class="settings-row" style="display:block">
       <div style="margin-bottom:9px">
+        <div class="settings-lbl">🎛️ Menu principal</div>
+        <div class="settings-desc">Escolhe a ordem e quais separadores aparecem na barra de navegação</div>
+      </div>
+      <div id="tab-order-list"></div>
+      <button class="btn-dark" style="margin-top:8px;margin-bottom:0" onclick="resetTabs()">↺ Repor menu predefinido</button>
+    </div>
+
+    <div class="settings-row" style="display:block">
+      <div style="margin-bottom:9px">
         <div class="settings-lbl">💾 Dados e backup</div>
         <div class="settings-desc">Copia listas, favoritos, orçamento e histórico para outro dispositivo</div>
       </div>
@@ -949,6 +975,7 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
       <button class="modal-close" onclick="closeScanner()" style="order:2">✕</button>
       <div style="order:1;flex:1"><div class="modal-title">📷 Escanear código de barras</div></div>
     </div>
+    <div id="scanner-h5" style="display:none;border-radius:12px;overflow:hidden;max-width:400px;margin:0 auto"></div>
     <div id="scanner-area">
       <video id="scanner-video" playsinline muted style="width:100%;border-radius:12px;background:#000;max-height:240px;object-fit:cover"></video>
       <div id="scanner-status" style="font-size:.7rem;color:var(--muted);margin-top:8px">A apontar a câmara para o código de barras...</div>
@@ -1277,7 +1304,7 @@ const CATALOG = [
   {name:'Peixe-Espada Congelado Pingo Doce 1kg',price:5.99,stores:{pingo_doce:5.99},emoji:'🐟',cat:'congelados'},
   {name:'Gambas Congeladas Continente 500g',price:6.49,stores:{continente:6.49},emoji:'🦐',cat:'congelados'},
   {name:'Ervilhas Congeladas Continente 1kg',price:1.49,stores:{continente:1.49,pingo_doce:1.39},emoji:'🟢',cat:'congelados'},
-  {name:'Batata Frita Congelada McCain 1kg',price:3.29,stores:{continente:3.29,pingo_doce:3.19,auchan:3.39},emoji:'🍟',cat:'congelados'},
+  {name:'Batata Frita Palitos McCain 1kg',price:3.29,stores:{continente:3.29,pingo_doce:3.19,auchan:3.39},emoji:'🍟',cat:'congelados'},
   {name:'Gelado Magnum Classic 3 un.',price:4.99,stores:{continente:4.99,pingo_doce:4.89,auchan:5.19},emoji:'🍦',cat:'congelados'},
 
   // ── ANIMAIS ──
@@ -1511,99 +1538,198 @@ CATALOG.push(...EXTRA_CATALOG);
     continente: {b:'Continente'},
     auchan:     {b:'Auchan'},
     intermarche:{b:'Intermarché'},
-    lidl:       {b:'Lidl', by:{leite:'Pilos',manteiga:'Pilos',iogurte:'Pilos',queijo:'Pilos',laticínio:'Pilos',higiene:'Cien',limpeza:'W5',bebidas:'Bellsoda',snacks:'Gourmet',congelados:'Gelatelli'}},
-    aldi:       {b:'Aldi', by:{leite:'Lacur',iogurte:'Milfina',manteiga:'Milfina',queijo:'Milfina',laticínio:'Milfina',higiene:'Osmose',limpeza:'Osmose',mercearia:'Bon Appetit',congelados:'Milfina'}},
-    mercadona:  {b:'Mercadona', by:{limpeza:'Bosque Verde',higiene:'Deliplus',leite:'Hacendado',iogurte:'Hacendado',queijo:'Hacendado',laticínio:'Hacendado',mercearia:'Hacendado',arroz:'Hacendado',massa:'Hacendado',azeite:'Hacendado',ovos:'Hacendado',café:'Hacendado',fruta:'Hacendado',legumes:'Hacendado',padaria:'Hacendado',snacks:'Hacendado',congelados:'Hacendado'}}
+    lidl:       {b:'Lidl', by:{leite:'Pilos',manteiga:'Pilos',iogurte:'Pilos',queijo:'Pilos',laticínio:'Pilos',higiene:'Cien',limpeza:'W5',bebidas:'Bellsoda',snacks:'Gourmet',congelados:'Gelatelli',padaria:'Lidl',mercearia:'Milbona'}},
+    aldi:       {b:'Aldi', by:{leite:'Lacur',iogurte:'Milfina',manteiga:'Milfina',queijo:'Milfina',laticínio:'Milfina',higiene:'Osmose',limpeza:'Osmose',mercearia:'Bon Appetit',congelados:'Milfina',café:'Orsolini',snacks:'Grandessa'}},
+    mercadona:  {b:'Mercadona', by:{limpeza:'Bosque Verde',higiene:'Deliplus',leite:'Hacendado',iogurte:'Hacendado',queijo:'Hacendado',laticínio:'Hacendado',mercearia:'Hacendado',arroz:'Hacendado',massa:'Hacendado',azeite:'Hacendado',ovos:'Hacendado',café:'Hacendado',fruta:'Hacendado',legumes:'Hacendado',padaria:'Hacendado',snacks:'Hacendado',congelados:'Hacendado',bebidas:'Hacendado',peixe:'Hacendado',carne:'Hacendado',charcutaria:'Hacendado',conservas:'Hacendado',pronta:'Hacendado',bebés:'Deliplus'}}
   };
+  const keys = ['pingo_doce','continente','auchan','intermarche','lidl','aldi','mercadona'];
+  const sname = {pingo_doce:'Pingo Doce',continente:'Continente',auchan:'Auchan',intermarche:'Intermarché',lidl:'Lidl',aldi:'Aldi',mercadona:'Mercadona'};
+  const discount = {pingo_doce:0.8,continente:0.79,auchan:0.77,intermarche:0.78,lidl:0.72,aldi:0.71,mercadona:0.74};
+  const existing = new Set(CATALOG.map(p=>p.name));
+  function addSb(name, qty, un, price, emoji, cat){
+    keys.forEach(st=>{
+      const s = SBRAND[st];
+      const brand = (s.by && s.by[cat]) ? s.by[cat] : s.b;
+      const suffix = brand!==sname[st] ? ' ('+sname[st]+')' : '';
+      const full = name+' '+brand+suffix+' '+qty+un;
+      if(existing.has(full)) return;
+      existing.add(full);
+      const p = Math.round(price*discount[st]*100)/100;
+      const stores = {}; stores[st] = p;
+      const pSeed = seedFromStr('sbpromo:'+full);
+      const roll = pSeed % 100;
+      let promo=null, promoOld=null, promoPct=null, promoTag=null, promoStore=null;
+      if(roll < 30){
+        promoPct = 10 + (pSeed % 4)*5;
+        promoOld = p;
+        stores[st] = Math.max(0.05, Math.round(p*(1-promoPct/100)*100)/100);
+        promoStore = st;
+        promo = '−'+promoPct+'% em ' + sname[st];
+      } else if(roll < 38){
+        const TAGS = ['Leve 2 Pague 1','3 por 2','2ª unidade a 50%'];
+        promoTag = TAGS[pSeed % TAGS.length];
+        promo = promoTag;
+      }
+      CATALOG.push({name:full, price:p, stores, emoji, cat, promo, promoOld, promoPct, promoTag, promoStore});
+    });
+  }
+  function addSf(name, qty, un, price, emoji, cat, flavors){
+    if(flavors && flavors.length){ flavors.forEach(f=>addSb(name+' '+f, qty, un, price, emoji, cat)); }
+    else addSb(name, qty, un, price, emoji, cat);
+  }
   const T = [
-    ['Arroz Carolino',1,'kg',2.19,'arroz','🍚'],
-    ['Arroz Agulha',1,'kg',1.89,'arroz','🍚'],
-    ['Azeite Virgem Extra',1,'L',6.49,'azeite','🫒'],
-    ['Azeite Virgem Extra',0.75,'L',5.19,'azeite','🫒'],
-    ['Azeite Suave',0.5,'L',3.49,'azeite','🫒'],
-    ['Massa Esparguete',0.5,'kg',0.89,'massa','🍝'],
-    ['Massa Penne',0.5,'kg',0.89,'massa','🍝'],
-    ['Massa Cotovelo',0.5,'kg',0.85,'massa','🍝'],
-    ['Leite UHT Meio Gordo',1,'L',0.65,'leite','🥛'],
-    ['Leite UHT Gordo',1,'L',0.67,'leite','🥛'],
-    ['Leite UHT Magro',1,'L',0.65,'leite','🥛'],
-    ['Leite Meio Gordo Sem Lactose',1,'L',0.99,'leite','🥛'],
+    ['Leite UHT Meio Gordo',1,'L',0.66,'leite','🥛'],
+    ['Leite UHT Meio Gordo',0.5,'L',0.35,'leite','🥛'],
+    ['Leite UHT Gordo',1,'L',0.66,'leite','🥛'],
+    ['Leite UHT Gordo',0.5,'L',0.35,'leite','🥛'],
+    ['Leite UHT Magro',1,'L',0.66,'leite','🥛'],
+    ['Leite UHT Magro',0.5,'L',0.35,'leite','🥛'],
+    ['Leite UHT Meio Gordo Sem Lactose',1,'L',0.99,'leite','🥛'],
+    ['Leite UHT Meio Gordo Sem Lactose',0.5,'L',0.52,'leite','🥛'],
     ['Leite Chocolate',1,'L',1.29,'leite','🥛'],
+    ['Leite Chocolate',0.2,'L',0.65,'leite','🥛'],
+    ['Bebida de Amêndoa',1,'L',1.29,'leite','🥛'],
+    ['Bebida de Aveia',1,'L',1.19,'leite','🥛'],
+    ['Bebida de Coco',1,'L',1.39,'leite','🥛'],
     ['Manteiga com Sal',250,'g',1.69,'manteiga','🧈'],
+    ['Manteiga com Sal',125,'g',0.99,'manteiga','🧈'],
     ['Manteiga sem Sal',250,'g',1.69,'manteiga','🧈'],
+    ['Manteiga sem Sal',125,'g',0.99,'manteiga','🧈'],
     ['Margarina',500,'g',1.19,'manteiga','🧈'],
-    ['Iogurte Natural Líquido',0.75,'L',0.99,'iogurte','🥛'],
+    ['Margarina',250,'g',0.69,'manteiga','🧈'],
+    ['Manteiga de Amendoim',0.34,'kg',1.99,'manteiga','🧈'],
+    ['Creme de Chocolate para Barrar',0.4,'kg',1.89,'manteiga','🧈'],
+    ['Iogurte Líquido',0.75,'L',0.99,'iogurte','🥛',['Natural', 'Morango', 'Pêssego', 'Banana', 'Ananás', 'Frutos Vermelhos', 'Baunilha']],
     ['Iogurte de Morango 6un',500,'g',1.19,'iogurte','🥛'],
     ['Iogurte Grego 4un',400,'g',1.49,'iogurte','🥛'],
+    ['Iogurte Grego Natural',0.5,'kg',1.29,'iogurte','🥛'],
+    ['Iogurte Natural',0.5,'kg',1.09,'iogurte','🥛',['Natural', 'Magro', 'Sem Lactose']],
+    ['Iogurte Proteico',0.3,'kg',1.59,'iogurte','🥛',['Baunilha', 'Chocolate', 'Morango', 'Limão']],
+    ['Iogurte Infantil 4un',0.4,'kg',1.89,'iogurte','🥛',['Morango', 'Frutos Vermelhos']],
     ['Queijo Flamengo',0.3,'kg',3.49,'queijo','🧀'],
+    ['Queijo Flamengo',0.5,'kg',5.49,'queijo','🧀'],
     ['Queijo Fatiado',0.2,'kg',1.99,'queijo','🧀'],
     ['Queijo Fresco',0.2,'kg',0.99,'queijo','🧀'],
+    ['Queijo Fresco',0.4,'kg',1.79,'queijo','🧀'],
+    ['Queijo Ralado',0.15,'kg',1.89,'queijo','🧀',['Mistura 4 Queijos', 'Parmesão', 'Flamengo']],
+    ['Queijo Creme para Barrar',0.15,'kg',1.39,'queijo','🧀',['Natural', 'Ervas Aromáticas']],
+    ['Mozzarella',0.125,'kg',0.99,'queijo','🧀',['Normal', 'Mini 20un']],
+    ['Queijo da Ilha Fatiado',0.2,'kg',2.29,'queijo','🧀'],
     ['Requeijão',0.2,'kg',1.09,'laticínio','🥛'],
-    ['Bebida de Soja',1,'L',1.19,'laticínio','🥛'],
+    ['Nata para Bater',0.2,'L',0.79,'laticínio','🥛'],
+    ['Leite Condensado',0.4,'kg',1.49,'laticínio','🥛'],
+    ['Gelado de Neve Manteiga',0.25,'kg',1.29,'laticínio','🥛'],
     ['Ovos M 12un',12,'un',2.29,'ovos','🥚'],
+    ['Ovos M 6un',6,'un',1.29,'ovos','🥚'],
+    ['Ovos L 12un',12,'un',2.79,'ovos','🥚'],
     ['Ovos XL 12un',12,'un',2.99,'ovos','🥚'],
-    ['Pão de Forma',0.5,'kg',1.29,'padaria','🍞'],
+    ['Ovos de Codorniz 12un',12,'un',2.49,'ovos','🥚'],
+    ['Azeite Virgem Extra',1,'L',6.49,'azeite','🫒'],
+    ['Azeite Virgem Extra',0.75,'L',5.19,'azeite','🫒'],
+    ['Azeite Virgem Extra',0.5,'L',3.49,'azeite','🫒'],
+    ['Azeite Suave',0.75,'L',4.79,'azeite','🫒'],
+    ['Azeite Virgem',1,'L',5.99,'azeite','🫒'],
+    ['Arroz Carolino',1,'kg',2.19,'arroz','🍚'],
+    ['Arroz Carolino',0.5,'kg',1.19,'arroz','🍚'],
+    ['Arroz Agulha',1,'kg',1.89,'arroz','🍚'],
+    ['Arroz Basmati',1,'kg',2.99,'arroz','🍚'],
+    ['Arroz Integral',1,'kg',1.99,'arroz','🍚'],
+    ['Arroz Doce',0.5,'kg',1.49,'arroz','🍚'],
+    ['Massa Esparguete',0.5,'kg',0.89,'massa','🍝'],
+    ['Massa Esparguete',1,'kg',1.59,'massa','🍝'],
+    ['Massa Penne',0.5,'kg',0.89,'massa','🍝'],
+    ['Massa Cotovelo',0.5,'kg',0.85,'massa','🍝'],
+    ['Massa Fusilli',0.5,'kg',0.85,'massa','🍝'],
+    ['Massa Tagliatelle',0.5,'kg',0.99,'massa','🍝'],
+    ['Massa Conchas',0.5,'kg',0.85,'massa','🍝'],
+    ['Macarrão',0.5,'kg',0.79,'massa','🍝'],
+    ['Lasanha Placas',0.5,'kg',1.49,'massa','🍝'],
+    ['Café Torrado Moído',0.5,'kg',4.49,'café','☕'],
+    ['Café Torrado Moído',1,'kg',7.99,'café','☕'],
+    ['Café Descafeinado Moído',0.5,'kg',4.79,'café','☕'],
+    ['Cápsulas de Café',0.1,'kg',2.99,'café','☕',['Clássico 10un', 'Intenso 10un', 'Descafeinado 10un', 'Longo 10un']],
+    ['Cápsulas de Café 16un',0.16,'kg',4.49,'café','☕'],
+    ['Café Solúvel',0.1,'kg',2.49,'café','☕'],
+    ['Pão de Forma',0.5,'kg',1.29,'padaria','🍞',['Normal', 'Integral', 'Sem Côdea']],
     ['Baguete',0.25,'kg',0.49,'padaria','🍞'],
     ['Croissant 2un',0.15,'kg',1.09,'padaria','🍞'],
-    ['Pizza Margherita',0.4,'kg',2.49,'pronta','🍗'],
-    ['Lasanha Bolonhesa',0.4,'kg',2.29,'pronta','🍗'],
-    ['Frango Assado inteiro',1,'kg',4.99,'pronta','🍗'],
-    ['Empanadas de Atum 2un',0.3,'kg',2.19,'pronta','🍗'],
+    ['Croissant 8un',0.5,'kg',3.29,'padaria','🍞'],
+    ['Pão de Leite 6un',0.4,'kg',1.59,'padaria','🍞'],
+    ['Pão Rústico',0.5,'kg',1.49,'padaria','🍞'],
+    ['Pastel de Nata 6un',0.45,'kg',3.49,'padaria','🍞'],
+    ['Tortilha de Trigo 8un',0.5,'kg',1.99,'padaria','🍞'],
+    ['Pão de Hambúrguer 4un',0.3,'kg',1.19,'padaria','🍞'],
     ['Costeletas de Porco',1,'kg',5.49,'carne','🍗'],
+    ['Costeletas de Porco',0.5,'kg',2.99,'carne','🍗'],
     ['Peito de Frango',1,'kg',6.99,'carne','🍗'],
+    ['Peito de Frango',0.5,'kg',3.79,'carne','🍗'],
     ['Carne Picada de Vaca',0.5,'kg',3.49,'carne','🍗'],
+    ['Carne Picada de Vaca',1,'kg',6.49,'carne','🍗'],
     ['Hambúrguer de Vaca 4un',0.4,'kg',3.29,'carne','🍗'],
-    ['Salsicha Frankfurt',0.3,'kg',1.89,'charcutaria','🥓'],
-    ['Fiambre de Peru',0.2,'kg',2.29,'charcutaria','🥓'],
-    ['Presunto Cozido',0.2,'kg',2.59,'charcutaria','🥓'],
-    ['Bacon Fatiado',0.15,'kg',1.79,'charcutaria','🥓'],
-    ['Salmão Fumado',0.1,'kg',4.99,'peixe','🐟'],
+    ['Frango Inteiro',1.2,'kg',4.99,'carne','🍗'],
+    ['Pernas de Frango',1,'kg',3.99,'carne','🍗'],
+    ['Coxas de Frango',1,'kg',3.49,'carne','🍗'],
+    ['Lombo de Porco',1,'kg',6.49,'carne','🍗'],
+    ['Febras de Porco',0.5,'kg',2.99,'carne','🍗'],
+    ['Bife de Vaca',0.5,'kg',5.99,'carne','🍗'],
+    ['Lombinho de Peru',0.5,'kg',4.49,'carne','🍗'],
+    ['Alheira',0.3,'kg',2.49,'carne','🍗'],
+    ['Salsichas Frescas',0.5,'kg',2.79,'carne','🍗'],
+    ['Salmão',0.3,'kg',7.99,'peixe','🐟'],
+    ['Salmão',0.2,'kg',5.49,'peixe','🐟'],
     ['Bacalhau Desfiado',0.5,'kg',9.99,'peixe','🐟'],
+    ['Bacalhau Desfiado',0.2,'kg',4.29,'peixe','🐟'],
     ['Filetes de Pescada',0.5,'kg',3.99,'peixe','🐟'],
     ['Gambas 20/30',1,'kg',9.99,'peixe','🐟'],
-    ['Atum ao Natural',0.4,'kg',1.49,'conservas','🐟'],
+    ['Gambas 20/30',0.5,'kg',5.49,'peixe','🐟'],
+    ['Dourada',0.5,'kg',6.49,'peixe','🐟'],
+    ['Robalo',0.5,'kg',7.49,'peixe','🐟'],
+    ['Sardinhas Frescas',1,'kg',3.99,'peixe','🐟'],
+    ['Polvo',1,'kg',12.99,'peixe','🐟'],
+    ['Salmão Fumado',0.1,'kg',4.99,'peixe','🐟'],
+    ['Salmão Fumado',0.2,'kg',8.99,'peixe','🐟'],
+    ['Atum ao Natural',0.12,'kg',0.79,'conservas','🐟',['120g', '160g']],
+    ['Atum em Óleo',0.12,'kg',0.85,'conservas','🐟'],
     ['Sardinhas em Óleo',0.12,'kg',0.89,'conservas','🐟'],
     ['Grão-de-Bico Cozido',0.4,'kg',0.69,'conservas','🐟'],
     ['Feijão Encarnado',0.4,'kg',0.69,'conservas','🐟'],
-    ['Banana',1,'kg',1.49,'fruta','🍌'],
-    ['Maçã Gala',1,'kg',1.79,'fruta','🍌'],
-    ['Laranja',1,'kg',1.19,'fruta','🍌'],
-    ['Batata',1,'kg',1.09,'legumes','🍅'],
-    ['Cenoura',1,'kg',0.99,'legumes','🍅'],
-    ['Cebola',1,'kg',0.89,'legumes','🍅'],
-    ['Tomate Rama',1,'kg',1.99,'legumes','🍅'],
-    ['Alface Iceberg',0.3,'kg',0.99,'legumes','🍅'],
-    ['Café Torrado Moído',0.5,'kg',4.49,'café','☕'],
-    ['Cápsulas de Café 10un',0.1,'kg',2.99,'café','☕'],
-    ['Água Mineral 6x1.5L',9,'L',1.79,'bebidas','💧'],
-    ['Água com Gás',1.5,'L',0.59,'bebidas','💧'],
-    ['Sumo de Laranja',1,'L',1.19,'bebidas','💧'],
-    ['Refrigerante Cola 2L',2,'L',1.29,'bebidas','💧'],
-    ['Refrigerante Laranja 2L',2,'L',1.19,'bebidas','💧'],
-    ['Cerveja Lager (2L)',2,'L',4.49,'bebidas','💧'],
-    ['Papel Higiénico 6un',6,'un',2.99,'higiene','🧻'],
-    ['Sabonete Líquido',0.5,'L',1.49,'higiene','🧻'],
-    ['Gel de Banho',0.5,'L',1.59,'higiene','🧻'],
-    ['Champô',0.4,'L',1.99,'higiene','🧻'],
-    ['Pasta de Dentes',0.1,'kg',1.29,'higiene','🧻'],
-    ['Detergente Roupa',1.5,'L',4.99,'limpeza','🫧'],
-    ['Lava-loiça',0.75,'L',1.29,'limpeza','🫧'],
-    ['Detergente Pratos',0.5,'L',1.09,'limpeza','🫧'],
-    ['Toalhitas Multiusos',1,'un',1.49,'limpeza','🫧'],
-    ['Sacos de Lixo 30L',30,'un',2.29,'limpeza','🫧'],
-    ['Batatas Fritas',0.15,'kg',0.99,'snacks','🍪'],
-    ['Bolachas de Água e Sal',0.2,'kg',0.89,'snacks','🍪'],
-    ['Barras de Cereais 4un',0.2,'kg',1.49,'snacks','🍪'],
-    ['Chocolate de Leite',0.2,'kg',1.29,'mercearia','🍬'],
-    ['Açúcar',1,'kg',0.99,'mercearia','🍬'],
-    ['Sal de Cozinha',1,'kg',0.59,'mercearia','🍬'],
-    ['Farinha de Trigo',1,'kg',0.79,'mercearia','🍬'],
-    ['Cereais de Trigo',0.5,'kg',1.79,'mercearia','🍬'],
-    ['Fraldas T4 40un',40,'un',12.99,'bebés','🍼'],
-    ['Leite em Pó Infantil',0.8,'kg',11.49,'bebés','🍼'],
-    ['Toalhitas Bebé 3x80un',240,'un',3.49,'bebés','🍼'],
-    ['Ração de Cão',2,'kg',5.99,'animais','🐶'],
-    ['Ração de Gato',1.5,'kg',5.49,'animais','🐶'],
+    ['Feijão Branco',0.4,'kg',0.69,'conservas','🐟'],
+    ['Feijão Frade',0.4,'kg',0.75,'conservas','🐟'],
+    ['Feijão Preto',0.4,'kg',0.79,'conservas','🐟'],
+    ['Lentilhas',0.4,'kg',0.79,'conservas','🐟'],
+    ['Ervilhas',0.4,'kg',0.69,'conservas','🐟'],
+    ['Milho Doce',0.2,'kg',0.79,'conservas','🐟'],
+    ['Polpa de Tomate',0.2,'kg',0.59,'conservas','🐟'],
+    ['Tomate Pelado',0.4,'kg',0.99,'conservas','🐟'],
+    ['Azeitonas Verdes',0.2,'kg',1.49,'conservas','🐟'],
+    ['Cogumelos Laminados',0.4,'kg',1.39,'conservas','🐟'],
+    ['Salsicha Frankfurt',0.3,'kg',1.89,'charcutaria','🥓'],
+    ['Salsicha Frankfurt',0.5,'kg',2.89,'charcutaria','🥓'],
+    ['Fiambre de Peru',0.2,'kg',2.29,'charcutaria','🥓'],
+    ['Fiambre de Peru',0.1,'kg',1.29,'charcutaria','🥓'],
+    ['Presunto Cozido',0.2,'kg',2.59,'charcutaria','🥓'],
+    ['Bacon Fatiado',0.15,'kg',1.79,'charcutaria','🥓'],
+    ['Chouriço',0.3,'kg',2.99,'charcutaria','🥓'],
+    ['Mortadela',0.2,'kg',1.49,'charcutaria','🥓'],
+    ['Peito de Peru',0.2,'kg',2.49,'charcutaria','🥓'],
+    ['Batata Frita',1,'kg',2.49,'congelados','🧊'],
+    ['Batata Frita',0.75,'kg',1.99,'congelados','🧊'],
+    ['Legumes Mistos',1,'kg',1.99,'congelados','🧊'],
+    ['Ervilhas',1,'kg',1.49,'congelados','🧊'],
+    ['Brócolos',0.6,'kg',1.49,'congelados','🧊'],
+    ['Feijão Verde Cortado',0.6,'kg',1.39,'congelados','🧊'],
+    ['Espinafres',0.6,'kg',1.39,'congelados','🧊'],
+    ['Salada de Fruta',1,'kg',2.99,'congelados','🧊'],
+    ['Pizza',0.4,'kg',2.49,'congelados','🧊',['Margherita', '4 Queijos', 'Presunto e Queijo', 'Atum', 'Vegetariana']],
+    ['Lasanha',0.4,'kg',2.29,'congelados','🧊'],
+    ['Lasanha',1,'kg',4.99,'congelados','🧊'],
+    ['Rissóis de Camarão',1,'kg',3.99,'congelados','🧊'],
+    ['Croquetes de Carne',1,'kg',3.49,'congelados','🧊'],
+    ['Nuggets de Frango',0.5,'kg',2.79,'congelados','🧊'],
+    ['Frango Panado',0.4,'kg',3.19,'congelados','🧊'],
+    ['Peixe Panado',0.5,'kg',3.49,'congelados','🧊'],
+    ['Douradinhos',0.5,'kg',3.29,'congelados','🧊'],
+    ['Croquetes de Camarão',0.5,'kg',2.99,'congelados','🧊'],
     ['Gelado de Baunilha',1,'L',3.29,'congelados','🍦'],
     ['Gelado de Chocolate',1,'L',3.29,'congelados','🍦'],
     ['Gelado de Morango',1,'L',3.29,'congelados','🍦'],
@@ -1614,28 +1740,166 @@ CATALOG.push(...EXTRA_CATALOG);
     ['Gelado de Frutos Vermelhos',0.9,'L',3.49,'congelados','🍦'],
     ['Gelado de Manga Sorbet',0.9,'L',3.29,'congelados','🍦'],
     ['Gelado de Limão Sorbet',0.9,'L',3.29,'congelados','🍦'],
+    ['Gelado de Coco',0.9,'L',3.49,'congelados','🍦'],
+    ['Gelado de Pistácio',0.9,'L',3.99,'congelados','🍦'],
     ['Picolé de Limão 6un',6,'un',2.19,'congelados','🍦'],
     ['Picolé de Morango 6un',6,'un',2.29,'congelados','🍦'],
     ['Picolé de Chocolate 4un',4,'un',2.49,'congelados','🍦'],
     ['Cone de Baunilha e Chocolate 6un',6,'un',2.99,'congelados','🍦'],
-    ['Gelado Proteico de Baunilha',0.9,'L',4.99,'congelados','🍦']
+    ['Gelado Proteico de Baunilha',0.9,'L',4.99,'congelados','🍦'],
+    ['Frango Assado inteiro',1,'kg',4.99,'pronta','🍗'],
+    ['Bacalhau à Brás',0.3,'kg',3.99,'pronta','🍗'],
+    ['Sopa de Legumes',0.5,'L',1.29,'pronta','🍗'],
+    ['Sopa de Feijão',0.5,'L',1.29,'pronta','🍗'],
+    ['Sopa de Creme de Legumes',0.5,'L',1.49,'pronta','🍗'],
+    ['Empanadas de Atum 2un',0.3,'kg',2.19,'pronta','🍗'],
+    ['Empanadas de Frango 2un',0.3,'kg',2.19,'pronta','🍗'],
+    ['Arroz de Pato',0.4,'kg',3.49,'pronta','🍗'],
+    ['Feijoada',0.4,'kg',2.99,'pronta','🍗'],
+    ['Frango no Churrasco',0.6,'kg',3.99,'pronta','🍗'],
+    ['Cozido à Portuguesa',0.5,'kg',3.49,'pronta','🍗'],
+    ['Banana',1,'kg',1.49,'fruta','🍌'],
+    ['Maçã Gala',1,'kg',1.79,'fruta','🍌'],
+    ['Maçã Golden',1,'kg',1.69,'fruta','🍌'],
+    ['Maçã Starking',1,'kg',1.59,'fruta','🍌'],
+    ['Maçã Granny Smith',1,'kg',2.19,'fruta','🍌'],
+    ['Laranja',1,'kg',1.19,'fruta','🍌'],
+    ['Pera Rocha',1,'kg',1.99,'fruta','🍌'],
+    ['Morangos',0.5,'kg',2.49,'fruta','🍌'],
+    ['Uvas Brancas',0.5,'kg',2.99,'fruta','🍌'],
+    ['Kiwi',0.5,'kg',1.89,'fruta','🍌'],
+    ['Manga',1,'un',1.29,'fruta','🍌'],
+    ['Ananás',1,'un',1.99,'fruta','🍌'],
+    ['Abacate',1,'un',0.99,'fruta','🍌'],
+    ['Limões',1,'kg',1.49,'fruta','🍌'],
+    ['Clementinas',1,'kg',2.29,'fruta','🍌'],
+    ['Pêssegos',1,'kg',2.49,'fruta','🍌'],
+    ['Melão',1,'un',2.99,'fruta','🍌'],
+    ['Melancia',1,'un',4.99,'fruta','🍌'],
+    ['Cerejas',0.5,'kg',4.49,'fruta','🍌'],
+    ['Batata',1,'kg',1.09,'legumes','🍅'],
+    ['Batata',2,'kg',1.99,'legumes','🍅'],
+    ['Batata',5,'kg',4.49,'legumes','🍅'],
+    ['Cenoura',1,'kg',0.99,'legumes','🍅'],
+    ['Cebola',1,'kg',0.89,'legumes','🍅'],
+    ['Cebola',0.75,'kg',0.79,'legumes','🍅'],
+    ['Tomate Rama',1,'kg',1.99,'legumes','🍅'],
+    ['Tomate Rama',0.5,'kg',1.09,'legumes','🍅'],
+    ['Alface Iceberg',1,'un',0.99,'legumes','🍅'],
+    ['Brócolos',1,'un',1.49,'legumes','🍅'],
+    ['Couve-flor',1,'un',1.99,'legumes','🍅'],
+    ['Courgette',1,'kg',1.79,'legumes','🍅'],
+    ['Pimento Vermelho',0.5,'kg',1.79,'legumes','🍅'],
+    ['Pimento Verde',0.5,'kg',1.29,'legumes','🍅'],
+    ['Cogumelos Frescos',0.5,'kg',1.99,'legumes','🍅'],
+    ['Espinafres Frescos',0.5,'kg',1.29,'legumes','🍅'],
+    ['Batata-doce',1,'kg',1.89,'legumes','🍅'],
+    ['Abóbora',1,'kg',0.99,'legumes','🍅'],
+    ['Feijão Verde',0.5,'kg',1.69,'legumes','🍅'],
+    ['Alho',0.25,'kg',1.79,'legumes','🍅'],
+    ['Chocolate de Leite',0.2,'kg',1.29,'mercearia','🍬'],
+    ['Chocolate',0.2,'kg',1.29,'mercearia','🍬',['de Leite', 'Preto 70%', 'Branco', 'de Leite com Avelãs']],
+    ['Açúcar',1,'kg',0.99,'mercearia','🍬'],
+    ['Açúcar',0.5,'kg',0.55,'mercearia','🍬'],
+    ['Açúcar Amarelo',1,'kg',1.29,'mercearia','🍬'],
+    ['Sal de Cozinha',1,'kg',0.59,'mercearia','🍬'],
+    ['Sal Marinho',0.75,'kg',0.79,'mercearia','🍬'],
+    ['Farinha de Trigo',1,'kg',0.79,'mercearia','🍬'],
+    ['Farinha de Trigo',5,'kg',3.49,'mercearia','🍬'],
+    ['Cereais',0.5,'kg',1.79,'mercearia','🍬',['Chocolate', 'Mel e Fruta', 'Coco', 'Trigo Integral']],
+    ['Cereais de Coco',0.5,'kg',1.89,'mercearia','🍬'],
+    ['Aveia em Flocos',0.5,'kg',0.99,'mercearia','🍬'],
+    ['Mel',0.5,'kg',2.99,'mercearia','🍬'],
+    ['Compota de Morango',0.3,'kg',1.49,'mercearia','🍬'],
+    ['Compota',0.45,'kg',1.99,'mercearia','🍬',['Morango', 'Pêssego', 'Framboesa', 'Laranja Amarga']],
+    ['Cacau em Pó',0.2,'kg',1.89,'mercearia','🍬'],
+    ['Maionese',0.35,'kg',1.49,'mercearia','🍬'],
+    ['Ketchup',0.5,'kg',1.19,'mercearia','🍬'],
+    ['Mostarda',0.2,'kg',0.99,'mercearia','🍬'],
+    ['Vinagre',0.75,'L',0.79,'mercearia','🍬'],
+    ['Óleo Alimentar',1,'L',1.49,'mercearia','🍬'],
+    ['Canela em Pó',0.05,'kg',1.19,'mercearia','🍬'],
+    ['Água Mineral',1.5,'L',0.35,'bebidas','💧'],
+    ['Água Mineral',0.5,'L',0.29,'bebidas','💧'],
+    ['Água Mineral 6x1.5L',9,'L',1.79,'bebidas','💧'],
+    ['Água com Gás',1.5,'L',0.59,'bebidas','💧'],
+    ['Refrigerante',2,'L',1.29,'bebidas','💧',['Cola', 'Cola Zero', 'Laranja', 'Limonada', 'Ananás']],
+    ['Refrigerante Cola 1.5L',1.5,'L',1.09,'bebidas','💧'],
+    ['Sumo de Laranja',1,'L',1.19,'bebidas','💧'],
+    ['Sumo de Laranja',0.2,'L',0.35,'bebidas','💧'],
+    ['Sumo de Ananás',1,'L',1.19,'bebidas','💧'],
+    ['Sumo de Maçã',1,'L',1.09,'bebidas','💧'],
+    ['Néctar de Pêssego',1,'L',1.09,'bebidas','💧'],
+    ['Chá Gelado',1.5,'L',1.29,'bebidas','💧',['Limão', 'Pêssego']],
+    ['Cerveja Lager 6x33cl',2,'L',4.49,'bebidas','💧'],
+    ['Cerveja Lager (2L)',2,'L',4.49,'bebidas','💧'],
+    ['Vinho Tinto',0.75,'L',3.49,'bebidas','💧'],
+    ['Vinho Branco',0.75,'L',3.29,'bebidas','💧'],
+    ['Vinho Verde',0.75,'L',3.19,'bebidas','💧'],
+    ['Papel Higiénico',6,'un',2.99,'higiene','🧻'],
+    ['Papel Higiénico',12,'un',5.49,'higiene','🧻'],
+    ['Papel Higiénico',4,'un',2.09,'higiene','🧻'],
+    ['Sabonete Líquido',0.5,'L',1.49,'higiene','🧻'],
+    ['Sabonete Líquido',0.25,'L',0.89,'higiene','🧻'],
+    ['Gel de Banho',0.5,'L',1.59,'higiene','🧻'],
+    ['Gel de Banho',0.75,'L',2.19,'higiene','🧻'],
+    ['Champô',0.4,'L',1.99,'higiene','🧻'],
+    ['Condicionador',0.4,'L',1.99,'higiene','🧻'],
+    ['Pasta de Dentes',0.1,'kg',1.29,'higiene','🧻'],
+    ['Sabonete de Barra 3un',0.45,'kg',1.19,'higiene','🧻'],
+    ['Cotonetes 200un',200,'un',1.09,'higiene','🧻'],
+    ['Discos de Algodão 100un',100,'un',1.29,'higiene','🧻'],
+    ['Desodorizante',0.15,'L',1.89,'higiene','🧻'],
+    ['Lenços de Papel 4un',4,'un',1.49,'higiene','🧻'],
+    ['Detergente Roupa',1.5,'L',4.99,'limpeza','🫧'],
+    ['Detergente Roupa',3,'L',8.49,'limpeza','🫧'],
+    ['Detergente Roupa',0.75,'L',2.99,'limpeza','🫧'],
+    ['Amaciador',1,'L',2.49,'limpeza','🫧'],
+    ['Amaciador',2,'L',3.99,'limpeza','🫧'],
+    ['Lava-loiça',0.75,'L',1.29,'limpeza','🫧'],
+    ['Lava-loiça',1.5,'L',2.29,'limpeza','🫧'],
+    ['Detergente Pratos',0.5,'L',1.09,'limpeza','🫧'],
+    ['Detergente Pratos',1,'L',1.89,'limpeza','🫧'],
+    ['Limpa Tudo',1,'L',1.29,'limpeza','🫧'],
+    ['Lixívia',1,'L',0.99,'limpeza','🫧'],
+    ['Desinfetante',1,'L',1.99,'limpeza','🫧'],
+    ['Limpa Vidros',0.75,'L',1.49,'limpeza','🫧'],
+    ['Toalhitas Multiusos',1,'un',1.49,'limpeza','🫧'],
+    ['Papel de Cozinha 3un',3,'un',2.49,'limpeza','🫧'],
+    ['Sacos de Lixo',30,'un',2.29,'limpeza','🫧',['30L', '50L']],
+    ['Sacos de Lixo 100L',20,'un',2.99,'limpeza','🫧'],
+    ['Batatas Fritas',0.165,'kg',0.99,'snacks','🍪',['Original', 'Salmão e Cebola', 'Presunto', 'Páprica']],
+    ['Batatas Fritas Grande',0.5,'kg',2.49,'snacks','🍪'],
+    ['Bolachas de Água e Sal',0.2,'kg',0.89,'snacks','🍪'],
+    ['Bolachas de Água e Sal',0.4,'kg',1.49,'snacks','🍪'],
+    ['Bolachas de Chocolate',0.15,'kg',1.19,'snacks','🍪'],
+    ['Bolachas Maria',0.25,'kg',0.99,'snacks','🍪'],
+    ['Barras de Cereais 4un',0.2,'kg',1.49,'snacks','🍪',['Chocolate', 'Cereais e Mel', 'Frutos Vermelhos']],
+    ['Amendoins Torrados',0.2,'kg',1.29,'snacks','🍪'],
+    ['Pipocas Microondas',0.1,'kg',1.09,'snacks','🍪'],
+    ['Aperitivos de Milho',0.15,'kg',0.99,'snacks','🍪'],
+    ['Frutos Secos Mistos',0.2,'kg',2.99,'snacks','🍪'],
+    ['Fraldas T1 30un',30,'un',8.99,'bebés','🍼'],
+    ['Fraldas T2 40un',40,'un',10.99,'bebés','🍼'],
+    ['Fraldas T3 44un',44,'un',11.99,'bebés','🍼'],
+    ['Fraldas T4 40un',40,'un',12.99,'bebés','🍼'],
+    ['Fraldas T5 36un',36,'un',12.49,'bebés','🍼'],
+    ['Toalhitas Bebé 3x80un',240,'un',3.49,'bebés','🍼'],
+    ['Leite em Pó Infantil',0.8,'kg',11.49,'bebés','🍼'],
+    ['Leite em Pó Infantil',0.4,'kg',6.49,'bebés','🍼'],
+    ['Papas Infantis',0.2,'kg',2.49,'bebés','🍼',['Cereais', 'Cereais com Fruta', 'Multi-cereais']],
+    ['Champô Bebé',0.5,'L',2.99,'bebés','🍼'],
+    ['Ração de Cão',2,'kg',5.99,'animais','🐶'],
+    ['Ração de Cão',10,'kg',19.99,'animais','🐶'],
+    ['Ração de Gato',1.5,'kg',5.49,'animais','🐶'],
+    ['Ração de Gato',0.4,'kg',1.99,'animais','🐶'],
+    ['Comida Húmida Gato 12un',0.12,'kg',3.49,'animais','🐶'],
+    ['Petiscos para Cão',0.2,'kg',1.99,'animais','🐶'],
+    ['Areia para Gato',10,'L',6.99,'animais','🐶'],
+    ['Areia para Gato Aglomerante',5,'L',4.49,'animais','🐶'],
   ];
-  const keys = ['pingo_doce','continente','auchan','intermarche','lidl','aldi','mercadona'];
-  const sname = {pingo_doce:'Pingo Doce',continente:'Continente',auchan:'Auchan',intermarche:'Intermarché',lidl:'Lidl',aldi:'Aldi',mercadona:'Mercadona'};
-  const discount = {pingo_doce:0.8,continente:0.79,auchan:0.77,intermarche:0.78,lidl:0.72,aldi:0.71,mercadona:0.74};
-  const existing = new Set(CATALOG.map(p=>p.name));
   T.forEach(t=>{
-    keys.forEach(st=>{
-      const s = SBRAND[st];
-      const brand = (s.by && s.by[t[4]]) ? s.by[t[4]] : s.b;
-      const suffix = brand!==sname[st] ? ' ('+sname[st]+')' : '';
-      const name = t[0]+' '+brand+suffix+' '+t[1]+t[2];
-      if(existing.has(name)) return;
-      existing.add(name);
-      const price = Math.round(t[3]*discount[st]*100)/100;
-      const stores = {}; stores[st] = price;
-      CATALOG.push({name, price, stores, emoji:t[5], cat:t[4]});
-    });
+    addSf(t[0], t[1], t[2], t[3], t[5], t[4], t[6]);
   });
 })();
 
@@ -1688,6 +1952,7 @@ const STORE_META = {
   lidl:{name:'Lidl',color:'#f43f5e',bg:'#fff1f2',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Lidl-Logo.svg/250px-Lidl-Logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#1e3a8a&quot;/><rect x=&quot;0&quot; y=&quot;65&quot; width=&quot;100&quot; height=&quot;35&quot; fill=&quot;#e11d48&quot;/><text x=&quot;50&quot; y=&quot;55&quot; text-anchor=&quot;middle&quot; font-size=&quot;24&quot; font-weight=&quot;900&quot; fill=&quot;#FFD700&quot; font-family=&quot;Arial&quot;>LIDL</text></svg>\'" alt="Lidl">'},
   aldi:{name:'Aldi',color:'#16a34a',bg:'#f0fdf4',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Aldi_S%C3%BCd_2017_logo.svg/250px-Aldi_S%C3%BCd_2017_logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#1e40af&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;26&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot; font-family=&quot;Arial&quot;>ALDI</text></svg>\'" alt="Aldi">'},
   mercadona:{name:'Mercadona',color:'#059669',bg:'#ecfdf5',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Mercadona.svg/250px-Mercadona.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#047857&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;20&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot; font-family=&quot;Arial&quot;>MERC</text></svg>\'" alt="Mercadona">'},
+  eleclerc:{name:'E.Leclerc',color:'#dc2626',bg:'#fef2f2',logo:'<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/E.Leclerc_logo.svg/250px-E.Leclerc_logo.svg.png" style="width:100%;height:100%;object-fit:contain;padding:2px" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 100 100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;100&quot; height=&quot;100&quot; rx=&quot;12&quot; fill=&quot;#dc2626&quot;/><text x=&quot;50&quot; y=&quot;62&quot; text-anchor=&quot;middle&quot; font-size=&quot;22&quot; font-weight=&quot;900&quot; fill=&quot;#fff&quot; font-family=&quot;Arial&quot;>LECLERC</text></svg>\'" alt="E.Leclerc">'},
 };
 function storeName(k){return (STORE_META[k]&&STORE_META[k].name)||k;}
 function storeLogoSvg(k){return (STORE_META[k]&&STORE_META[k].logo)||'<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" rx="12" fill="#94a3b8"/></svg>';}
@@ -1765,6 +2030,26 @@ function productEan(p){
  function searchByBarcode(digits){
   const d = (digits||'').replace(/\D/g,'');
   if(d.length < 4) return [];
+  if(SEARCH_IDX){
+    const eanList = SEARCH_IDX.eanList;
+    const L = CATALOG.length;
+    const exact = SEARCH_IDX.eanMap[d];
+    if(exact !== undefined){
+      if(d.length === 13) return [CATALOG[exact]];
+      const out = [CATALOG[exact]];
+      const seen = {}; seen[exact]=1;
+      for(let i=0;i<L && out.length<8;i++){
+        if(seen[i]) continue;
+        if(eanList[i].indexOf(d) !== -1){ seen[i]=1; out.push(CATALOG[i]); }
+      }
+      return out;
+    }
+    const out = [];
+    for(let i=0;i<L && out.length<8;i++){
+      if(eanList[i].indexOf(d) !== -1) out.push(CATALOG[i]);
+    }
+    return out;
+  }
   return CATALOG.filter(p => productEan(p).indexOf(d) !== -1).slice(0,8);
 }
 
@@ -1828,7 +2113,7 @@ function priceHistory(productName, store, currentPrice){
   var STORE_BRAND = {
     'Continente':'continente','Pingo Doce':'pingo_doce','Pilos':'lidl','Lidl':'lidl',
     'Aldi':'aldi','Auchan':'auchan','Intermarché':'intermarche','Mercadona':'mercadona',
-    'Hacendado':'mercadona'
+    'Hacendado':'mercadona','E.Leclerc':'eleclerc'
   };
   function pickStores(brand, seed){
     var sb = STORE_BRAND[brand];
@@ -1890,8 +2175,8 @@ function priceHistory(productName, store, currentPrice){
       sizes:[['500g',1.15],['250g',0.65]]},
 
     // ── CAFÉ ──
-    {cat:'café',emoji:'☕',name:'Café {brand} 250g',brands:['Delta','Delta Platina','Nescafé Classic','Nescafé Gold','Segafredo','Buondi','Sical','Auchan','Continente','Pingo Doce','Pilos','Hacendado'],
-      sizes:[['250g',4.29],['500g',7.99],['1kg',13.99]]},
+    {cat:'café',emoji:'☕',name:'Café {brand}',brands:['Delta','Delta Platina','Nescafé Classic','Nescafé Gold','Segafredo','Buondi','Sical','Auchan','Continente','Pingo Doce','Pilos','Hacendado'],
+      sizes:[['250g',4.29],['500g',7.99],['1kg',13.99]],flavors:['Torrado','Intenso','Suave','Descafeinado']},
     {cat:'café',emoji:'☕',name:'Cápsulas {brand}',brands:['Delta Q Intenso','Delta Q Ristretto','Nescafé Dolce Gusto Intenso','Nespresso Original','Auchan','Continente','Pingo Doce','Lidl'],
       sizes:[['10 cápsulas',4.49],['16 cápsulas',6.49],['30 cápsulas',9.99]]},
 
@@ -1938,7 +2223,7 @@ function priceHistory(productName, store, currentPrice){
       sizes:[['6 unid.',1.89],['10 unid.',2.99]]},
 
     // ── PADARIA ──
-    {cat:'padaria',emoji:'🥖',name:'Pão {brand} 500g',brands:['Saloio','Cerealis','Continente','Pingo Doce','Lidl','Aldi'],
+    {cat:'padaria',emoji:'🥖',name:'Pão {brand}',brands:['Saloio','Cerealis','Continente','Pingo Doce','Lidl','Aldi'],
       sizes:[['500g',1.19],['750g',1.69]]},
     {cat:'padaria',emoji:'🥖',name:'Baguete {brand}',brands:['Saloio','Cerealis','Continente','Pingo Doce','Lidl'],
       sizes:[['250g',0.59],['2 unid.',0.89]]},
@@ -2001,9 +2286,9 @@ function priceHistory(productName, store, currentPrice){
     {cat:'bebidas',emoji:'🥤',name:'Néctar de Pêssego {brand}',brands:['Compal','Santal','Continente','Pingo Doce'],
       sizes:[['1L',1.69]]},
     {cat:'bebidas',emoji:'🥤',name:'Cerveja {brand}',brands:['Super Bock','Sagres','Coral'],
-      sizes:[['330ml',0.69],['6x330ml',3.99],['1L',1.59]]},
+      sizes:[['330ml',0.69],['6x330ml',3.99],['1L',1.59]],flavors:['Lager','Sem Álcool','Pilsen','Trigo']},
     {cat:'bebidas',emoji:'🥤',name:'Vinho Tinto {brand}',brands:['Alentejo','Dão','Continente','Pingo Doce'],
-      sizes:[['75cl',3.49],['1L',4.99]]},
+      sizes:[['75cl',3.49],['1L',4.99]],flavors:['Regional','Reserva','Alentejano','Douro']},
     {cat:'bebidas',emoji:'🥤',name:'Vinho Verde {brand}',brands:['Casal Garcia','Gazela','Continente','Pingo Doce'],
       sizes:[['75cl',3.29]]},
     {cat:'bebidas',emoji:'🥤',name:'Chá Gelado {brand}',brands:['Lipton','Nestea','Continente','Pingo Doce'],
@@ -2064,7 +2349,7 @@ function priceHistory(productName, store, currentPrice){
       sizes:[['100g',0.99]]},
 
     // ── FRUTA ──
-    {cat:'fruta',emoji:'🍎',name:'Banana {brand}',brands:['1kg','Continente','Pingo Doce','Lidl'],
+    {cat:'fruta',emoji:'🍎',name:'Banana {brand}',brands:['Continente','Pingo Doce','Lidl'],
       sizes:[['1kg',1.19]]},
     {cat:'fruta',emoji:'🍎',name:'Maçã {brand}',brands:['Golden','Gala','Continente','Pingo Doce','Lidl'],
       sizes:[['1kg',1.49]]},
@@ -2258,15 +2543,15 @@ function priceHistory(productName, store, currentPrice){
       sizes:[['400g',5.99]]},
     {cat:'pronta',emoji:'🍽️',name:'Bacalhau Espiritual {brand}',brands:['Iglo','Continente','Pingo Doce'],
       sizes:[['450g',6.49]]},
-{cat:'leite',emoji:'🥛',name:'Leite UHT Meio Gordo {brand} 3x1L',brands:['Mimosa','Milhafre','Agros','Continente','Pingo Doce','Pilos','Lidl','Aldi'],
+ {cat:'leite',emoji:'🥛',name:'Leite UHT Meio Gordo {brand}',brands:['Mimosa','Milhafre','Agros','Continente','Pingo Doce','Pilos','Lidl','Aldi'],
       sizes:[['3x1L',2.79]]},
-    {cat:'arroz',emoji:'🍚',name:'Arroz {brand} Agulha 5kg',brands:['Continente','Pingo Doce','Lidl','Aldi'],
+    {cat:'arroz',emoji:'🍚',name:'Arroz {brand} Agulha',brands:['Continente','Pingo Doce','Lidl','Aldi'],
       sizes:[['5kg',6.49]]},
     {cat:'massa',emoji:'🍝',name:'Massa {brand} Lacinhos',brands:['Milaneza','Continente','Pingo Doce','Lidl'],
       sizes:[['500g',1.09]]},
     {cat:'massa',emoji:'🍝',name:'Massa {brand} Esparguete Integral',brands:['Milaneza','Continente','Pingo Doce','Lidl'],
       sizes:[['500g',1.29]]},
-    {cat:'café',emoji:'☕',name:'Café {brand} Intenso 250g',brands:['Delta','Sical','Buondi','Continente','Pingo Doce'],
+    {cat:'café',emoji:'☕',name:'Café {brand} Intenso',brands:['Delta','Sical','Buondi','Continente','Pingo Doce'],
       sizes:[['250g',4.49]]},
     {cat:'queijo',emoji:'🧀',name:'Queijo da Ilha {brand}',brands:['Terra Nostra','Mimoso','Continente','Pingo Doce'],
       sizes:[['200g',3.29]]},
@@ -2496,7 +2781,7 @@ function priceHistory(productName, store, currentPrice){
       sizes:[['1L',1.99],['500ml',1.29]]},
     {cat:'manteiga',emoji:'🧈',name:'Manteiga Light {brand}',brands:['Milhafre','Auchan','Continente','Pingo Doce','Pilos'],
       sizes:[['250g',2.59]]},
-    {cat:'azeite',emoji:'🫒',name:'Azeite Virgem Extra {brand} 250ml',brands:['Gallo','Oliveira da Serra','Andorinha','Continente','Pingo Doce','Lidl','Aldi'],
+    {cat:'azeite',emoji:'🫒',name:'Azeite Virgem Extra {brand}',brands:['Gallo','Oliveira da Serra','Andorinha','Continente','Pingo Doce','Lidl','Aldi'],
       sizes:[['250ml',2.99]]},
     {cat:'arroz',emoji:'🍚',name:'Arroz {brand} Integral',brands:['Cigala','Auchan','Continente','Pingo Doce','Pilos','Aldi','Hacendado'],
       sizes:[['1kg',1.89],['500g',0.99]]},
@@ -2506,7 +2791,7 @@ function priceHistory(productName, store, currentPrice){
       sizes:[['500g',0.99]]},
     {cat:'café',emoji:'☕',name:'Café Solúvel {brand}',brands:['Nescafé','Sical','Continente','Pingo Doce'],
       sizes:[['100g',3.99],['200g',6.99]]},
-    {cat:'café',emoji:'☕',name:'Cápsulas {brand} 60 un.',brands:['Delta Q','Nespresso','Continente','Pingo Doce','Lidl'],
+    {cat:'café',emoji:'☕',name:'Cápsulas {brand}',brands:['Delta Q','Nespresso','Continente','Pingo Doce','Lidl'],
       sizes:[['60 cápsulas',19.99]]},
     {cat:'queijo',emoji:'🧀',name:'Queijo Fresco {brand}',brands:['Santa Lúcia','Mimoso','Auchan','Continente','Pingo Doce'],
       sizes:[['250g',1.49],['500g',2.49]]},
@@ -2669,30 +2954,295 @@ function priceHistory(productName, store, currentPrice){
     {cat:'pronta',emoji:'🍽️',name:'Frango Assado com Batata {brand}',brands:['Continente','Pingo Doce'],
       sizes:[['1 un.',5.49]]},
     {cat:'pronta',emoji:'🍽️',name:'Bifanas {brand}',brands:['Continente','Pingo Doce'],
-      sizes:[['400g',2.99]]}
+      sizes:[['400g',2.99]]},
+    {cat:'laticínio',emoji:'🥛',name:'Bebida Vegetal {brand}',brands:["Alpro", "Sojasun", "Provamel", "Continente", "Pingo Doce", "Pilos", "Hacendado"],sizes:[["1L", 1.89], ["500ml", 1.19]],flavors:["Soja", "Amêndoa", "Aveia", "Coco", "Arroz", "Avelã"]},
+    {cat:'iogurte',emoji:'🥛',name:'Iogurte Líquido {brand}',brands:["Mimosa", "Danone", "Nestlé", "Auchan", "Continente", "Pingo Doce", "Pilos", "Aldi"],sizes:[["6x100g", 2.19], ["4x150g", 1.99]],flavors:["Morango","Pêssego","Banana","Ananás","Frutos Vermelhos","Maçã","Coco","Ameixa","Maracujá","Figo","Kiwi","Uva","Mel"]},
+    {cat:'iogurte',emoji:'🥛',name:'Iogurte Sólido {brand}',brands:["Danone", "Mimosa", "Nestlé", "Auchan", "Continente", "Pingo Doce", "Pilos", "Hacendado"],sizes:[["4x125g", 1.69], ["6x125g", 2.49]],flavors:["Morango","Pêssego","Banana","Ananás","Baunilha","Coco","Framboesa","Mirtilo","Maracujá","Figo","Kiwi","Uva","Mel"]},
+    {cat:'iogurte',emoji:'🥛',name:'Sobremesa Láctea {brand}',brands:["Nestlé", "Danone", "Mimosa", "Auchan", "Continente", "Pingo Doce"],sizes:[["4x100g", 1.79], ["6x100g", 2.49]],flavors:["Chocolate", "Baunilha", "Caramelo", "Morango", "Café"]},
+    {cat:'iogurte',emoji:'🥛',name:'Creme de Queijo {brand}',brands:["Milbona", "Auchan", "Continente", "Pingo Doce", "Pilos"],sizes:[["150g", 1.29], ["400g", 2.99]],flavors:["Natural", "Ervas Aromáticas", "Alho e Ervas", "Pimenta"]},
+    {cat:'queijo',emoji:'🧀',name:'Queijo Flamengo {brand}',brands:["Serra da Cangalha", "Limiano", "Terra Nostra", "Auchan", "Continente", "Pingo Doce", "Pilos", "Hacendado"],sizes:[["250g", 2.29], ["150g", 1.49], ["400g", 3.49], ["800g", 6.49]]},
+    {cat:'queijo',emoji:'🧀',name:'Queijo Ralado {brand}',brands:["Terra Nostra", "Auchan", "Continente", "Pingo Doce", "Pilos"],sizes:[["150g", 1.89], ["250g", 2.79]],flavors:["4 Queijos", "Parmesão", "Flamengo", "Mistura"]},
+    {cat:'queijo',emoji:'🧀',name:'Queijo Fatiado {brand}',brands:["Serra da Cangalha", "Limiano", "Auchan", "Continente", "Pingo Doce", "Pilos"],sizes:[["200g", 1.99], ["400g", 3.49], ["500g", 4.29]]},
+    {cat:'manteiga',emoji:'🧈',name:'Manteiga de Amendoim {brand}',brands:["Calvé", "Auchan", "Continente", "Pingo Doce", "Lidl"],sizes:[["340g", 1.99], ["600g", 3.29]],flavors:["Crocante", "Suave"]},
+    {cat:'laticínio',emoji:'🥛',name:'Natas {brand}',brands:["Milhafre", "Auchan", "Continente", "Pingo Doce", "Pilos", "Terra Nostra"],sizes:[["200ml", 0.79], ["500ml", 1.69]]},
+    {cat:'mercearia',emoji:'🍯',name:'Compota {brand}',brands:["Compaçal", "Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["350g", 1.39], ["450g", 1.99], ["900g", 3.49]],flavors:["Morango","Pêssego","Framboesa","Laranja Amarga","Figo","Mirtilo","Damasco","Manga","Ameixa","Morango Silvestre","Maçã e Canela"]},
+    {cat:'mercearia',emoji:'🍯',name:'Mel {brand}',brands:["Compaçal", "Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["350g", 2.99], ["500g", 3.99]],flavors:["Flores","Rosmaninho","Montanha","Laranjeira","Eucalipto","Castanheiro","Queimado","Mel e Própolis"]},
+    {cat:'mercearia',emoji:'🥣',name:'Cereais {brand}',brands:["Kellogg's", "Nestlé", "Auchan", "Continente", "Pingo Doce", "Lidl", "Hacendado"],sizes:[["375g", 2.99], ["500g", 3.49], ["750g", 4.99]],flavors:["Chocolate","Mel e Fruta","Coco","Trigo Integral","Avelã e Cacau","Muesli","Farelo","Aveia e Mel","Frutos Vermelhos","Arroz Crocante","Fibra"]},
+    {cat:'mercearia',emoji:'🍪',name:'Bolachas Recheadas {brand}',brands:["Milka", "Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["200g", 1.19], ["400g", 1.99]],flavors:["Chocolate","Baunilha","Morango","Avelã","Coco","Laranja","Pistácio"]},
+    {cat:'mercearia',emoji:'🍪',name:'Bolachas de Chocolate {brand}',brands:["Milka", "Belga", "Continente", "Pingo Doce", "Lidl"],sizes:[["150g", 1.29], ["300g", 2.19]],flavors:["Chocolate Preto", "Chocolate de Leite", "Cacau", "Chocolate Branco"]},
+    {cat:'mercearia',emoji:'🍪',name:'Wafers {brand}',brands:["Loacker", "Continente", "Pingo Doce", "Lidl"],sizes:[["200g", 1.99], ["400g", 3.49]],flavors:["Chocolate","Baunilha","Avelã","Cacau","Pistácio","Limão","Morango"]},
+    {cat:'mercearia',emoji:'🍫',name:'Chocolate {brand}',brands:["Milka", "Lindt", "Côte d'Or", "Auchan", "Continente", "Pingo Doce", "Lidl"],sizes:[["100g", 1.29], ["150g", 1.79], ["300g", 2.99]],flavors:["de Leite","Preto 70%","Preto 85%","Branco","de Leite com Avelãs","com Caramelo","com Laranja","com Frutos Secos","com Menta","com Arroz Crocante","Rugoso"]},
+    {cat:'mercearia',emoji:'🥫',name:'Farinha {brand}',brands:["Sidul", "Auchan", "Continente", "Pingo Doce", "Lidl", "Aldi"],sizes:[["1kg", 0.79], ["5kg", 2.99]],flavors:["de Trigo T65", "Integral", "de Milho", "de Centeio", "de Aveia"]},
+    {cat:'mercearia',emoji:'🥫',name:'Açúcar {brand}',brands:["Sidul", "Auchan", "Continente", "Pingo Doce", "Lidl", "Aldi"],sizes:[["1kg", 0.99], ["2kg", 1.79]],flavors:["Branco", "Amarelo", "Mascavado", "Baunilhado", "Coco"]},
+    {cat:'mercearia',emoji:'🧂',name:'Sal {brand}',brands:["Sidul", "Auchan", "Continente", "Pingo Doce", "Lidl"],sizes:[["1kg", 0.49], ["750g", 0.79]],flavors:["Fino", "Grosso", "Marinho", "Flor de Sal", "Himalaia"]},
+    {cat:'mercearia',emoji:'🥫',name:'Ketchup {brand}',brands:["Heinz", "Calvé", "Continente", "Pingo Doce"],sizes:[["340g", 1.49], ["570g", 2.29]]},
+    {cat:'mercearia',emoji:'🥫',name:'Maionese {brand}',brands:["Calvé", "Heinz", "Continente", "Pingo Doce", "Lidl"],sizes:[["220g", 1.29], ["450g", 2.19]],flavors:["Tradicional", "Light", "Alho", "Mostarda"]},
+    {cat:'mercearia',emoji:'🥫',name:'Mostarda {brand}',brands:["Calvé", "Heinz", "Continente", "Pingo Doce"],sizes:[["200g", 1.09], ["400g", 1.79]],flavors:["Suave", "Forte", "de Dijon"]},
+    {cat:'mercearia',emoji:'🥫',name:'Molho Barbecue {brand}',brands:["Heinz", "Continente", "Pingo Doce", "Lidl"],sizes:[["250g", 1.49], ["500g", 2.49]]},
+    {cat:'mercearia',emoji:'🥫',name:'Piri-piri {brand}',brands:["Fany", "Continente", "Pingo Doce"],sizes:[["250g", 1.79], ["500g", 2.99]]},
+    {cat:'mercearia',emoji:'🥫',name:'Molho de Soja {brand}',brands:["Kikkoman", "Continente", "Pingo Doce"],sizes:[["200ml", 1.99], ["1L", 4.99]]},
+    {cat:'mercearia',emoji:'🥫',name:'Vinagre {brand}',brands:["Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["500ml", 0.69], ["1L", 1.19]],flavors:["de Vinho", "de Maçã", "Balsâmico", "de Vinho Tinto"]},
+    {cat:'mercearia',emoji:'🥫',name:'Atum em Óleo {brand}',brands:["Bom Petisco", "Continente", "Pingo Doce", "Lidl", "Aldi"],sizes:[["80g", 0.99], ["120g", 1.49], ["2x80g", 1.89]]},
+    {cat:'mercearia',emoji:'🥫',name:'Paté {brand}',brands:["Companhia das Patés", "Continente", "Pingo Doce"],sizes:[["100g", 0.99], ["200g", 1.79]],flavors:["de Sardinha", "de Atum", "de Salsa", "de Ovas"]},
+    {cat:'mercearia',emoji:'🥜',name:'Frutos Secos {brand}',brands:["Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["200g", 1.99], ["500g", 4.49]],flavors:["Amendoins","Amêndoas","Nozes","Castanhas","Avelãs","Pistácios","Mistura","Caju","Pecã","Avelãs Torradas"]},
+    {cat:'mercearia',emoji:'🥫',name:'Tomate Pelado {brand}',brands:["Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["400g", 0.99], ["800g", 1.79]]},
+    {cat:'mercearia',emoji:'🥫',name:'Polpa de Tomate {brand}',brands:["Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["200g", 0.59], ["500g", 1.19]]},
+    {cat:'mercearia',emoji:'🥫',name:'Feijão Preto {brand}',brands:["Bom Petisco", "Continente", "Pingo Doce", "Lidl"],sizes:[["400g", 0.79], ["2x400g", 1.29]]},
+    {cat:'mercearia',emoji:'🥫',name:'Lentilhas {brand}',brands:["Bom Petisco", "Continente", "Pingo Doce", "Lidl"],sizes:[["400g", 0.89], ["2x400g", 1.49]]},
+    {cat:'mercearia',emoji:'🥫',name:'Milho Doce {brand}',brands:["Bom Petisco", "Continente", "Pingo Doce", "Lidl"],sizes:[["200g", 0.79], ["340g", 1.09]]},
+    {cat:'bebidas',emoji:'💧',name:'Água Saborizada {brand}',brands:["Luso", "Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["1L", 0.79], ["50cl", 0.45]],flavors:["Limão","Lima e Hortelã","Morango","Ananás","Tangerina","Coco","Pêssego","Framboesa","Melancia","Ananás e Coco","Maracujá"]},
+    {cat:'bebidas',emoji:'🧋',name:'Chá Gelado {brand}',brands:["Lipton", "Fuzetea", "Compal", "Continente", "Pingo Doce", "Lidl"],sizes:[["1L", 1.49], ["1.5L", 1.79], ["33cl", 0.79]],flavors:["Limão","Pêssego","Manga","Frutos Vermelhos","Tangerina","Cereja","Limão e Menta","Manga e Maracujá"]},
+    {cat:'bebidas',emoji:'🧃',name:'Sumo {brand}',brands:["Compal", "Santal", "Auchan", "Continente", "Pingo Doce", "Lidl"],sizes:[["1L", 1.79], ["200ml", 0.59]],flavors:["Laranja","Maçã","Ananás","Uva","Manga","Multifrutos","Tangerina","Pêssego","Cenoura e Laranja","Ananás e Coco","Melancia","Maracujá","Gengibre e Limão"]},
+    {cat:'bebidas',emoji:'🥤',name:'Refrigerante {brand}',brands:["Coca-Cola", "Pepsi", "Kima", "Continente", "Pingo Doce", "Lidl"],sizes:[["1.5L", 1.69], ["2L", 2.19], ["330ml", 0.89]],flavors:["Cola","Cola Zero","Laranja","Limão","Ananás","Manga","Tónica","Cola Ligeira","Laranja Zero","Lima-Limão","Gengibre","Manga Zero"]},
+    {cat:'bebidas',emoji:'🥤',name:'Água Tónica {brand}',brands:["Schweppes", "Fever-Tree", "Continente", "Pingo Doce"],sizes:[["25cl", 1.29], ["1L", 2.49]],flavors:["Clássica", "Limão", "Laranja"]},
+    {cat:'bebidas',emoji:'🍺',name:'Cerveja {brand}',brands:["Super Bock", "Sagres", "Coral", "Cristal", "Sagres Bohemia", "Trinca"],sizes:[["33cl", 0.89], ["50cl", 1.29], ["6x33cl", 4.99], ["24x33cl", 15.99]]},
+    {cat:'bebidas',emoji:'🍷',name:'Vinho Tinto {brand}',brands:["Quinta do Crasto", "Esporão", "Pêra Manca", "Borba", "Alentejano"],sizes:[["75cl", 4.99], ["1.5L", 8.99], ["37.5cl", 2.99]]},
+    {cat:'bebidas',emoji:'🍷',name:'Vinho Branco {brand}',brands:["Casal Garcia", "Esporão", "Quinta da Aveleda", "Alvarinho"],sizes:[["75cl", 5.49], ["1.5L", 9.49]]},
+    {cat:'bebidas',emoji:'🥂',name:'Espumante {brand}',brands:["Murganheira", "Raposeira", "Aliança", "Quinta do Arnozelo"],sizes:[["75cl", 6.99], ["1.5L", 11.99]],flavors:["Brut", "Meio Seco", "Rosé"]},
+    {cat:'bebidas',emoji:'🥃',name:'Whisky {brand}',brands:["Johnnie Walker", "Ballantine's", "Grant's", "Jack Daniel's"],sizes:[["70cl", 14.99], ["1L", 18.99]]},
+    {cat:'bebidas',emoji:'🍸',name:'Gin {brand}',brands:["Bombay", "Tanqueray", "London Dry", "Hendrick's"],sizes:[["70cl", 15.99]]},
+    {cat:'bebidas',emoji:'🥃',name:'Licor Beirão {brand}',brands:["Licor Beirão"],sizes:[["70cl", 9.99]]},
+    {cat:'bebidas',emoji:'🧋',name:'Café Solúvel {brand}',brands:["Nescafé", "Auchan", "Continente", "Pingo Doce"],sizes:[["100g", 2.49], ["200g", 4.29]]},
+    {cat:'congelados',emoji:'🍦',name:'Gelado {brand}',brands:["Olá", "Lactogal", "Nestlé", "Auchan", "Continente", "Pingo Doce", "Gelatelli"],sizes:[["1L", 3.29], ["500ml", 2.19], ["900ml", 3.49]],flavors:["Baunilha","Chocolate","Morango","Caramelo Salgado","Nata","Stracciatella","Café","Manga","Limão","Coco","Pistácio","Frutos Vermelhos","Banana","Tiramisú","Menta e Chocolate","Cacau","Noz Pecã","Cheesecake","Cookies","Mel"]},
+    {cat:'congelados',emoji:'🍦',name:'Gelado de Pau {brand}',brands:["Olá", "Magnum", "Nestlé", "Continente", "Pingo Doce", "Gelatelli"],sizes:[["4 un.", 2.99], ["6 un.", 3.99]],flavors:["Morango","Chocolate","Baunilha","Limão","Manga","Pêssego","Cola","Framboesa","Melão","Cereja"]},
+    {cat:'congelados',emoji:'🧊',name:'Batata Frita {brand}',brands:["Iglo", "Continente", "Pingo Doce", "Lidl", "Aldi"],sizes:[["750g", 2.49], ["1kg", 2.99], ["2kg", 4.99]],flavors:["Pala-Pala","Média","Tradicional","Com Casca","Mini","Palitos","Curly","Sabor Carne"]},
+    {cat:'congelados',emoji:'🧊',name:'Vegetais Congelados {brand}',brands:["Iglo", "Continente", "Pingo Doce", "Lidl", "Aldi"],sizes:[["600g", 1.39], ["1kg", 1.99]],flavors:["Brócolos","Ervilhas","Feijão Verde","Espinafres","Mistura de Legumes","Cenoura e Ervilhas","Batatinhas","Cogumelos","Espargos","Alcachofras","Ratatouille"]},
+    {cat:'congelados',emoji:'🧊',name:'Nuggets de Frango {brand}',brands:["Iglo", "Continente", "Pingo Doce", "Lidl"],sizes:[["300g", 2.79], ["600g", 4.99]]},
+    {cat:'congelados',emoji:'🧊',name:'Douradinhos {brand}',brands:["Iglo", "Continente", "Pingo Doce", "Lidl"],sizes:[["300g", 2.49], ["600g", 4.29]]},
+    {cat:'congelados',emoji:'🧊',name:'Croquetes {brand}',brands:["Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["400g", 2.29], ["800g", 3.99]],flavors:["de Carne", "de Camarão", "de Bacalhau"]},
+    {cat:'congelados',emoji:'🧊',name:'Rissóis {brand}',brands:["Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["400g", 2.49], ["800g", 4.29]],flavors:["de Camarão", "de Carne", "de Bacalhau"]},
+    {cat:'congelados',emoji:'🧊',name:'Lasanha {brand}',brands:["Iglo", "Continente", "Pingo Doce", "Lidl"],sizes:[["400g", 2.99], ["800g", 4.99]],flavors:["Bolonhesa", "Vegetariana", "Cogumelos"]},
+    {cat:'congelados',emoji:'🧊',name:'Pizza Congelada {brand}',brands:["Dr. Oetker", "Iglo", "Continente", "Pingo Doce", "Lidl"],sizes:[["350g", 2.79], ["420g", 3.29]],flavors:["Margherita","4 Queijos","Presunto e Queijo","Atum","Vegetariana","Pepperoni","Calabresa","Prosciutto","Toscana"]},
+    {cat:'padaria',emoji:'🥖',name:'Pão {brand}',brands:["Saloio", "Cerealis", "Continente", "Pingo Doce", "Lidl", "Aldi"],sizes:[["500g", 1.19], ["750g", 1.69]],flavors:["de Forma","Integral","de Mistura","Sem Côdea","de Cereais","de Centeio","de Espelta","Torrado"]},
+    {cat:'padaria',emoji:'🥐',name:'Croissants {brand}',brands:["Cerealis", "Continente", "Pingo Doce", "Lidl"],sizes:[["4 un.", 1.89], ["8 un.", 3.49]],flavors:["de Manteiga","de Chocolate","de Doce","de Amêndoa"]},
+    {cat:'padaria',emoji:'🧁',name:'Madeleines {brand}',brands:["Cerealis", "Continente", "Pingo Doce"],sizes:[["4 un.", 1.29], ["12 un.", 2.99]],flavors:["Chocolate","Baunilha","Limão","Laranja","Amêndoa"]},
+    {cat:'padaria',emoji:'🍩',name:'Donuts {brand}',brands:["Cerealis", "Continente", "Pingo Doce"],sizes:[["4 un.", 1.99], ["12 un.", 4.99]],flavors:["Cobertos de Chocolate","Açúcar","Canela","Recheados de Doce","Glaceados"]},
+    {cat:'padaria',emoji:'🥖',name:'Baguete {brand}',brands:["Saloio", "Cerealis", "Continente", "Pingo Doce", "Lidl"],sizes:[["250g", 0.59], ["2 un.", 0.89]]},
+    {cat:'padaria',emoji:'🍞',name:'Pão de Leite {brand}',brands:["Saloio", "Continente", "Pingo Doce", "Lidl", "Aldi"],sizes:[["6 un.", 1.39], ["12 un.", 2.49]],flavors:["Normal", "Integral"]},
+    {cat:'charcutaria',emoji:'🥓',name:'Fiambre {brand}',brands:["Primor", "Danovita", "Continente", "Pingo Doce", "Lidl"],sizes:[["150g", 1.79], ["200g", 2.09], ["400g", 3.69]],flavors:["de Peru","de Porco","Magro","Fatiado Fino","Extra Fino","Reduzido em Sal","Sem Glúten"]},
+    {cat:'charcutaria',emoji:'🥓',name:'Peito de Peru {brand}',brands:["Primor", "Danovita", "Continente", "Pingo Doce", "Lidl"],sizes:[["150g", 2.49], ["300g", 4.49]],flavors:["Natural", "Fumado", "Com Pimentos"]},
+    {cat:'charcutaria',emoji:'🥓',name:'Presunto {brand}',brands:["Lidade", "Primor", "Continente", "Pingo Doce"],sizes:[["150g", 3.29], ["400g", 7.49]],flavors:["Serrano","Fatiado","Cozido","Ibérico","Extra"]},
+    {cat:'charcutaria',emoji:'🥓',name:'Chouriço {brand}',brands:["Lidade", "Continente", "Pingo Doce", "Lidl"],sizes:[["200g", 2.99], ["400g", 5.49]],flavors:["de Vinho","Picante","de Carne","de Cebola","Caseiro"]},
+    {cat:'charcutaria',emoji:'🥓',name:'Salame {brand}',brands:["Lidade", "Continente", "Pingo Doce"],sizes:[["150g", 2.79], ["300g", 4.99]],flavors:["Italiano", "Alemão"]},
+    {cat:'charcutaria',emoji:'🥓',name:'Bacon {brand}',brands:["Primor", "Continente", "Pingo Doce", "Lidl"],sizes:[["150g", 1.79], ["300g", 3.29]],flavors:["Fatiado", "em Cubos"]},
+    {cat:'carne',emoji:'🥩',name:'Bife de Vaca {brand}',brands:["Auchan", "Continente", "Pingo Doce"],sizes:[["500g", 5.99], ["1kg", 11.49]]},
+    {cat:'carne',emoji:'🥩',name:'Vazia {brand}',brands:["Auchan", "Continente", "Pingo Doce"],sizes:[["500g", 6.49], ["1kg", 12.49]]},
+    {cat:'carne',emoji:'🥩',name:'Alcatra {brand}',brands:["Auchan", "Continente", "Pingo Doce"],sizes:[["500g", 7.49], ["1kg", 14.49]]},
+    {cat:'carne',emoji:'🥩',name:'Coração de Vaca {brand}',brands:["Auchan", "Continente", "Pingo Doce"],sizes:[["500g", 5.29], ["1kg", 9.99]]},
+    {cat:'carne',emoji:'🥩',name:'Lombo de Porco {brand}',brands:["Auchan", "Continente", "Pingo Doce"],sizes:[["500g", 3.99], ["1kg", 7.49]]},
+    {cat:'carne',emoji:'🥩',name:'Febras {brand}',brands:["Auchan", "Continente", "Pingo Doce"],sizes:[["500g", 2.99], ["1kg", 5.49]]},
+    {cat:'carne',emoji:'🥩',name:'Almôndegas {brand}',brands:["Auchan", "Continente", "Pingo Doce", "Lidl"],sizes:[["400g", 2.99], ["800g", 5.49]],flavors:["de Vaca", "de Porco", "de Frango"]},
+    {cat:'carne',emoji:'🍗',name:'Coxas de Frango {brand}',brands:["Auchan", "Continente", "Pingo Doce", "Lidl"],sizes:[["800g", 2.99], ["1.6kg", 5.49]]},
+    {cat:'carne',emoji:'🍗',name:'Pernas de Frango {brand}',brands:["Auchan", "Continente", "Pingo Doce", "Lidl"],sizes:[["800g", 3.29], ["1.6kg", 5.99]]},
+    {cat:'peixe',emoji:'🐟',name:'Robalo {brand}',brands:["Auchan", "Continente", "Pingo Doce", "Lidl"],sizes:[["500g", 7.49], ["1kg", 14.49]]},
+    {cat:'peixe',emoji:'🐟',name:'Dourada {brand}',brands:["Auchan", "Continente", "Pingo Doce", "Lidl"],sizes:[["500g", 6.49], ["1kg", 12.49]]},
+    {cat:'peixe',emoji:'🐟',name:'Lulas {brand}',brands:["Auchan", "Continente", "Pingo Doce"],sizes:[["500g", 5.99], ["1kg", 11.49]]},
+    {cat:'peixe',emoji:'🐟',name:'Cavala {brand}',brands:["Auchan", "Continente", "Pingo Doce", "Lidl"],sizes:[["500g", 2.79], ["1kg", 4.99]]},
+    {cat:'peixe',emoji:'🐟',name:'Polvo {brand}',brands:["Auchan", "Continente", "Pingo Doce"],sizes:[["500g", 8.99], ["1kg", 17.49]]},
+    {cat:'peixe',emoji:'🐟',name:'Espadarte {brand}',brands:["Auchan", "Continente", "Pingo Doce"],sizes:[["500g", 9.99], ["1kg", 19.49]]},
+    {cat:'peixe',emoji:'🐟',name:'Bacalhau Crescido {brand}',brands:["Auchan", "Continente", "Pingo Doce"],sizes:[["1kg", 16.99], ["2kg", 31.99]]},
+    {cat:'fruta',emoji:'🍌',name:'Banana {brand}',brands:["Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["1kg", 1.49], ["500g", 0.79]]},
+    {cat:'fruta',emoji:'🍎',name:'Maçã {brand}',brands:["Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["1kg", 1.79], ["2kg", 3.29]],flavors:["Gala", "Golden", "Granny Smith", "Starking", "Fuji"]},
+    {cat:'fruta',emoji:'🍊',name:'Laranja {brand}',brands:["Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["1kg", 1.19], ["2kg", 2.19]],flavors:["Valência", "Comum", "Sanguínea"]},
+    {cat:'fruta',emoji:'🍐',name:'Pera {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["1kg", 1.99]],flavors:["Rocha", "Comum"]},
+    {cat:'fruta',emoji:'🍇',name:'Uvas {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["500g", 2.99]],flavors:["Brancas", "Tinta"]},
+    {cat:'fruta',emoji:'🥝',name:'Kiwi {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["500g", 1.89]]},
+    {cat:'fruta',emoji:'🍓',name:'Morangos {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["500g", 2.49]]},
+    {cat:'legumes',emoji:'🥔',name:'Batata {brand}',brands:["Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["2kg", 1.99], ["5kg", 4.49]],flavors:["Nova", "Velha", "Para Fritar", "Doce"]},
+    {cat:'legumes',emoji:'🥕',name:'Cenoura {brand}',brands:["Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["1kg", 0.99], ["2kg", 1.79]]},
+    {cat:'legumes',emoji:'🧅',name:'Cebola {brand}',brands:["Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["1kg", 0.89], ["2kg", 1.59]],flavors:["Amarela", "Roxa", "Branca"]},
+    {cat:'legumes',emoji:'🍅',name:'Tomate {brand}',brands:["Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["1kg", 1.99]],flavors:["Rama", "Chucha", "Grappe", "Cereja"]},
+    {cat:'legumes',emoji:'🥦',name:'Brócolos {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["1 un.", 1.49]]},
+    {cat:'legumes',emoji:'🥬',name:'Couve {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["1 un.", 1.29]],flavors:["Galega", "Portuguesa", "Coração de Vaca"]},
+    {cat:'legumes',emoji:'🍆',name:'Beringela {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["1 un.", 0.99]]},
+    {cat:'legumes',emoji:'🌶️',name:'Pimento {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["500g", 1.79]],flavors:["Vermelho", "Verde", "Amarelo"]},
+    {cat:'legumes',emoji:'🍄',name:'Cogumelos {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["500g", 1.99]],flavors:["Brancos", "Portobello", "Shiitake"]},
+    {cat:'higiene',emoji:'🧴',name:'Champô {brand}',brands:["L'Oréal Elseve", "Head & Shoulders", "Auchan", "Continente", "Pingo Doce", "Lidl"],sizes:[["400ml", 3.49], ["650ml", 4.99]],flavors:["Quotidiano","Frutos Vermelhos","Cabelos Secos","Cabelos Oleosos","Anti-caspa","Volume","Romã","Argan e Óleos","Aloe Vera","Menta","Nutritivo","Dermatológico"]},
+    {cat:'higiene',emoji:'🪥',name:'Pasta de Dentes {brand}',brands:["Colgate", "Oral-B", "Auchan", "Continente", "Pingo Doce"],sizes:[["75ml", 1.49], ["125ml", 1.99]],flavors:["Proteção Total","Branqueadora","Sensível","Menta Fresca","Carvão Ativo","Gengiva","Branqueamento Rápido","Menta e Sal","Hortelã e Limão"]},
+    {cat:'higiene',emoji:'🧴',name:'Gel de Banho {brand}',brands:["Dove", "Nivea", "Sanex", "Auchan", "Continente", "Pingo Doce", "Lidl"],sizes:[["500ml", 1.99], ["750ml", 2.79]],flavors:["Coco","Aveia","Morango","Eucalipto","Floral","Energizante","Frutos Vermelhos","Romã","Aloé Vera","Chocolate","Algodão","Marinho","Pêssego","Lírio"]},
+    {cat:'higiene',emoji:'🧴',name:'Desodorizante {brand}',brands:["Dove", "Nivea", "Rexona", "Auchan", "Continente", "Pingo Doce"],sizes:[["150ml", 2.79], ["250ml", 3.49]],flavors:["Neutro","Desportivo","Floral","Fresco","Frutos Vermelhos","Algodão","Marinho","Limão"]},
+    {cat:'higiene',emoji:'🧼',name:'Sabonete Líquido {brand}',brands:["Dove", "Nivea", "Auchan", "Continente", "Pingo Doce"],sizes:[["300ml", 1.29], ["500ml", 1.99]],flavors:["Neutro","Aloe Vera","Glicerina","Lavanda","Frutos Vermelhos","Coco","Rosa Mosqueta","Algodão"]},
+    {cat:'higiene',emoji:'🧻',name:'Papel Higiénico {brand}',brands:["Renova", "Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["4 un.", 1.99], ["8 un.", 3.49], ["12 un.", 4.99]],flavors:["Clássico","Extra Suave","Reciclado","Perfumado","Dupla Camada","Tripla Camada","Bambu"]},
+    {cat:'higiene',emoji:'🧻',name:'Lenços de Papel {brand}',brands:["Renova", "Continente", "Pingo Doce"],sizes:[["4 un.", 1.49], ["8 un.", 2.69]]},
+    {cat:'limpeza',emoji:'🫧',name:'Detergente Roupa {brand}',brands:["Skip", "Tide", "Ariel", "Auchan", "Continente", "Pingo Doce", "Lidl"],sizes:[["1.5L", 4.99], ["3L", 8.49], ["30 doses", 7.99]],flavors:["Cores","Brancos","Concentrado","Cápsulas","Pó","Mountain","Sensível","Flores do Campo","Perfume de Coco"]},
+    {cat:'limpeza',emoji:'🫧',name:'Amaciador {brand}',brands:["Comfort", "Silan", "Auchan", "Continente", "Pingo Doce"],sizes:[["1L", 2.49], ["2L", 3.99]],flavors:["Lavanda","Sensível","Bebé","Mountain Spring","Coco","Flores","Rosas","Limão e Chá Verde"]},
+    {cat:'limpeza',emoji:'🧽',name:'Lava-loiça {brand}',brands:["Fairy", "Auchan", "Continente", "Pingo Doce", "Lidl"],sizes:[["500ml", 1.09], ["1L", 1.89]],flavors:["Limão","Maçã","Neutro","Aloe Vera","Cítrico","Uva"]},
+    {cat:'limpeza',emoji:'🫧',name:'Limpa Tudo {brand}',brands:["Ajax", "Cif", "Auchan", "Continente", "Pingo Doce"],sizes:[["1L", 1.29], ["2L", 2.29]],flavors:["Cítrico","Floral","Eucalipto","Limão","Coco","Lavanda"]},
+    {cat:'limpeza',emoji:'🫧',name:'Desinfetante {brand}',brands:["Lysol", "Continente", "Pingo Doce"],sizes:[["1L", 1.99], ["2L", 3.49]],flavors:["Pinho","Floral","Neutro","Eucalipto","Cítrico","Lavanda"]},
+    {cat:'limpeza',emoji:'🫧',name:'Sacos de Lixo {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["30 un.", 2.29], ["50 un.", 3.49]],flavors:["30L", "50L", "100L", "Orgânicos"]},
+    {cat:'bebés',emoji:'🍼',name:'Papas Infantis {brand}',brands:["Cerelac", "Nestlé", "Continente", "Pingo Doce", "Lidl"],sizes:[["200g", 2.49], ["400g", 4.49]],flavors:["Cereais","Cereais com Fruta","Multi-cereais","Legumes","Cereais com Aveia","Cereais com Mel","Boa Noite"]},
+    {cat:'bebés',emoji:'🍼',name:'Fraldas {brand}',brands:["Pampers", "Huggies", "Continente", "Pingo Doce", "Lidl"],sizes:[["30 un.", 8.99], ["40 un.", 10.99], ["60 un.", 14.99]],flavors:["T1", "T2", "T3", "T4", "T4+", "T5"]},
+    {cat:'bebés',emoji:'🍼',name:'Toalhitas Bebé {brand}',brands:["Pampers", "Continente", "Pingo Doce", "Lidl"],sizes:[["80 un.", 1.99], ["240 un.", 4.49]],flavors:["Sensíveis","Aloe Vera","Sem Fragrância","Sensível Sem Álcool","Camomila"]},
+    {cat:'animais',emoji:'🐶',name:'Ração de Cão {brand}',brands:["Pedigree", "Purina", "Royal Canin", "Continente", "Pingo Doce", "Lidl"],sizes:[["2kg", 5.99], ["10kg", 19.99], ["15kg", 26.99]],flavors:["Adulto","Cachorro","Raça Pequena","Raça Grande","Sénior","Light","Adulto Mini","Adulto Médio","Active","Sensível"]},
+    {cat:'animais',emoji:'🐱',name:'Ração de Gato {brand}',brands:["Whiskas", "Purina", "Royal Canin", "Continente", "Pingo Doce", "Lidl"],sizes:[["1.5kg", 5.49], ["4kg", 11.99]],flavors:["Adulto","Gatinho","Esterilizado","Sénior","Adulto Sensível","Indoor","Pelo e Pele"]},
+    {cat:'animais',emoji:'🐶',name:'Comida Húmida Cão {brand}',brands:["Pedigree", "Continente", "Pingo Doce"],sizes:[["400g", 0.99]],flavors:["Vaca", "Frango", "Cordeiro"]},
+    {cat:'animais',emoji:'🐱',name:'Comida Húmida Gato {brand}',brands:["Whiskas", "Friskies", "Continente", "Pingo Doce"],sizes:[["100g", 0.79]],flavors:["Salmão", "Frango", "Atum", "Vitela"]},
+    {cat:'pronta',emoji:'🍲',name:'Sopa {brand}',brands:["Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["500ml", 1.29], ["1L", 2.29]],flavors:["Legumes","Feijão","Creme de Legumes","Peixe","Galinha","Cenoura e Alho-Francês","Tomate","Abóbora","Legumes com Massa","Caldo Verde"]},
+    {cat:'pronta',emoji:'🍗',name:'Frango Assado {brand}',brands:["Continente", "Pingo Doce", "Auchan"],sizes:[["1 un.", 4.99], ["1/2 un.", 2.99]],flavors:["Inteiro", "Churrasco"]},
+    {cat:'pronta',emoji:'🥗',name:'Salada Pronta {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["300g", 2.49], ["600g", 4.49]],flavors:["Grega","César","de Atum","de Massa","de Frango","de Cogumelos","Niçoise"]},
   ];
 
+(function(){
+var FLAVOR_POOLS = {
+  higiene:['Frutas Tropicais','Coco e Baunilha','Água de Rosas','Limão e Eucalipto','Manga e Maracujá','Granado','Sensível','Creme de Leite e Aveia'],
+  limpeza:['Maçã Verde','Marinho','Flores Brancas','Chá Verde e Lima','Perfume de Algodão','Amêndoa','Sensível'],
+  iogurte:['Cereja','Laranja','Manga e Maracujá','Tropical','Frutos do Bosque','Tangerina','Ginja','Ameixa Amarela'],
+  laticínio:['Cereja','Laranja','Tropical','Frutos do Bosque','Baunilha de Madagáscar','Caramelo','Nata','Chocolate Branco'],
+  congelados:['Snickers','Nutella','Banana Split','Red Velvet','Amarena','Limão e Merengue','Chocolate e Avelã','Frutas do Bosque'],
+  bebidas:['Grapefruit','Limão e Menta','Frutos Tropicais','Cereja','Tangerina','Gengibre','Cola Cereja','Manga e Maracujá'],
+  mercearia:['Frutos do Bosque','Laranja e Canela','Maracujá','Ameixa Amarela','Figo e Noz','Pera e Gengibre','Mirtilo e Açaí','Coco e Chocolate'],
+  queijo:['Aromático','Com Alho e Ervas','Com Pimenta Preta','Defumado','Extra Picante','Com Ervas Aromáticas','Com Nozes'],
+  charcutaria:['Extra Magro','Com Pimenta Preta','Defumado','Com Ervas','Fatiado Extra Fino','Sem Lactose'],
+  bebés:['Cereais com Maçã e Canela','Multi-cereais com Fruta','Cereais e Mel','Frutas Tropicais','Cereais com Pera','Cereais com Banana'],
+  animais:['Frango e Arroz','Salmão','Cordeiro','Vitela','Peru','Pato','Mar e Terra','Lasanha'],
+  padaria:['de Manteiga e Canela','de Cacau','de Morango','de Baunilha','de Noz','de Aveia'],
+  snacks:['Páprica','Vinagre e Sal','Sour Cream','Barbecue','Chili','Picanha','Wasabi'],
+  pronta:['Sopa de Legumes Light','Minestrone','Creme de Cogumelos','Sopa de Alho-Francês','Creme de Legumes com Croutons'],
+  azeite:['Picante','Suave','Com Alho','Com Limão'],
+  massa:['Integral','Com Ovos','Sêmola de Trigo Duro','Sem Glúten'],
+  arroz:['Carolino','Agulha','Basmati','Jasmim','Vaporizado','Integral'],
+};
+function expandFAMILIES(FAMILIES){
+  var STORE_BRANDS = ['Continente','Pingo Doce','Lidl','Auchan','Aldi','Hacendado','Intermarché','E.Leclerc'];
+  var VOL=[100,125,150,200,250,300,330,400,500,600,650,750,900,1000,1250,1500,1750,2000,2250,2500,3000,4000,5000,10000];
+  var WGT=[40,50,60,70,80,90,100,110,120,125,140,150,160,170,180,190,200,220,250,280,300,320,340,350,360,375,380,400,410,420,425,440,450,500,540,550,565,570,600,625,700,750,800,850,900,950,1000,1100,1200,1250,1400,1500,1600,1750,1800,2000,2250,2500,3000,3500,4000,4500,5000,6000,7500,10000,12000,15000];
+  var CNT=[1,2,3,4,5,6,8,10,12,15,16,20,24,25,30,32,40,48,50,60,72,80,96,100,120,144];
+  function szInfo(label){
+    var s=String(label).trim();
+    var m=s.match(/^(\d+)x(.+)$/);
+    if(m) return {type:'multipack', count:+m[1], sub:m[2].trim()};
+    m=s.match(/^([\d.]+)\s*(ml|cl|l|L)$/);
+    if(m){ var q=+m[1]; var u=m[2].toLowerCase(); return {type:'volume', val:u==='l'?q*1000:u==='cl'?q*10:q}; }
+    m=s.match(/^([\d.]+)\s*(g|kg)$/);
+    if(m) return {type:'weight', val:+m[1]*(m[2]==='kg'?1000:1)};
+    m=s.match(/^([\d.]+)\s*(un\.|unid\.|unidades|doses|cápsulas|sacos|rolos|folhas|saquetas|par|pares|bolas|garras|pacotes|saqueta)$/);
+    if(m) return {type:'count', val:+m[1]};
+    m=s.match(/^([\d.]+)\s*(m)$/);
+    if(m) return {type:'length', val:+m[1]};
+    return null;
+  }
+  function round2(x){ return Math.round(x*100)/100; }
+  function labelFor(type,val){
+    if(type==='volume'){
+      if(val>=1000){ var l=val/1000; return (l%1===0? l : l)+'L'; }
+      return val+'ml';
+    }
+    if(type==='weight'){
+      if(val>=1000){ var k=val/1000; return (k%1===0? k : k)+'kg'; }
+      return val+'g';
+    }
+    if(type==='count') return val+' un.';
+    return null;
+  }
+  FAMILIES.forEach(function(fam){
+    STORE_BRANDS.forEach(function(sb){
+      if(fam.brands.indexOf(sb)===-1) fam.brands.push(sb);
+    });
+    var infos=[], counts={volume:0,weight:0,count:0,multipack:0};
+    fam.sizes.forEach(function(sz){ var i=szInfo(sz[0]); if(i){ infos.push(i); counts[i.type]=(counts[i.type]||0)+1; } });
+    var type=null, mx=0;
+    ['volume','weight','count'].forEach(function(t){ if(counts[t]>mx){ mx=counts[t]; type=t; } });
+    if(type){
+      var vals=infos.filter(function(i){return i.type===type;}).map(function(i){return i.val;});
+      var mn=Math.min.apply(null,vals), mxv=Math.max.apply(null,vals);
+      var ladder = type==='volume'?VOL : type==='weight'?WGT : CNT;
+      var lo = type==='count'? Math.max(1, mn*0.5) : mn*0.4;
+      var hi = type==='count'? Math.min(1000, mxv*7) : mxv*3.8;
+      var existing=vals.slice();
+      var chosen=[];
+      ladder.forEach(function(v){
+        if(v < lo || v > hi) return;
+        var near = existing.some(function(e){ return Math.abs(e-v)/Math.max(1,e) < 0.02; });
+        if(!near) chosen.push(v);
+      });
+      var K = fam.sizes.length<2 ? 4 : (fam.sizes.length<3 ? 3 : 2);
+      chosen = chosen.slice(0,K);
+      var bestIdx=0, bestRatio=-1;
+      fam.sizes.forEach(function(sz,idx){ var i=szInfo(sz[0]); if(i && i.type===type && i.val>0){ var r=sz[1]/i.val; if(r>bestRatio){bestRatio=r; bestIdx=idx;} } });
+      var refPrice=fam.sizes[bestIdx][1];
+      chosen.forEach(function(v){
+        var label=labelFor(type,v);
+        if(!label) return;
+        var dupe=fam.sizes.some(function(sz){ return sz[0]===label; });
+        if(dupe) return;
+        var mult=Math.pow((mxv/v),0.32);
+        var price=round2((refPrice/mxv)*v*mult);
+        fam.sizes.push([label, Math.max(0.10,price)]);
+      });
+    }
+    if(counts.multipack && infos.some(function(i){return i.type==='multipack';})){
+      var subSet={};
+      infos.forEach(function(i){ if(i.type==='multipack'){ if(!subSet[i.sub]) subSet[i.sub]=[]; subSet[i.sub].push(i.count); } });
+      Object.keys(subSet).forEach(function(su){
+        var cs=subSet[su].slice();
+        var mn=Math.min.apply(null,cs), mxv=Math.max.apply(null,cs);
+        [4,6,8,10,12,18,20,24,30,36,40,48].forEach(function(c){
+          if(c>=mn*0.5 && c<=mxv*3.5 && cs.indexOf(c)===-1){
+            var label=c+'x'+su;
+            if(!fam.sizes.some(function(sz){return sz[0]===label;})){
+              var ref=fam.sizes.find(function(sz){var i=szInfo(sz[0]); return i&&i.type==='multipack';});
+              var price=ref? round2(ref[1]/Number(ref[0].split('x')[0])*c*Math.pow((mxv/c),0.15)) : 1;
+              fam.sizes.push([label, Math.max(0.10,round2(price))]);
+            }
+          }
+        });
+      });
+    }
+    // 3) sabores adicionais (apenas famílias que já têm sabores)
+    if(fam.flavors && fam.flavors.length && FLAVOR_POOLS[fam.cat]){
+      var pool=FLAVOR_POOLS[fam.cat];
+      var added=0;
+      for(var i=0;i<pool.length && added<2;i++){
+        if(fam.flavors.indexOf(pool[i])===-1){ fam.flavors.push(pool[i]); added++; }
+      }
+    }
+  });
+  return FAMILIES;
+}
+  expandFAMILIES(FAMILIES);
+})();
   var before = CATALOG.length;
   for(var f=0; f<FAMILIES.length; f++){
     var fam = FAMILIES[f];
-    for(var b=0; b<fam.brands.length; b++){
-      var brand = fam.brands[b];
-      for(var s=0; s<fam.sizes.length; s++){
-        var size = fam.sizes[s];
-        var pname = fam.name.replace('{brand}', brand) + ' ' + size[0];
-        if(seen[pname]) continue;
-        seen[pname] = 1;
-        var bSeed = seedFromStr(pname);
-        var factor = 1 + ((bSeed % 11) - 5)/100; // -5%..+5%
-        var price = Math.max(0.10, Math.round(size[1]*factor*100)/100);
-        var stores = {};
-        var sts = pickStores(brand, bSeed);
-        for(var k=0; k<sts.length; k++){
-          var sSeed = seedFromStr(pname+'|'+sts[k]);
-          var sf = 1 + ((sSeed % 7) - 3)/100; // -3%..+3%
-          stores[sts[k]] = Math.max(0.05, Math.round(price*sf*100)/100);
+    var flavors = fam.flavors || ['']; // variantes de sabor (ex.: gelados, iogurtes, sumos)
+    for(var fl=0; fl<flavors.length; fl++){
+      var flavor = flavors[fl];
+      for(var b=0; b<fam.brands.length; b++){
+        var brand = fam.brands[b];
+        for(var s=0; s<fam.sizes.length; s++){
+          var size = fam.sizes[s];
+          var base = fam.name.replace('{brand}', brand) + (flavor?(' '+flavor):'');
+          var pname = base + ' ' + size[0];
+          if(seen[pname]) continue;
+          seen[pname] = 1;
+          var bSeed = seedFromStr(pname);
+          var factor = 1 + ((bSeed % 11) - 5)/100; // -5%..+5%
+          var price = Math.max(0.10, Math.round(size[1]*factor*100)/100);
+          var stores = {};
+          var sts = pickStores(brand, bSeed);
+          for(var k=0; k<sts.length; k++){
+            var sSeed = seedFromStr(pname+'|'+sts[k]);
+            var sf = 1 + ((sSeed % 7) - 3)/100; // -3%..+3%
+            stores[sts[k]] = Math.max(0.05, Math.round(price*sf*100)/100);
+          }
+          // Promoção de folheto: ~30% com desconto de preço num supermercado,
+          // ~8% com oferta tipo "Leve 2 Pague 1" (determinística por produto)
+          var promo = null, promoOld = null, promoPct = null, promoTag = null, promoStore = null;
+          var pSeed = seedFromStr('promo:'+pname);
+          var promoRoll = pSeed % 100;
+          if(promoRoll < 30 && sts.length){
+            promoPct = 10 + (pSeed % 4)*5; // 10%, 15%, 20%, 25%
+            promoStore = sts[(pSeed >> 4) % sts.length];
+            promoOld = price;
+            stores[promoStore] = Math.max(0.05, Math.round(price*(1-promoPct/100)*100)/100);
+            promo = '−'+promoPct+'% em ' + storeName(promoStore);
+          } else if(promoRoll < 38){
+            var TAGS = ['Leve 2 Pague 1','3 por 2','Leve 3 Pague 2','2ª unidade a 50%'];
+            promoTag = TAGS[pSeed % TAGS.length];
+            promo = promoTag;
+          }
+          CATALOG.push({name:pname, price:price, stores:stores, emoji:fam.emoji, cat:fam.cat, promo:promo, promoOld:promoOld, promoPct:promoPct, promoTag:promoTag, promoStore:promoStore});
         }
-        CATALOG.push({name:pname, price:price, stores:stores, emoji:fam.emoji, cat:fam.cat});
       }
     }
   }
@@ -2703,9 +3253,64 @@ function priceHistory(productName, store, currentPrice){
 CATALOG.forEach(p => productEan(p));
 
 // ══════════════════════════════════════════════════════
+// ÍNDICE DE PESQUISA OTIMIZADO (construído 1× — essencial
+// com o catálogo a 50k+ produtos; evita re-varrer tudo e
+// re-calcular EANs a cada pesquisa/autocomplete)
+// ══════════════════════════════════════════════════════
+const _ACCENTS = {'à':'a','á':'a','â':'a','ã':'a','ä':'a','å':'a','ç':'c','è':'e','é':'e','ê':'e','ë':'e','ì':'i','í':'i','î':'i','ï':'i','ñ':'n','ò':'o','ó':'o','ô':'o','õ':'o','ö':'o','ø':'o','ù':'u','ú':'u','û':'u','ü':'u','ý':'y','ÿ':'y'};
+function foldDiacritics(s){
+  return String(s).toLowerCase().replace(/[àáâãäåçèéêëìíîïñòóôõöøùúûüýÿ]/g, function(c){ return _ACCENTS[c]; });
+}
+const SEARCH_IDX = (function(){
+  var L = CATALOG.length;
+  var norm = new Array(L);     // nome em minúsculas sem acentos
+  var words = new Array(L);    // tokens do nome (sem acentos)
+  var cats = new Array(L);     // categoria
+  var eanList = new Array(L);  // EAN pré-calculado
+  var eanMap = Object.create(null); // EAN exato -> índice
+  var tokenMap = Object.create(null); // token -> array de índices
+  var i, j, p, n, ws, ean, tok, arr;
+  for(i=0;i<L;i++){
+    p = CATALOG[i];
+    n = foldDiacritics((p.name||'').toLowerCase());
+    norm[i] = n;
+    ws = n.split(/[^a-z0-9]+/i);
+    for(j=0;j<ws.length;j++) if(!ws[j]) ws.splice(j--,1);
+    words[i] = ws;
+    cats[i] = foldDiacritics((p.cat||'').toLowerCase());
+    ean = productEan(p);
+    eanList[i] = ean;
+    if(eanMap[ean]===undefined) eanMap[ean] = i;
+    for(j=0;j<ws.length;j++){
+      tok = ws[j];
+      if(tok.length < 2) continue;
+      arr = tokenMap[tok];
+      if(!arr){ tokenMap[tok] = [i]; }
+      else if(arr[arr.length-1] !== i) arr.push(i);
+    }
+  }
+  // lista ordenada de tokens únicos para pesquisa por prefixo (binary search)
+  var tokens = Object.keys(tokenMap).sort();
+  return {norm:norm, words:words, cats:cats, eanList:eanList, eanMap:eanMap, tokenMap:tokenMap, tokens:tokens};
+})();
+function tokenPrefixRange(prefix){
+  var tokens = SEARCH_IDX.tokens, lo = 0, hi = tokens.length;
+  while(lo < hi){ var mid = (lo+hi)>>1; if(tokens[mid] < prefix) lo = mid+1; else hi = mid; }
+  var start = lo; hi = tokens.length;
+  var limit = prefix + '\uffff';
+  while(lo < hi){ var m2 = (lo+hi)>>1; if(tokens[m2] <= limit) lo = m2+1; else hi = m2; }
+  return {start:start, end:lo};
+}
+function prefixTokenMatches(prefix){
+  var r = tokenPrefixRange(prefix), out = [], tokens = SEARCH_IDX.tokens, i;
+  for(i=r.start;i<r.end;i++) out.push(tokens[i]);
+  return out;
+}
+
+// ══════════════════════════════════════════════════════
 // MODAL: produto / histórico de preços
 // ══════════════════════════════════════════════════════
-function openModal(id){ document.getElementById(id).classList.add('show'); }
+function openModal(id){ document.getElementById(id).classList.add('show'); if(id==='settings-modal' && typeof renderTabSettings==='function') renderTabSettings(); }
 function closeModal(id){ document.getElementById(id).classList.remove('show'); }
 function closeModalBg(ev,id){ if(ev.target.id===id) closeModal(id); }
 
@@ -2741,7 +3346,11 @@ function openProductModal(product){
   if(unitEl) unitEl.innerHTML = unitPriceHtml(product, minPrice);
   const cheapStore = entries.find(e=>e[1]===minPrice)[0];
   const saving = entries.length>1 ? maxPrice - minPrice : 0;
-  document.getElementById('pm-bestnote').textContent = `💰 Mais barato em ${storeName(cheapStore)}: ${fmtEur(minPrice)}${saving>0.01?' · Poupa até '+fmtEur(saving):''}`;
+  let bestnote = `💰 Mais barato em ${storeName(cheapStore)}: ${fmtEur(minPrice)}${saving>0.01?' · Poupa até '+fmtEur(saving):''}`;
+  if(product.promoPct && product.promoStore && product.promoOld && product.promoOld>minPrice+0.001){
+    bestnote += ` · <span style="color:var(--red);font-weight:800">🔥 −${product.promoPct}% em ${storeName(product.promoStore)} (antes ${fmtEur(product.promoOld)})</span>`;
+  }
+  document.getElementById('pm-bestnote').innerHTML = bestnote;
 
   const sel = document.getElementById('list-market') ? document.getElementById('list-market').value : null;
 
@@ -2756,13 +3365,14 @@ function openProductModal(product){
   sorted.forEach(([store,price])=>{
     const isBest = price===minPrice;
     const isSelected = store===sel;
+    const isPromoHere = product.promoStore===store;
     const barPct = maxPrice>minPrice ? Math.round(((price-minPrice)/(maxPrice-minPrice))*100) : 0;
     const barW = 100 - barPct; // wider bar = cheaper
     html += `<div class="store-pricerow${isBest?' spr-row-best':''}">
       <div class="spr-left">
         <div class="spr-logo">${storeLogoSvg(store)}</div>
         <div style="flex:1;min-width:0">
-          <div class="spr-name">${storeName(store)}${isSelected?' <span style="color:var(--green);font-weight:700">· tua loja</span>':''}${isBest?' <span style="font-size:.58rem;background:var(--green-l);color:var(--green-d);padding:1px 5px;border-radius:5px;margin-left:3px">✓ Melhor</span>':''}</div>
+          <div class="spr-name">${storeName(store)}${isSelected?' <span style="color:var(--green);font-weight:700">· tua loja</span>':''}${isBest?' <span style="font-size:.58rem;background:var(--green-l);color:var(--green-d);padding:1px 5px;border-radius:5px;margin-left:3px">✓ Melhor</span>':''}${isPromoHere?' <span style="font-size:.58rem;background:var(--red-l);color:#7f1d1d;padding:1px 5px;border-radius:5px;margin-left:3px;font-weight:800">🔥 Promo −'+(product.promoPct||0)+'%</span>':''}</div>
           <div style="margin-top:4px;height:5px;background:var(--border);border-radius:99px;overflow:hidden">
             <div style="height:100%;width:${barW}%;background:${isBest?'var(--green)':'var(--amber)'};border-radius:99px;transition:width .4s"></div>
           </div>
@@ -3016,11 +3626,60 @@ function basePriceOf(p, sel){
   return (sel && p.stores && p.stores[sel]!=null) ? p.stores[sel] : (p.price||0);
 }
 function effPriceOf(p, sel){
-  return basePriceOf(p, sel);
+  if(sel) return basePriceOf(p, sel);
+  if(p.promoStore && p.stores && p.stores[p.promoStore]!=null) return p.stores[p.promoStore];
+  return p.price||0;
 }
 function effStorePrices(p){
   const s = p.stores||{};
   return Object.assign({}, s);
+}
+
+// ── PROMOÇÕES: preço antigo riscado + badges (folheto real) ──
+function promoActiveAt(p, sel){
+  if(!p) return false;
+  if(p.promo || p.promoOld || p.promoPct || p.promoTag) return true;
+  return !!(p.promoStore && p.stores && p.stores[p.promoStore]!=null && (p.promoPct||p.promoTag));
+}
+function promoPriceOf(p, sel){
+  if(!p.promoStore || !p.stores) return null;
+  if(p.promoStore!==sel && sel) return null;
+  if(p.stores[p.promoStore]==null) return null;
+  return p.stores[p.promoStore];
+}
+function promoOldOf(p, sel){
+  if(!p.promoOld) return null;
+  if(p.promoStore && sel && p.promoStore!==sel) return null;
+  if(p.promoStore && !sel && p.stores && p.stores[p.promoStore]!=null && p.promoOld > p.stores[p.promoStore]+0.001) return p.promoOld;
+  if(!p.promoStore && sel) return null;
+  return p.promoOld;
+}
+function oldPriceHtml(p, sel){
+  const old = promoOldOf(p, sel);
+  if(old==null) return '';
+  return `<span class="pprice-old">${fmtEur(old)}</span>`;
+}
+function promoBadgeHtml(p, sel){
+  if(!p) return '';
+  if(p.promoPct && (!p.promoStore || p.promoStore===sel || !sel)){
+    return `<span class="ppct-badge">−${p.promoPct}%</span>`;
+  }
+  return '';
+}
+function promoTagHtml(p, sel){
+  if(!p || !p.promoTag) return '';
+  if(p.promoStore && sel && p.promoStore!==sel) return '';
+  return `<span class="ptag-badge">${p.promoTag}</span>`;
+}
+function promoLineHtml(p, sel){
+  const old = oldPriceHtml(p, sel);
+  const badge = promoBadgeHtml(p, sel);
+  const tag = promoTagHtml(p, sel);
+  if(!old && !badge && !tag) return '';
+  return `<div class="promo-tags">${badge}${tag}${old}</div>`;
+}
+function priceCellHtml(p, price, sel){
+  return `<div class="pprice-wrap"><span class="prod-price">${fmtEur(price)}</span>${promoBadgeHtml(p, sel)}${oldPriceHtml(p, sel)}</div>`;
 }
 
 // ══════════════════════════════════════════════════════
@@ -3042,6 +3701,7 @@ function switchTab(t){
   if(t==='inicio') renderHome();
   if(t==='pesquisa') renderFeatured();
   if(t==='supermercados') renderSupermercados();
+  if(t==='campanhas') renderCampCalendar();
   if(t==='perfil') renderPerfil();
   try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(e){}
 }
@@ -3101,16 +3761,8 @@ function onSearchInput(){
     const q = document.getElementById('search-q').value.trim().toLowerCase();
     const el = document.getElementById('search-suggestions');
     if(q.length<2){ el.style.display='none'; return; }
-    // match catalog names
-    const qAcWords = q.split(/\s+/).filter(w=>w.length>=2);
-    const matches = CATALOG.filter(p=>{
-      const n=p.name.toLowerCase(); const c=(p.cat||'').toLowerCase();
-      return n.includes(q)||(qAcWords.length>1&&qAcWords.some(w=>n.includes(w)||c.includes(w)));
-    }).sort((a,b)=>{
-      const an=a.name.toLowerCase(),bn=b.name.toLowerCase();
-      const as=qAcWords.filter(w=>an.includes(w)).length, bs=qAcWords.filter(w=>bn.includes(w)).length;
-      return bs-as;
-    }).slice(0,5);
+    // match catalog names via índice de tokens (prefixo por palavra) — O(tokens)
+    const matches = suggestFromIndex(q);
     // also match from history
     const histMatches = searchHistory.filter(h=>h.productName.toLowerCase().includes(q)||h.query.toLowerCase().includes(q)).slice(0,3);
     const seen = new Set();
@@ -3128,7 +3780,42 @@ function onSearchInput(){
         <span style="flex:1">${item.name}</span>
         ${item.fromHist?'<span style="font-size:.58rem;color:var(--muted)">pesquisado</span>':'<span style="font-size:.58rem;color:var(--muted)">catálogo</span>'}
       </div>`).join('');
-  }, 180);
+  }, 120);
+}
+
+// Sugestões rápidas a partir do índice de tokens (prefixo por palavra)
+function suggestFromIndex(q){
+  if(!SEARCH_IDX) return [];
+  const qf = foldDiacritics(q);
+  const qw = qf.split(/\s+/).filter(w=>w.length>=2);
+  if(!qw.length) return [];
+  const candScore = Object.create(null);
+  qw.forEach((w, wi)=>{
+    const tks = prefixTokenMatches(w);
+    const boost = wi===0 ? 3 : 1;
+    tks.forEach(tk=>{
+      const arr = SEARCH_IDX.tokenMap[tk];
+      if(!arr) return;
+      for(let k=0;k<arr.length;k++){
+        const idx = arr[k];
+        candScore[idx] = (candScore[idx]||0) + boost;
+      }
+    });
+  });
+  const res = [];
+  for(const ks in candScore){
+    const idx = +ks;
+    const n = SEARCH_IDX.norm[idx];
+    let score = candScore[idx];
+    if(n.startsWith(qf)) score += 30;
+    if(SEARCH_IDX.words[idx].indexOf(qf) !== -1) score += 20;
+    res.push(idx);
+    candScore[idx] = score;
+  }
+  res.sort((a,b)=>candScore[b]-candScore[a]);
+  const out = [];
+  for(let i=0;i<res.length && out.length<5;i++) out.push(CATALOG[res[i]]);
+  return out;
 }
 
 // ── Featured section: mostrar logo quando abres a aba ──
@@ -3172,7 +3859,7 @@ function renderFeatured(){
             ${p.promo?`<div class="prod-promo">ℹ️ ${p.promo}</div>`:''}
           </div>
           <div class="prod-right">
-            <div class="prod-price">${fmtEur(dPrice)}</div>
+            ${priceCellHtml(p, dPrice, storeFilter)}
             <button class="add-btn-sm" onclick='addToList(${JSON.stringify({name:p.name,price:dPrice,stores:p.stores||{},emoji:p.emoji||"🛒",promo:p.promo||null})})' title="Adicionar à lista">+</button>
           </div>
         </div>`;
@@ -3222,7 +3909,7 @@ function renderFeatured(){
           ${isBest?'<span class="chip-best">✓ Melhor preço</span>':''}
         </div>
         <div class="prod-right">
-          <div class="prod-price">${fmtEur(dPrice)}</div>
+          ${priceCellHtml(p, dPrice, storeFilter)}
           <button class="add-btn-sm" onclick='addToList(${JSON.stringify({name:p.name,price:dPrice,stores:p.stores||{},emoji:p.emoji||"🛒",promo:p.promo||null})})' title="Adicionar à lista">+</button>
         </div>
       </div>`;
@@ -3230,27 +3917,48 @@ function renderFeatured(){
     html += '</div>';
   }
 
-  // ── Bloco 4: Explorar categorias (chips) — sempre visível ──
-  const CAT_CHIPS = [
-    {label:'🥛 Leite',q:'leite meio gordo'},{label:'🧈 Manteiga',q:'manteiga milhafre'},
-    {label:'🫒 Azeite',q:'azeite gallo'},{label:'🍚 Arroz',q:'arroz cigala agulha'},
-    {label:'☕ Café',q:'café delta'},{label:'🍝 Massas',q:'massa esparguete milaneza'},
-    {label:'🧀 Queijo',q:'queijo flamengo'},{label:'🥚 Ovos',q:'ovos'},
-    {label:'🍗 Frango',q:'frango inteiro'},{label:'🐟 Peixe',q:'bacalhau noruega'},
-    {label:'🍌 Fruta',q:'banana'},{label:'🍅 Legumes',q:'tomate'},
-    {label:'💧 Água',q:'água luso'},{label:'🥤 Refrigerantes',q:'coca-cola'},
-    {label:'🍺 Cerveja',q:'cerveja super bock'},{label:'🍷 Vinho',q:'vinho verde casal garcia'},
-    {label:'🧻 Papel hig.',q:'papel higiénico renova'},{label:'🫧 Detergente',q:'detergente skip'},
-    {label:'🍦 Gelados',q:'gelado magnum'},{label:'🍪 Snacks',q:'chocolate milka'},
-    {label:'🍼 Bebés',q:'fraldas pampers'},{label:'🐶 Animais',q:'ração pedigree'},
-    {label:'🥓 Charcutaria',q:'fiambre primor'},{label:'🥖 Padaria',q:'pão saloio'},
+  // ── Bloco 4: Explorar por departamento (como numa loja real) ──
+  const DEPARTMENTS = [
+    {name:'🥖 Padaria & Mercearia', chips:[
+      {label:'🥛 Leite',q:'leite meio gordo'},{label:'🧈 Manteiga',q:'manteiga milhafre'},
+      {label:'🫒 Azeite',q:'azeite gallo'},{label:'🍚 Arroz',q:'arroz cigala agulha'},
+      {label:'☕ Café',q:'café delta'},{label:'🍝 Massas',q:'massa esparguete milaneza'},
+      {label:'🧀 Queijo',q:'queijo flamengo'},{label:'🥚 Ovos',q:'ovos'}]},
+    {name:'🍎 Hortofrutícola', chips:[
+      {label:'🍌 Fruta',q:'banana'},{label:'🍅 Legumes',q:'tomate'},
+      {label:'🥬 Saladas',q:'alface'},{label:'🥔 Batata',q:'batata'}]},
+    {name:'🥩 Talho & Peixaria', chips:[
+      {label:'🍗 Frango',q:'frango inteiro'},{label:'🥩 Carne',q:'bife vaca'},
+      {label:'🐟 Peixe',q:'bacalhau noruega'},{label:'🦐 Marisco',q:'gambas'}]},
+    {name:'🧊 Congelados & Pronto-a-comer', chips:[
+      {label:'🍦 Gelados',q:'gelado magnum'},{label:'❄️ Congelados',q:'batata frita'},
+      {label:'🍕 Pizza',q:'pizza'},{label:'🍽️ Pronto a comer',q:'sopa'}]},
+    {name:'🍺 Bebidas', chips:[
+      {label:'💧 Água',q:'água luso'},{label:'🥤 Refrigerantes',q:'coca-cola'},
+      {label:'🍺 Cerveja',q:'cerveja super bock'},{label:'🍷 Vinho',q:'vinho verde casal garcia'}]},
+    {name:'🧴 Higiene & Limpeza', chips:[
+      {label:'🧻 Papel hig.',q:'papel higiénico renova'},{label:'🫧 Detergente',q:'detergente skip'},
+      {label:'🧼 Sabonete',q:'sabonete dove'},{label:'🧴 Champô',q:'champô elseve'}]},
+    {name:'🍪 Snacks & Charcutaria', chips:[
+      {label:'🍪 Snacks',q:'chocolate milka'},{label:'🥓 Charcutaria',q:'fiambre primor'},
+      {label:'🥖 Padaria',q:'pão saloio'},{label:'🍯 Mercearia doce',q:'compota'}]},
+    {name:'🍼 Bebé & Pets', chips:[
+      {label:'🍼 Bebés',q:'fraldas pampers'},{label:'🐶 Animais',q:'ração pedigree'}]},
   ];
-  window.__catChips = CAT_CHIPS;
+  window.__catChips = DEPARTMENTS.reduce((a,d)=>a.concat(d.chips),[]);
+  let chipIdx = 0;
   html += `<div class="card" style="padding:11px 13px">
-    <div class="card-title" style="margin-bottom:7px">Explorar por categoria</div>
-    <div class="quick-grid">
-      ${CAT_CHIPS.map((c,i)=>`<button class="qchip" onclick="doSearchQ(window.__catChips[${i}].q)">${c.label}</button>`).join('')}
-    </div>
+    <div class="card-title" style="margin-bottom:4px">Explorar por departamento</div>
+    <div style="font-size:.6rem;color:var(--muted);margin-bottom:4px">As secções de uma loja real</div>
+    `+DEPARTMENTS.map(d=>
+      `<div class="dept-head">${d.name}</div>
+       <div class="quick-grid">
+         ${d.chips.map(c=>{
+           const cIdx = chipIdx++;
+           return `<button class="qchip" onclick="doSearchQ(window.__catChips[${cIdx}].q)">${c.label}</button>`;
+         }).join('')}
+       </div>`
+    ).join('')+`
   </div>`;
 
   sec.innerHTML = html;
@@ -3414,11 +4122,12 @@ function homeStatsHtml(){
       <span class="hs-lbl">Melhores preços Pingo Doce</span>
     </div>
     <div class="hs-card">
-      <span class="hs-ico">🗂️</span>
-      <span class="hs-val">${CATALOG.length}</span>
-      <span class="hs-lbl">Produtos no catálogo</span>
+      <span class="hs-ico">🏪</span>
+      <span class="hs-val">${Object.keys(STORE_META).length}</span>
+      <span class="hs-lbl">Supermercados comparados</span>
     </div>
-  </div>`;
+  </div>
+  <div style="font-size:.6rem;color:var(--muted);margin-top:6px;padding:0 2px;line-height:1.5">O catálogo mostra <b>exatamente os artigos que encontras em cada supermercado</b> — consulta o catálogo completo de cada loja na aba <b>Lojas</b>.</div>`;
 }
 
 // ── Melhores preços do dia (carrossel) ──
@@ -3447,10 +4156,13 @@ function bestDealsRowHtml(){
     <div class="hscroll">`+deals.map((d,i)=>{
       const p=d.p;
       const price = d.store && p.stores ? p.stores[d.store] : p.price;
+      const onPromo = p.promoStore && p.promoStore===d.store && p.promoOld;
+      const oldH = onPromo ? `<span class="pprice-old">${fmtEur(p.promoOld)}</span>` : '';
+      const pctH = onPromo && p.promoPct ? `<span class="ppct-badge">−${p.promoPct}%</span>` : '';
       return `<div class="hcard">
         <div class="hc-img" onclick="openProductModal(window.__homeDeals[${i}].p)">${productPhotoHtml(p,false)}</div>
         <div class="hc-name" onclick="openProductModal(window.__homeDeals[${i}].p)">${p.name}</div>
-        <div class="hc-price"><span class="p">${fmtEur(price)}</span><span class="s">em ${storeName(d.store)}</span></div>
+        <div class="hc-price"><span class="p">${fmtEur(price)}</span><span class="s">em ${storeName(d.store)}</span>${oldH}${pctH}</div>
         <span class="hc-save">🏆 melhor preço</span>
         <div class="hc-row">
           <span class="hc-store">${storeName(d.store)}</span>
@@ -3463,20 +4175,28 @@ function bestDealsRowHtml(){
 
 // ── Em promoção agora ──
 function promoRowHtml(){
-  const prods = CATALOG.filter(p=>p.promo && p.stores && Object.keys(p.stores).length>0).slice(0,10);
+  const prods = CATALOG.filter(p=>promoActiveAt(p) && p.stores && Object.keys(p.stores).length>0)
+    .sort((a,b)=>{
+      const ap = promoPriceOf(a)!=null?promoPriceOf(a):Infinity;
+      const bp = promoPriceOf(b)!=null?promoPriceOf(b):Infinity;
+      return (b.promoOld?b.promoOld-b.promoOld*0.25:0) - (a.promoOld?a.promoOld-a.promoOld*0.25:0) || ap-bp;
+    }).slice(0,10);
   if(!prods.length) return '';
   window.__homePromo = prods;
   return `<div class="card">
     <div class="sec-head"><span class="sec-title">🔥 Em promoção agora</span><button class="sec-more" onclick="switchTab('campanhas')">Ver ofertas →</button></div>
     <div class="hscroll">`+prods.map((p,i)=>{
-      const best = Math.min(...Object.values(p.stores));
-      const shortPromo = p.promo.split(' ').slice(0,3).join(' ');
-      const bestStore = Object.keys(p.stores).reduce((a,b)=>p.stores[b]<p.stores[a]?b:a);
+      const best = promoPriceOf(p)!=null ? promoPriceOf(p) : Math.min(...Object.values(p.stores));
+      const bestStore = promoPriceOf(p)!=null ? p.promoStore : Object.keys(p.stores).reduce((a,b)=>p.stores[b]<p.stores[a]?b:a);
+      const oldH = (p.promoOld&&p.promoOld>best+0.001) ? `<span class="pprice-old">${fmtEur(p.promoOld)}</span>` : '';
+      const pctH = (p.promoPct&&(!p.promoStore||p.promoStore===bestStore)) ? `<span class="ppct-badge">−${p.promoPct}%</span>` : '';
+      const tagH = p.promoTag ? `<span class="hc-tag">${p.promoTag}</span>` : '';
       return `<div class="hcard">
         <div class="hc-img" onclick="openProductModal(window.__homePromo[${i}])">${productPhotoHtml(p,false)}</div>
         <div class="hc-name" onclick="openProductModal(window.__homePromo[${i}])">${p.name}</div>
-        <div class="hc-price"><span class="p">${fmtEur(best)}</span><span class="s">normal ${fmtEur(p.price||0)}</span></div>
-        <span class="hc-save">${shortPromo}</span>
+        <div class="hc-price"><span class="p">${fmtEur(best)}</span>${pctH}${oldH}</div>
+        <span class="hc-save">🔥 ${p.promo?p.promo.split(' ').slice(0,4).join(' '):(p.promoTag||'oferta')}</span>
+        ${tagH}
         <div class="hc-row">
           <span class="hc-store">${storeName(bestStore)}</span>
           <button class="hc-btn" onclick='addToList(${JSON.stringify({name:p.name,price:best,stores:p.stores||{},emoji:p.emoji||"🛒",promo:p.promo||null})})'>+</button>
@@ -3510,7 +4230,7 @@ function recentsRowHtml(recent){
       return `<div class="hcard">
         <div class="hc-img" onclick="openProductModal(window.__homeRecent[${i}])">${productPhotoHtml(p,false)}</div>
         <div class="hc-name" onclick="openProductModal(window.__homeRecent[${i}])">${p.name}</div>
-        <div class="hc-price"><span class="p">${fmtEur(price)}</span><span class="s">${storeLabel}</span></div>
+        <div class="hc-price"><span class="p">${fmtEur(price)}</span><span class="s">${storeLabel}</span>${p.promoOld&&p.promoOld>price+0.001?`<span class="pprice-old">${fmtEur(p.promoOld)}</span>`:''}</div>
         <div class="hc-row">
           <span class="hc-store">${storeLabel}</span>
           <button class="hc-btn" onclick='addToList(${JSON.stringify({name:p.name,price:p.price,stores:p.stores||{},emoji:p.emoji||"🛒",promo:p.promo||null})})'>+</button>
@@ -3598,6 +4318,8 @@ function clearSearchHistory(){
 let _barcodeScanTimer = null;
 let _scannerStream = null;
 let _scannerDetector = null;
+let _scannerH5 = null;
+let _bcTimer = null;
 
 function doBarcodeSearch(){
   const inp = document.getElementById('search-barcode');
@@ -3698,26 +4420,67 @@ function shareList(){
   }catch(e){ showNotif('⚠️ Não foi possível partilhar a lista.'); }
 }
 
+function _handleScannedCode(raw){
+  const d = (raw||'').replace(/\D/g,'');
+  if(d.length < 8) return false;
+  const inp = document.getElementById('search-barcode');
+  if(inp) inp.value = d.slice(0,13);
+  closeScanner();
+  doBarcodeSearch();
+  showNotif('🏷️ Código detetado: '+d.slice(0,13));
+  return true;
+}
 function stopScanner(){
   if(_barcodeScanTimer){ clearInterval(_barcodeScanTimer); _barcodeScanTimer=null; }
   if(_scannerStream){ _scannerStream.getTracks().forEach(t=>t.stop()); _scannerStream=null; }
   _scannerDetector=null;
+  if(_scannerH5){ try{ _scannerH5.stop().catch(()=>{}); _scannerH5.clear().catch(()=>{}); }catch(e){} _scannerH5=null; }
 }
 function closeScanner(){
   stopScanner();
   const ov = document.getElementById('scanner-modal');
   if(ov) ov.classList.remove('show');
 }
+function _scannerManualFallback(){
+  const fallback = document.getElementById('scanner-fallback');
+  const area = document.getElementById('scanner-area');
+  const h5el = document.getElementById('scanner-h5');
+  if(area) area.style.display='none';
+  if(h5el){ h5el.style.display='none'; h5el.innerHTML=''; }
+  if(fallback){
+    fallback.style.display='block';
+    fallback.innerHTML = '📵 Não foi possível iniciar a câmara. Introduz o código manualmente.<br><button class="btn-green" onclick="closeScanner();setTimeout(function(){var i=document.getElementById(\'search-barcode\');if(i)i.focus();},50)" style="margin-top:10px">⌨️ Introduzir código manualmente</button>';
+  }
+}
 function startBarcodeScan(){
   const ov = document.getElementById('scanner-modal');
   const fallback = document.getElementById('scanner-fallback');
   const status = document.getElementById('scanner-status');
   const area = document.getElementById('scanner-area');
+  const h5el = document.getElementById('scanner-h5');
   const video = document.getElementById('scanner-video');
   if(fallback) fallback.style.display='none';
   if(area) area.style.display='';
+  if(h5el){ h5el.style.display='none'; h5el.innerHTML=''; }
   if(ov) ov.classList.add('show');
   if(!('BarcodeDetector' in window)){
+    // Fallback: biblioteca html5-qrcode (suporta mais navegadores/dispositivos)
+    const h5 = window.Html5Qrcode;
+    if(h5 && h5el && navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+      try{
+        _scannerH5 = new h5(h5el.id, {fps:10, qrbox:{width:250,height:120}, aspectRatio:1.0});
+        if(status) status.textContent = 'A apontar a câmara para o código de barras...';
+        if(area) area.style.display='none';
+        if(h5el) h5el.style.display='block';
+        _scannerH5.start(
+          {facingMode:'environment'},
+          {formatsToSupport:[h5.Format.EAN_13, h5.Format.EAN_8, h5.Format.UPC_A, h5.Format.UPC_E]},
+          (txt)=>{ _handleScannedCode(txt); },
+          ()=>{}
+        ).catch(()=>{ _scannerManualFallback(); });
+        return;
+      }catch(e){}
+    }
     if(area) area.style.display='none';
     if(fallback){
       fallback.style.display='block';
@@ -3728,8 +4491,7 @@ function startBarcodeScan(){
   try{ _scannerDetector = new BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e']}); }
   catch(e){ _scannerDetector = new BarcodeDetector(); }
   if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
-    if(area) area.style.display='none';
-    if(fallback) fallback.style.display='block';
+    _scannerManualFallback();
     return;
   }
   navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(stream=>{
@@ -3742,24 +4504,24 @@ function startBarcodeScan(){
       try{
         const codes = await _scannerDetector.detect(video);
         if(codes && codes.length){
-          const raw = (codes[0].rawValue||'').replace(/\D/g,'');
-          if(raw.length>=8){
-            const inp = document.getElementById('search-barcode');
-            if(inp) inp.value = raw.slice(0,13);
-            closeScanner();
-            doBarcodeSearch();
-            showNotif('🏷️ Código detetado: '+raw.slice(0,13));
-          }
+          _handleScannedCode(codes[0].rawValue||'');
         }
       }catch(e){}
     }, 350);
-  }).catch(err=>{
-    if(area) area.style.display='none';
-    if(fallback){
-      fallback.style.display='block';
-      fallback.innerHTML = '📵 Sem permissão de câmara. Introduz o código manualmente.<br><button class="btn-green" onclick="closeScanner();setTimeout(function(){var i=document.getElementById(\'search-barcode\');if(i)i.focus();},50)" style="margin-top:10px">⌨️ Introduzir código manualmente</button>';
-    }
-  });
+  }).catch(()=>{ _scannerManualFallback(); });
+}
+
+// Pesquisa de código em tempo real (debounce) enquanto o utilizador digita
+function onBarcodeInput(){
+  clearTimeout(_bcTimer);
+  const v = (document.getElementById('search-barcode')||{}).value || '';
+  const d = v.replace(/\D/g,'');
+  const hint = document.getElementById('barcode-hint');
+  if(d.length < 4){
+    if(hint) hint.style.display='none';
+    return;
+  }
+  _bcTimer = setTimeout(()=>{ doBarcodeSearch(); }, 250);
 }
 
 // ══════════════════════════════════════════════════════
@@ -3777,7 +4539,8 @@ function doSearchQ(q){
 }
 
 async function doSearch(){
-  const q = document.getElementById('search-q').value.trim().toLowerCase();
+  const qRaw = document.getElementById('search-q').value.trim().toLowerCase();
+  const q = foldDiacritics(qRaw); // pesquisa sem acentos (ex.: "champo" → "champô")
   const storeFilter = document.getElementById('search-store-filter') ? document.getElementById('search-store-filter').value : '';
   const catFilter = document.getElementById('search-cat-filter') ? document.getElementById('search-cat-filter').value : '';
   if(!q && !catFilter && !storeFilter) return;
@@ -3798,42 +4561,50 @@ async function doSearch(){
     }
     return false;
   }
-  function scoreProduct(p){
-    const n = p.name.toLowerCase();
-    const c = (p.cat||'').toLowerCase();
-    // hard-gates: categoria e supermercado
-    if(catFilter && c !== catFilter) return 0;
-    if(storeFilter && !(p.stores && p.stores[storeFilter]!=null)) return 0;
-    if(!q) return 50;
+  const hasIdx = !!SEARCH_IDX;
+  const _norm = hasIdx ? SEARCH_IDX.norm : null;
+  const _words = hasIdx ? SEARCH_IDX.words : null;
+  const _cats = hasIdx ? SEARCH_IDX.cats : null;
+  const _eans = hasIdx ? SEARCH_IDX.eanList : null;
+  const N = CATALOG.length;
+  const results = [];
+  for(let i=0;i<N;i++){
+    const p = CATALOG[i];
+    if(catFilter && (_cats ? _cats[i] !== catFilter : (p.cat||'') !== catFilter)) continue;
+    if(storeFilter && !(p.stores && p.stores[storeFilter]!=null)) continue;
+    if(!q){ results.push(p); continue; }
     let score = 0;
     if(isDigits){
-      const ean = productEan(p);
+      const ean = _eans ? _eans[i] : productEan(p);
       if(ean === q) score += 500;
       else if(ean.startsWith(q)) score += 300;
       else if(ean.indexOf(q) !== -1) score += 150;
-      if(n.indexOf(q)!==-1) score += 20;
+      if((_norm ? _norm[i] : p.name.toLowerCase()).indexOf(q)!==-1) score += 20;
     }
-    const nameWords = n.split(/[^a-zà-ÿ0-9]+/i).filter(Boolean);
-    const catTok = c.split(/[^a-zà-ÿ0-9]+/i).filter(Boolean);
+    const nameWords = _words ? _words[i] : p.name.toLowerCase().split(/[^a-zà-ÿ0-9]+/i).filter(Boolean);
+    const catTok = (_cats ? _cats[i] : (p.cat||'').toLowerCase()).split(/[^a-zà-ÿ0-9]+/i).filter(Boolean);
+    const nLow = _norm ? _norm[i] : p.name.toLowerCase();
     let matched = 0;
     qWords.forEach(w=>{
       if(wordMatch(w, nameWords)){
         score += 80; matched++;
       } else if(wordMatch(w, catTok)){
         score += 55; matched++;
-      } else if(n.includes(w)){
+      } else if(nLow.includes(w)){
         score += 20;
       }
     });
     score += matched * 15;
-    if(qWords.length && n.startsWith(qWords[0])) score += 25;
-    return score;
+    if(qWords.length && nLow.startsWith(qWords[0])) score += 25;
+    if(score > 0) results.push({p, score});
   }
-  let local = CATALOG.map(p=>({p, score:scoreProduct(p)}))
-    .filter(({score})=>score>0)
-    .sort((a,b)=>b.score-a.score)
-    .map(({p})=>p);
-  local = local.slice(0, catFilter && !q ? 20 : 10);
+  let local;
+  if(q){
+    results.sort((a,b)=>b.score-a.score);
+    local = results.map(r=>r.p).slice(0, 10);
+  } else {
+    local = results.slice(0, catFilter && !q ? 20 : 10);
+  }
 
   const sourceLabel = [
     storeFilter ? storeName(storeFilter) : '',
@@ -3843,7 +4614,7 @@ async function doSearch(){
 
   if(local.length>0){
     renderResults(el, local, sourceLabel);
-    if(q) recordSearch(q, local);
+    if(q) recordSearch(qRaw || q, local);
     btn.disabled = false;
     return;
   }
@@ -3882,7 +4653,7 @@ async function doSearch(){
     if(storeFilter) products = products.filter(p=>p.stores&&p.stores[storeFilter]!=null);
     if(catFilter) products = products.filter(p=>!p.cat||p.cat===catFilter);
     renderResults(el, products, `Estimativa IA · ${[storeFilter?storeName(storeFilter):'',catFilter||'','confirma na loja'].filter(Boolean).join(' · ')}`);
-    recordSearch(q, products);
+    recordSearch(qRaw || q, products);
   }catch(e){
     el.innerHTML = '<div class="empty-state"><span class="empty-icon">😕</span>Não encontrado. Tenta outro nome ou adiciona manualmente na Lista.</div>';
   }
@@ -3915,7 +4686,7 @@ async function doSearch(){
   const prices = list.map(p=>effPriceOf(p, sel));
   const min = Math.min(...prices), max = Math.max(...prices);
   el.innerHTML = `<div style="font-size:.63rem;color:var(--muted);margin-bottom:6px;padding:0 1px;display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap">`+
-    `<span>Fonte: ${source} · toca na imagem para ver histórico</span>`+
+    `<span>Fonte: ${source} · <b>${list.length}</b> resultado${list.length!==1?'s':''} · toca na imagem para ver histórico</span>`+
     `<select onchange="sortResults(this.value)" style="font-size:.62rem;background:var(--input-bg);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:3px 5px;font-family:inherit">
       <option value="" ${sortMode===''?'selected':''}>Por relevância</option>
       <option value="unit" ${sortMode==='unit'?'selected':''}>Preço por unidade (€/kg · €/L)</option>
@@ -3932,12 +4703,13 @@ async function doSearch(){
         <div class="prod-store" style="font-size:.6rem;color:var(--muted);letter-spacing:1px">EAN ${productEan(p)}</div>
         <div class="prod-store">${formatStores(p.stores, p.name)}</div>
         ${p.promo?`<div class="prod-promo">ℹ️ ${p.promo}</div>`:''}
+        ${promoTagHtml(p, sel)?`<div class="promo-tags" style="justify-content:flex-start">${promoTagHtml(p, sel)}</div>`:''}
         ${sel && p.stores && p.stores[sel]!=null?`<div class="prod-store" style="color:var(--green);font-weight:700">🛒 Preço em ${storeName(sel)} pré-selecionado</div>`:''}
         ${dPrice===min&&prices.length>1?'<span class="chip-best">✓ Mais barato</span>':''}
         ${dPrice===max&&prices.length>1?'<span class="chip-high">▲ Mais caro</span>':''}
       </div>
       <div class="prod-right">
-        <div class="prod-price">${fmtEur(dPrice)}</div>
+        ${priceCellHtml(p, dPrice, sel)}
         <button class="add-btn-sm" onclick='addToList(${JSON.stringify({name:p.name,price:dPrice,stores:p.stores||{},emoji:p.emoji||"🛒",promo:p.promo||null})})' title="Adicionar à lista">+</button>
       </div>
     </div>`;}).join('');
@@ -3952,6 +4724,112 @@ function sortResults(mode){
 function formatStores(stores, name){
   if(!stores) return '';
   return Object.entries(stores).map(([k,v])=>`${storeBadgeHtml(k)} ${fmtEur(v)}`).join(' · ');
+}
+
+// ══════════════════════════════════════════════════════
+// CALENDÁRIO DE CAMPANHAS — datas e fins das campanhas
+// ══════════════════════════════════════════════════════
+const CAMP_MONTHS = {'jan':1,'fev':2,'mar':3,'abr':4,'mai':5,'jun':6,'jul':7,'ago':8,'set':9,'out':10,'nov':11,'dez':12};
+function _p2(n){ return String(n).padStart(2,'0'); }
+function parseCampaignDates(c){
+  const v = c.valid || '';
+  let m = v.match(/(\d{1,2})\s*[-–]\s*(\d{1,2})\s*([a-zç]{3,8})\s*(\d{4})/i);
+  if(m){
+    const mon = CAMP_MONTHS[String(m[3]).slice(0,3).toLowerCase()];
+    if(mon) return {start:m[4]+'-'+_p2(mon)+'-'+_p2(m[1]), end:m[4]+'-'+_p2(mon)+'-'+_p2(m[2])};
+  }
+  m = v.match(/(\d{1,2})\s*([a-zç]{3,8})\s*[-–]\s*(\d{1,2})\s*([a-zç]{3,8})\s*(\d{4})/i);
+  if(m){
+    const mon1 = CAMP_MONTHS[String(m[2]).slice(0,3).toLowerCase()];
+    const mon2 = CAMP_MONTHS[String(m[4]).slice(0,3).toLowerCase()];
+    if(mon1&&mon2) return {start:m[5]+'-'+_p2(mon1)+'-'+_p2(m[1]), end:m[5]+'-'+_p2(mon2)+'-'+_p2(m[3])};
+  }
+  if(/fim de semana/i.test(v)) return {start:'2026-06-27', end:'2026-06-28'};
+  return null;
+}
+function campLabel(store, c){
+  const meta = STORE_META[store]||{};
+  return `<span class="tag" style="background:${meta.bg||'#e2e8f0'};color:#1e293b;font-size:.6rem;margin-right:3px">${meta.name||store}</span><span style="font-size:.68rem;color:var(--text);font-weight:600">${c.name}</span>`;
+}
+function campEndLabel(c){
+  const d = parseCampaignDates(c);
+  if(!d) return c.valid||'';
+  const [y,mo,da] = d.end.split('-').map(Number);
+  return `${da}/${mo}/${y}`;
+}
+function renderCampCalendar(){
+  const root = document.getElementById('camp-calendar');
+  if(!root) return;
+  let view = window.__campView || {y:2026, m:6};
+  const first = new Date(view.y, view.m-1, 1);
+  const startDow = first.getDay(); // 0=dom
+  const daysInMonth = new Date(view.y, view.m, 0).getDate();
+  // eventos por dia
+  const events = {};
+  Object.keys(CAMPAIGNS).forEach(k=>{
+    (CAMPAIGNS[k]||[]).forEach(c=>{
+      if(c.id==='none') return;
+      const d = parseCampaignDates(c);
+      if(!d) return;
+      const mk = (dateStr)=>dateStr;
+      if(!events[mk(d.start)]) events[mk(d.start)] = [];
+      events[mk(d.start)].push({store:k, c, type:'start'});
+      if(!events[mk(d.end)]) events[mk(d.end)] = [];
+      events[mk(d.end)].push({store:k, c, type:'end'});
+    });
+  });
+  const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const key = (y,m,d)=> y+'-'+_p2(m)+'-'+_p2(d);
+  // células
+  let cells = '<div style="font-size:.55rem;color:var(--muted);text-align:center;font-weight:700">D</div>';
+  ['S','T','Q','Q','S','S','D'].forEach(d=> cells += `<div style="font-size:.55rem;color:var(--muted);text-align:center;font-weight:700">${d}</div>`);
+  for(let i=0;i<startDow;i++) cells += '<div></div>';
+  for(let d=1; d<=daysInMonth; d++){
+    const k = key(view.y, view.m, d);
+    const evs = events[k] || [];
+    const isToday = (view.y===2026 && view.m===6 && d>=26 && d<=29);
+    const marks = evs.slice(0,2).map(e=>{
+      const meta = STORE_META[e.store]||{};
+      const col = e.type==='end' ? '#ef4444' : (meta.color||'#16a34a');
+      return `<div style="width:9px;height:9px;border-radius:99px;background:${col};margin:1px auto" title="${e.c.name}"></div>`;
+    }).join('');
+    cells += `<div style="min-height:40px;background:${isToday?'var(--green-l)':'transparent'};border:${isToday?'1px solid var(--green)':'1px solid var(--border)'};border-radius:8px;padding:2px;text-align:center">
+      <div style="font-size:.62rem;font-weight:700;color:${isToday?'var(--green)':'var(--text)'}">${d}${evs.some(e=>e.type==='end')?'<span style="color:#ef4444;font-weight:900"> fim</span>':''}</div>
+      ${marks}
+    </div>`;
+  }
+  const nav = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+    <button class="mini-btn" onclick="campMonth(-1)">◀</button>
+    <div style="font-size:.8rem;font-weight:800;color:var(--text)">${monthNames[view.m-1]} ${view.y}</div>
+    <button class="mini-btn" onclick="campMonth(1)">▶</button>
+  </div>`;
+  // lista de campanhas com fins
+  let list = '';
+  Object.keys(CAMPAIGNS).forEach(k=>{
+    const camps = (CAMPAIGNS[k]||[]).filter(c=>c.id!=='none');
+    camps.forEach(c=>{
+      const d = parseCampaignDates(c);
+      const end = d ? 'Termina a '+campEndLabel(c) : (c.valid ? c.valid : 'Sem data definida');
+      list += `<div style="display:flex;align-items:flex-start;gap:8px;padding:7px 2px;border-bottom:1px solid var(--border);font-size:.68rem;line-height:1.4">
+        <span style="flex-shrink:0;margin-top:2px">${storeLogoSvg(k).replace('width:100%','width:18px').replace('height:100%','height:18px')}</span>
+        <div style="flex:1;min-width:0"><div style="color:var(--text);font-weight:700">${c.name}</div>
+        <div style="color:${d?'#ef4444':'var(--muted)'};font-weight:${d?'700':'400'}">${d?'🏁 '+end:c.valid}</div></div>
+      </div>`;
+    });
+  });
+  root.innerHTML = nav +
+    `<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:6px">${cells}</div>` +
+    `<div style="font-size:.58rem;color:var(--muted);margin-bottom:9px">● início de campanha · ● fim de campanha · fundo verde = campanhas desta semana (26–29 Jun)</div>` +
+    `<div class="card-title" style="margin-top:4px">🏁 Fins de campanha</div>` + list;
+}
+function campMonth(d){
+  let v = window.__campView || {y:2026, m:6};
+  let m = v.m + d;
+  let y = v.y;
+  if(m<1){ m=12; y--; }
+  if(m>12){ m=1; y++; }
+  window.__campView = {y, m};
+  renderCampCalendar();
 }
 
 // ══════════════════════════════════════════════════════
@@ -4246,6 +5124,27 @@ function saveItemEdit(){
 // ══════════════════════════════════════════════════════
 // COMPARAR SUPERMERCADOS — total da lista em cada loja
 // ══════════════════════════════════════════════════════
+function rewardValue(reward){
+  const m = String(reward||'').match(/(\d+(?:[.,]\d+)?)\s*€/);
+  return m ? parseFloat(m[1].replace(',','.')) : 0;
+}
+// Poupança da melhor campanha de uma loja para um total de compra (€)
+function campaignSavingsFor(k, total){
+  const camps = (CAMPAIGNS[k]||[]).filter(c=>c.id!=='none');
+  let best = {id:null, save:0, name:'', valid:'', type:'none', c:null};
+  camps.forEach(c=>{
+    let save = 0, type = 'none';
+    if(c.pctOnly && c.pct){ save = total*c.pct; type='pct'; }
+    else if(c.target && total>=c.target){
+      save = rewardValue(c.reward);
+      if(c.multi && total>=c.t2) save = rewardValue(c.r2||c.reward);
+      type = 'target';
+    }
+    if(save>best.save) best = {id:c.id, save, name:c.name, valid:c.valid||'', type, c};
+  });
+  best.save = Math.round(best.save*100)/100;
+  return best;
+}
 function storeTotals(){
   const out = {};
   Object.keys(STORE_META).forEach(k=>{
@@ -4255,7 +5154,9 @@ function storeTotals(){
       if(i.stores && i.stores[k]!=null){ t += effPriceOf(i,k)*q; withStores++; }
       else t += (i.price||0)*q;
     });
-    out[k] = {total:t, withStores};
+    t = Math.round(t*100)/100;
+    const camp = campaignSavingsFor(k, t);
+    out[k] = {total:t, withStores, campSave:camp.save, campId:camp.id, campName:camp.name, campValid:camp.valid, effTotal:Math.max(0, Math.round((t-camp.save)*100)/100)};
   });
   return out;
 }
@@ -4264,9 +5165,9 @@ function renderStoreCompare(){
   if(!el) return;
   const totals = storeTotals();
   const rows = Object.entries(totals)
-    .map(([k,v])=>({k, total:v.total, withStores:v.withStores}))
+    .map(([k,v])=>({k, total:v.total, withStores:v.withStores, campSave:v.campSave, campName:v.campName, campId:v.campId, effTotal:v.effTotal}))
     .filter(r=>r.withStores>0 || listItems.length===0)
-    .sort((a,b)=>a.total-b.total);
+    .sort((a,b)=>a.effTotal-b.effTotal);
   if(!listItems.length){
     el.innerHTML = '<div style="font-size:.7rem;color:var(--muted)">Lista vazia — adiciona produtos para comparar.</div>';
     return;
@@ -4276,33 +5177,48 @@ function renderStoreCompare(){
     return;
   }
   const market = document.getElementById('list-market') ? document.getElementById('list-market').value : '';
-  const min = rows[0].total;
-  const max = rows[rows.length-1].total;
+  const min = rows[0].effTotal;
+  const max = rows[rows.length-1].effTotal;
+  const bestBase = Math.min(...rows.map(r=>r.total));
   const save = max - min;
   const bestName = storeName(rows[0].k);
+  // Poupança total: produtos (melhor preço por produto face ao mais caro) + campanha da loja vencedora
+  let prodSaving = 0;
+  listItems.forEach(i=>{
+    if(!i.stores || Object.keys(i.stores).length<2) return;
+    const vals = Object.values(i.stores).filter(v=>v!=null);
+    if(vals.length<2) return;
+    prodSaving += (Math.max(...vals) - Math.min(...vals)) * (i.qty||1);
+  });
+  const campSaving = rows[0].campSave||0;
+  const totalSaving = Math.round((prodSaving + campSaving)*100)/100;
   let barTop = '';
   if(save > 0.005){
     const pct = min>0 ? Math.round(min/max*100) : 0;
-    barTop = `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-      <div style="font-size:.7rem;font-weight:700;color:var(--green);flex:1">🛒 Comprar no <strong>${bestName}</strong> poupa <strong>${fmtEur(save)}</strong> face ao mais caro</div>
-      <span style="font-size:.62rem;color:var(--muted)">mín. ${pct}%</span>
+    barTop = `<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+      <div style="font-size:.72rem;font-weight:800;color:var(--green);flex:1">🛒 Com campanhas, comprar no <strong>${bestName}</strong> fica em <strong>${fmtEur(min)}</strong> <span style="color:var(--muted);font-weight:600">(mín. ${pct}% vs mais caro)</span></div>
     </div>
-    <div class="prog-track" style="margin-bottom:9px"><div class="prog-fill pf-ok" style="width:${pct}%"></div></div>`;
+    <div class="prog-track" style="margin-bottom:8px"><div class="prog-fill pf-ok" style="width:${pct}%"></div></div>`;
+  }
+  if(totalSaving > 0.005){
+    barTop += `<div style="font-size:.68rem;color:var(--text);background:var(--green-l);border:1px solid var(--green);border-radius:10px;padding:8px 10px;margin-bottom:9px">💶 <strong>Poupança total desta lista: ${fmtEur(totalSaving)}</strong> (${fmtEur(Math.round(prodSaving*100)/100)} em preços + ${fmtEur(campSaving)} em campanhas — se comprares no ${bestName})</div>`;
   }
   el.innerHTML = barTop + rows.map(r=>{
-    const isMin = r.total<=min+0.001;
+    const isMin = r.effTotal<=min+0.001;
     const isSel = r.k===market;
-    const diff = r.total - min;
-    const pctW = max>0 ? Math.max(8, Math.round(r.total/max*100)) : 8;
+    const diff = r.effTotal - min;
+    const pctW = max>0 ? Math.max(8, Math.round(r.effTotal/max*100)) : 8;
     const color = STORE_META[r.k] ? STORE_META[r.k].color : '#64748b';
     return `<div style="display:flex;align-items:center;gap:9px;padding:6px 2px;border-bottom:1px solid var(--border);${isSel?'background:var(--green-l);border-radius:8px;padding-left:7px':''}">
       <span class="st-logo" style="width:22px;height:22px;flex-shrink:0">${storeLogoSvg(r.k)}</span>
       <div style="flex:1;min-width:0">
-        <div style="font-size:.7rem;font-weight:700;color:var(--text)">${storeName(r.k)}${isSel?' <span style="color:var(--green);font-weight:800">· a visitar</span>':''}${isMin?' <span class="chip-best">✓ mais barato</span>':''}</div>
+        <div style="font-size:.7rem;font-weight:700;color:var(--text)">${storeName(r.k)}${isSel?' <span style="color:var(--green);font-weight:800">· a visitar</span>':''}${isMin?' <span class="chip-best">✓ mais barato c/ campanha</span>':''}</div>
+        ${r.campSave>0.005?`<div style="font-size:.6rem;color:var(--green);font-weight:700">📣 −${fmtEur(r.campSave)} · ${r.campName.replace(/^[^\p{L}]+/u,'')}</div>`:''}
         <div style="height:5px;background:var(--input-bg);border-radius:99px;margin-top:3px;overflow:hidden"><div style="height:100%;width:${pctW}%;background:${color};border-radius:99px"></div></div>
       </div>
       <div style="text-align:right;flex-shrink:0">
-        <div style="font-size:.82rem;font-weight:800;color:${isMin?'var(--green)':'var(--text)'}">${fmtEur(r.total)}</div>
+        <div style="font-size:.82rem;font-weight:800;color:${isMin?'var(--green)':'var(--text)'}">${fmtEur(r.effTotal)}</div>
+        ${r.campSave>0.005?`<div style="font-size:.56rem;color:var(--muted)"><s>${fmtEur(r.total)}</s></div>`:''}
         ${diff>0.005?`<div style="font-size:.58rem;color:var(--muted)">+${fmtEur(diff)} vs min</div>`:'<div style="font-size:.58rem;color:var(--green)">melhor preço</div>'}
       </div>
     </div>`;
@@ -4451,20 +5367,24 @@ function bestPriceProducts(k, n){
 function onPromoAt(p, k){
   const s = p.stores;
   if(!s || s[k]==null) return false;
-  if(p.promo) return true; // nota de promoção explícita
-  return s[k] < (p.price||0) - 0.005 && isCheapestAt(p, k);
+  if(p.promoStore && p.promoStore===k) return true; // promo desta loja
+  if(p.promoTag && !p.promoStore) return true;       // oferta tipo "Leve 2 Pague 1"
+  if(p.promo && !p.promoStore) return true;          // nota geral de promoção
+  if(p.promoStore) return false;                     // promo noutra loja
+  return s[k] < (p.promoOld||p.price||0) - 0.005 && isCheapestAt(p, k);
 }
 function addToListBtnJson(p, price){
   return JSON.stringify({name:p.name,price:price!=null?price:(p.price||0),stores:p.stores||{},emoji:p.emoji||'🛒',promo:p.promo||null});
 }
 function favPromoCard(p, k){
   const price = p.stores[k];
+  const oldP = (p.promoOld&&p.promoOld>price+0.001)?p.promoOld:(p.price||0);
   return `<div class="fav-promo">
     <div style="flex-shrink:0;cursor:pointer" onclick='openProductModal(${JSON.stringify(p)})'>${productPhotoHtml(p,false)}</div>
     <div style="flex:1;min-width:0">
       <div class="prod-name">${p.name}</div>
-      <div style="font-size:.64rem;color:var(--muted);margin-top:1px">Preço normal: <s>${fmtEur(p.price||0)}</s> → <strong style="color:var(--amber)">${fmtEur(price)}</strong></div>
-      <span class="promo-badge">🔥 Em promoção</span>
+      <div style="font-size:.64rem;color:var(--muted);margin-top:1px">Preço normal: <s>${fmtEur(oldP)}</s> → <strong style="color:var(--amber)">${fmtEur(price)}</strong></div>
+      <span class="promo-badge">🔥 Em promoção${p.promoPct?` · −${p.promoPct}%`:''}${p.promoTag?` · ${p.promoTag}`:''}</span>
     </div>
     <div class="prod-right">
       <div class="prod-price">${fmtEur(price)}</div>
@@ -4481,14 +5401,14 @@ function favHereCard(p, k){
       <div class="prod-store">Nesta loja: ${fmtEur(price)}</div>
     </div>
     <div class="prod-right">
-      <div class="prod-price">${fmtEur(price)}</div>
+      ${priceCellHtml(p, price, k)}
       <button class="add-btn-sm" onclick='addToList(${addToListBtnJson(p, price)})' title="Adicionar à lista">+</button>
     </div>
   </div>`;
 }
 function bestPriceCard(p, k, idx){
   const price = p.stores[k];
-  const saving = (p.price||0) - price;
+  const saving = (p.promoOld||p.price||0) - price;
   return `<div class="prod-card">
     <div style="cursor:pointer" onclick="openProductModal(window.__storeBest[${idx}])">${productPhotoHtml(p,false)}</div>
     <div class="prod-info">
@@ -4498,7 +5418,7 @@ function bestPriceCard(p, k, idx){
       ${saving>0.005?`<span class="chip-high" style="background:var(--amber-l);color:#92400e">−${fmtEur(saving)} vs normal</span>`:''}
     </div>
     <div class="prod-right">
-      <div class="prod-price">${fmtEur(price)}</div>
+      ${priceCellHtml(p, price, k)}
       <button class="add-btn-sm" onclick='addToList(${addToListBtnJson(p, price)})' title="Adicionar à lista">+</button>
     </div>
   </div>`;
@@ -4564,6 +5484,14 @@ function storeTabBody(k){
   }
   html += '</div>';
 
+  // ── Todos os produtos desta loja ──
+  const totalProd = storeAssortmentCount(k);
+  html += `<div class="card">
+    <div class="card-title">🛒 Catálogo desta loja</div>
+    <div style="font-size:.72rem;color:var(--muted);line-height:1.5;margin-bottom:8px">Vê todos os <b>${totalProd.toLocaleString('pt-PT')}</b> produtos disponíveis nesta loja — pesquisa dentro da loja, filtra por categoria e adiciona à lista.</div>
+    <button class="btn-green" style="width:100%" onclick="openStoreCatalog('${k}')">Ver todos os produtos →</button>
+  </div>`;
+
   return html;
 }
 function renderSupermercados(){
@@ -4576,7 +5504,11 @@ function renderSupermercados(){
   }).join('');
   let body = '';
   if(currentStoreTab){
-    body = storeTabBody(currentStoreTab);
+    if(window.__storeCat && window.__storeCat.k===currentStoreTab){
+      body = storeCatalogBody(currentStoreTab);
+    } else {
+      body = storeTabBody(currentStoreTab);
+    }
   } else {
     body = `<div class="store-grid">`+Object.keys(STORE_META).map(k=>{
       const isFav = favStores.indexOf(k)>=0;
@@ -4588,10 +5520,121 @@ function renderSupermercados(){
     }).join('')+`</div>`;
   }
   root.innerHTML = `<div class="store-tabs">${tabs}</div>${body}`;
+  if(window.__storeCat && window.__storeCat.k===currentStoreTab){
+    renderStoreCatalog(false);
+    const sel = document.getElementById('store-cat-filter');
+    if(sel) sel.value = window.__storeCat.cat||'';
+  }
 }
 function openStoreTab(k){
   currentStoreTab = k;
+  window.__storeCat = null;
   renderSupermercados();
+}
+
+// ── Catálogo completo de uma loja ──
+function storeAssortmentCount(k){
+  let c = 0;
+  for(let i=0;i<CATALOG.length;i++){ if(CATALOG[i].stores && CATALOG[i].stores[k]!=null) c++; }
+  return c;
+}
+function storeAssortment(k, query, cat, start, limit){
+  const out = [];
+  const q = (query||'').trim().toLowerCase();
+  for(let i=0;i<CATALOG.length;i++){
+    const p = CATALOG[i];
+    if(!(p.stores && p.stores[k]!=null)) continue;
+    if(cat && p.cat!==cat) continue;
+    if(q){
+      const n = p.name.toLowerCase();
+      const qw = q.split(/\s+/).filter(w=>w.length>=2);
+      const ok = qw.length ? qw.every(w=>n.includes(w)) : n.includes(q);
+      if(!ok) continue;
+    }
+    if(out.length < start) { start--; continue; }
+    if(out.length >= limit) break;
+    out.push(p);
+  }
+  return out;
+}
+function openStoreCatalog(k){
+  currentStoreTab = k;
+  window.__storeCat = {k:k, page:0, query:'', cat:''};
+  renderSupermercados();
+}
+function closeStoreCatalog(){
+  window.__storeCat = null;
+  renderSupermercados();
+}
+function storeCatSearch(){
+  if(!window.__storeCat) return;
+  window.__storeCat.query = document.getElementById('store-cat-q') ? document.getElementById('store-cat-q').value : '';
+  window.__storeCat.page = 0;
+  renderStoreCatalog();
+}
+function storeCatFilter(){
+  if(!window.__storeCat) return;
+  window.__storeCat.cat = document.getElementById('store-cat-filter') ? document.getElementById('store-cat-filter').value : '';
+  window.__storeCat.page = 0;
+  renderStoreCatalog();
+}
+function storeCatMore(){
+  if(!window.__storeCat) return;
+  window.__storeCat.page++;
+  renderStoreCatalog(true);
+}
+function renderStoreCatalog(append){
+  const st = window.__storeCat;
+  const el = document.getElementById('store-catalog-list');
+  if(!el) return;
+  const PAGE = 40;
+  const start = st.page * PAGE;
+  const prods = storeAssortment(st.k, st.query, st.cat, start, PAGE);
+  if(!append) el.innerHTML='';
+  const listHtml = prods.map((p,idx)=>{
+    const price = p.stores[st.k];
+    return `<div class="prod-card">
+      <div style="cursor:pointer" onclick='openProductModal(${JSON.stringify(p).replace(/'/g,'&#39;')})'>${productPhotoHtml(p,false)}</div>
+      <div class="prod-info">
+        <div class="prod-name">${p.name}${unitPriceHtml(p, price)}</div>
+        <div class="prod-store" style="font-size:.6rem;color:var(--muted);letter-spacing:1px">EAN ${productEan(p)}</div>
+        <div class="prod-store">${STORE_META[st.k].name}: <strong>${fmtEur(price)}</strong></div>
+        ${onPromoAt(p,st.k)?'<span class="promo-badge">🔥 Promo</span>':''}
+      </div>
+      <div class="prod-right">
+        <div class="prod-price">${fmtEur(price)}</div>
+        <button class="add-btn-sm" onclick='addToList(${addToListBtnJson(p, price)})' title="Adicionar à lista">+</button>
+      </div>
+    </div>`;
+  }).join('');
+  el.innerHTML += listHtml + (prods.length===PAGE ? `<button class="btn-dark" style="margin-top:8px;margin-bottom:0" onclick="storeCatMore()">Carregar mais produtos →</button>` : '');
+}
+function storeCatalogBody(k){
+  const meta = STORE_META[k];
+  const cats = {};
+  CATALOG.forEach(p=>{ if(p.stores && p.stores[k]!=null && p.cat) cats[p.cat]=(cats[p.cat]||0)+1; });
+  const total = storeAssortmentCount(k);
+  const catOpts = Object.keys(cats).sort().map(c=>`<option value="${c}">${c} (${cats[c].toLocaleString('pt-PT')})</option>`).join('');
+  return `<div class="card">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <button class="mini-btn" onclick="closeStoreCatalog()">← Voltar</button>
+      <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">
+        <span class="st-logo" style="width:26px;height:26px">${storeLogoSvg(k)}</span>
+        <div style="min-width:0">
+          <div style="font-size:.85rem;font-weight:800;color:var(--text)">Catálogo ${meta.name}</div>
+          <div style="font-size:.6rem;color:var(--muted)">${total.toLocaleString('pt-PT')} produtos disponíveis</div>
+        </div>
+      </div>
+    </div>
+    <div class="search-row" style="margin-bottom:7px">
+      <input type="text" class="inp" id="store-cat-q" placeholder="🔍 Pesquisar nesta loja..." value="${window.__storeCat?window.__storeCat.query:''}" onkeydown="if(event.key==='Enter')storeCatSearch()" oninput="storeCatSearch()">
+    </div>
+    <select class="sel" id="store-cat-filter" onchange="storeCatFilter()" style="margin-bottom:9px">
+      <option value="">Todas as categorias</option>
+      ${catOpts}
+    </select>
+    <div id="store-catalog-list"></div>
+  </div>`;
 }
 
 // ══════════════════════════════════════════════════════
@@ -5088,9 +6131,104 @@ async function checkNowAndUpdate(){
   }
 }
 
+// ══════════════════════════════════════════════════════
+// MENU PRINCIPAL PERSONALIZÁVEL — ordem e visibilidade
+// ══════════════════════════════════════════════════════
+const TAB_DEFS = [
+  {id:'inicio', icon:'🏠', label:'Início'},
+  {id:'pesquisa', icon:'🔍', label:'Produtos'},
+  {id:'supermercados', icon:'🏪', label:'Lojas'},
+  {id:'campanhas', icon:'📣', label:'Ofertas'},
+  {id:'lista', icon:'📝', label:'Lista'},
+  {id:'perfil', icon:'👤', label:'Perfil'},
+];
+const DEFAULT_TAB_ORDER = TAB_DEFS.map(t=>t.id);
+function loadTabConfig(){
+  try{
+    const raw = JSON.parse(localStorage.getItem('pf_tabs')||'null');
+    if(Array.isArray(raw) && raw.length>=3){
+      const ids = TAB_DEFS.map(t=>t.id);
+      const clean = raw.filter(id=>ids.indexOf(id)>=0);
+      // garante que os essenciais ficam sempre visíveis
+      ['inicio','lista'].forEach(id=>{ if(clean.indexOf(id)<0) clean.unshift(id); });
+      return clean;
+    }
+  }catch(e){}
+  return DEFAULT_TAB_ORDER.slice();
+}
+function saveTabOrder(order){
+  const clean = order.filter(id=>TAB_DEFS.some(t=>t.id===id));
+  if(clean.length>=3) localStorage.setItem('pf_tabs', JSON.stringify(clean));
+}
+function renderTabs(){
+  const wrap = document.getElementById('tabs-inner');
+  if(!wrap) return;
+  const order = loadTabConfig();
+  wrap.innerHTML = order.map(id=>{
+    const t = TAB_DEFS.find(x=>x.id===id);
+    if(!t) return '';
+    return `<button class="tab-btn ${id===currentTab?'active':''}" data-tab="${id}" onclick="switchTab('${id}')"><span class="ticon">${t.icon}</span><span class="tlabel">${t.label}</span></button>`;
+  }).join('');
+}
+function moveTab(id, dir){
+  const order = loadTabConfig();
+  const i = order.indexOf(id);
+  const j = i + dir;
+  if(i<0 || j<0 || j>=order.length) return;
+  const t = order.splice(i,1)[0];
+  order.splice(j,0,t);
+  saveTabOrder(order);
+  renderTabSettings();
+  renderTabs();
+}
+function toggleTabVisibility(id){
+  const order = loadTabConfig();
+  const i = order.indexOf(id);
+  if(i>=0){
+    if(order.length<=3){ showNotif('⚠️ O menu tem de ter pelo menos 3 separadores.'); return; }
+    order.splice(i,1);
+  } else {
+    order.push(id);
+  }
+  saveTabOrder(order);
+  renderTabSettings();
+  renderTabs();
+}
+function resetTabs(){
+  localStorage.removeItem('pf_tabs');
+  renderTabSettings();
+  renderTabs();
+  showNotif('↺ Menu reposto.');
+}
+function renderTabSettings(){
+  const el = document.getElementById('tab-order-list');
+  if(!el) return;
+  const order = loadTabConfig();
+  el.innerHTML = order.map((id,idx)=>{
+    const t = TAB_DEFS.find(x=>x.id===id);
+    if(!t) return '';
+    return `<div style="display:flex;align-items:center;gap:8px;padding:7px 4px;border-bottom:1px solid var(--border)">
+      <span style="font-size:1rem">${t.icon}</span>
+      <span style="flex:1;font-size:.78rem;font-weight:600;color:var(--text)">${t.label}</span>
+      <button class="mini-btn" onclick="moveTab('${id}',-1)" ${idx===0?'disabled':''} title="Mover para cima">▲</button>
+      <button class="mini-btn" onclick="moveTab('${id}',1)" ${idx===order.length-1?'disabled':''} title="Mover para baixo">▼</button>
+      <button class="mini-btn" onclick="toggleTabVisibility('${id}')" title="Esconder separador">🙈</button>
+    </div>`;
+  }).join('');
+  // separadores escondidos
+  const hidden = TAB_DEFS.filter(t=>order.indexOf(t.id)<0);
+  if(hidden.length){
+    el.innerHTML += `<div style="margin-top:6px;font-size:.6rem;color:var(--muted)">Escondidos (toca para repor):</div>`;
+    el.innerHTML += hidden.map(t=>`
+      <button class="mini-btn" style="margin:2px" onclick="toggleTabVisibility('${t.id}')">${t.icon} ${t.label}</button>`).join('');
+  }
+}
+
  (function init(){
   loadDarkMode();
   loadFontSize();
+  renderTabs();
+  renderTabSettings();
   renderList();
   showCampAlert();
   calcTotal();
@@ -5098,6 +6236,7 @@ async function checkNowAndUpdate(){
   updatePredefPrices();
   renderHome();
   renderFeatured();
+  renderCampCalendar();
   addManifest();
   checkForUpdate();
   document.getElementById('footer-bar').style.display='none';
