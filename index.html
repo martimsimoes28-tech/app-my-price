@@ -374,6 +374,13 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
 </head>
 <body>
 
+<!-- Splash de arranque (aparece enquanto o catálogo é gerado) -->
+<div id="boot-splash" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0d3b22,#15803d);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#fff;font-family:'Inter',sans-serif;transition:opacity .3s">
+  <svg viewBox="0 0 64 64" width="76" height="76" aria-hidden="true"><path d="M12 17h6l6 26a3 3 0 0 0 3 2.6h19a3 3 0 0 0 2.9-2.3l4-14H19" fill="none" stroke="#fff" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="27" cy="52" r="3.4" fill="#fff"/><circle cx="46" cy="52" r="3.4" fill="#fff"/><circle cx="51" cy="12" r="9" fill="#f59e0b"/><text x="51" y="16.5" text-anchor="middle" font-size="11" font-weight="900" fill="#fff" font-family="Arial">€</text></svg>
+  <div style="font-size:1.05rem;font-weight:800;letter-spacing:-.3px">Poupa Fácil</div>
+  <div style="font-size:.68rem;opacity:.85">A carregar o catálogo dos supermercados...</div>
+</div>
+
 <div class="notif" id="notif"></div>
 
 <header>
@@ -466,6 +473,8 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
         <option value="animais">🐾 Animais</option>
       </select>
     </div>
+    <!-- Sugestões rápidas -->
+    <div id="search-chips" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px"></div>
     <!-- Autocomplete / sugestões de pesquisa -->
     <div id="search-suggestions" style="display:none;margin-bottom:8px"></div>
     <div id="search-results"></div>
@@ -3123,6 +3132,54 @@ function priceHistory(productName, store, currentPrice){
     {cat:'charcutaria',emoji:'🥓',name:'Mortadela {brand}',brands:["Primor", "Continente", "Pingo Doce", "Lidl"],sizes:[["150g", 1.29], ["300g", 2.29]],flavors:["Clássica", "Italiana", "De Frango"]},
     {cat:'laticínio',emoji:'🥛',name:'Leite Condensado {brand}',brands:["Nestlé", "Continente", "Pingo Doce"],sizes:[["397g", 1.99]],flavors:["Normal", "Magro"]},
     {cat:'manteiga',emoji:'🥜',name:'Creme para Barrar {brand}',brands:["Nutella", "Continente", "Pingo Doce", "Lidl"],sizes:[["200g", 1.89], ["400g", 3.29], ["750g", 5.49]],flavors:["Chocolate com Avelã", "Chocolate Branco", "Caramelo"]},
+    {cat:'carne',emoji:'🥩',name:'Costeleta de Porco {brand}',brands:["Continente", "Pingo Doce", "Auchan", "Lidl"],sizes:[["1kg", 4.49], ["500g", 2.49]]},
+    {cat:'carne',emoji:'🥩',name:'Entrecosto de Porco {brand}',brands:["Continente", "Pingo Doce", "Auchan", "Lidl"],sizes:[["1kg", 5.49], ["800g", 4.49]]},
+    {cat:'carne',emoji:'🥩',name:'Rojões {brand}',brands:["Continente", "Pingo Doce"],sizes:[["500g", 3.99], ["1kg", 7.49]]},
+    {cat:'carne',emoji:'🥩',name:'Carne Picada de Vaca {brand}',brands:["Auchan", "Continente", "Pingo Doce", "Lidl"],sizes:[["500g", 3.49], ["1kg", 6.49]],flavors:["10% MG", "5% MG", "Extra Magra"]},
+    {cat:'carne',emoji:'🍗',name:'Frango no Churrasco {brand}',brands:["Continente", "Pingo Doce", "Auchan"],sizes:[["1 un.", 4.99], ["1/2 un.", 2.99]]},
+    {cat:'peixe',emoji:'🐟',name:'Sardinhas Frescas {brand}',brands:["Continente", "Pingo Doce", "Auchan"],sizes:[["1kg", 3.99], ["500g", 2.19]]},
+    {cat:'peixe',emoji:'🐟',name:'Carapaus Frescos {brand}',brands:["Continente", "Pingo Doce"],sizes:[["1kg", 3.49], ["500g", 1.99]]},
+    {cat:'peixe',emoji:'🐙',name:'Polvo Fresco {brand}',brands:["Continente", "Pingo Doce", "Auchan"],sizes:[["1kg", 14.99], ["500g", 7.99]]},
+    {cat:'peixe',emoji:'🦪',name:'Mexilhão {brand}',brands:["Continente", "Pingo Doce", "Auchan"],sizes:[["1kg", 3.99], ["500g", 2.29]]},
+    {cat:'higiene',emoji:'💊',name:'Paracetamol {brand}',brands:["Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["16 comp.", 1.29], ["24 comp.", 1.79], ["32 comp.", 2.29]],flavors:["500mg", "1000mg", "Efervescente"]},
+    {cat:'higiene',emoji:'💊',name:'Ibuprofeno {brand}',brands:["Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["12 comp.", 1.49], ["24 comp.", 2.49]],flavors:["200mg", "400mg"]},
+    {cat:'higiene',emoji:'🍯',name:'Xarope para a Tosse {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["150ml", 4.49], ["300ml", 7.99]],flavors:["Adulto", "Infantil"]},
+    {cat:'higiene',emoji:'💊',name:'Multivitaminas {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["30 comp.", 3.49], ["60 comp.", 5.99]],flavors:["Adultos", "Crianças", "Mulheres", "Homens"]},
+    {cat:'higiene',emoji:'🌸',name:'Tampões {brand}',brands:["Tampax", "o.b.", "Continente", "Pingo Doce", "Lidl"],sizes:[["16 un.", 2.49], ["32 un.", 4.29]],flavors:["Normal", "Super", "Mini"]},
+    {cat:'higiene',emoji:'🤍',name:'Algodão {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["100g", 1.19], ["200g", 1.99]],flavors:["Discos", "Bolas", "Bastões"]},
+    {cat:'higiene',emoji:'🧴',name:'Toalhitas Desmaquilhantes {brand}',brands:["Garnier", "Nivea", "Continente", "Pingo Doce"],sizes:[["25 un.", 2.49], ["50 un.", 3.99]],flavors:["Sensível", "Olhos", "Todas as peles"]},
+    {cat:'limpeza',emoji:'🧴',name:'Lixívia {brand}',brands:["Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["1L", 0.99], ["2L", 1.79]],flavors:["Normal", "Concentrada", "Com Limão"]},
+    {cat:'limpeza',emoji:'🚽',name:'Limpador WC {brand}',brands:["Cif", "Continente", "Pingo Doce", "Lidl"],sizes:[["750ml", 1.49], ["1.5L", 2.49]],flavors:["Lavanda", "Limão", "Pinho", "Citrus"]},
+    {cat:'limpeza',emoji:'🪟',name:'Lava-vidros {brand}',brands:["Ajax", "Continente", "Pingo Doce"],sizes:[["500ml", 1.29], ["1L", 1.99]],flavors:["Limão", "Neutro"]},
+    {cat:'limpeza',emoji:'👕',name:'Tira-nódoas {brand}',brands:["Vanish", "Continente", "Pingo Doce", "Lidl"],sizes:[["400g", 2.99], ["1kg", 4.99]],flavors:["Roupa Branca", "Cores", "Têxteis"]},
+    {cat:'limpeza',emoji:'🪣',name:'Lã de Aço {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["6 un.", 1.09], ["12 un.", 1.79]]},
+    {cat:'bebidas',emoji:'🥃',name:'Vodka {brand}',brands:["Absolut", "Smirnoff", "Continente", "Pingo Doce"],sizes:[["70cl", 9.99], ["1L", 13.99]],flavors:["Original", "Citrus"]},
+    {cat:'bebidas',emoji:'🥃',name:'Rum {brand}',brands:["Bacardi", "Cacique", "Continente", "Pingo Doce"],sizes:[["70cl", 11.99], ["1L", 16.99]],flavors:["Branco", "Escuro"]},
+    {cat:'bebidas',emoji:'🍸',name:'Licor {brand}',brands:["Licor Beirão", "Licor de Ginja", "Continente", "Pingo Doce"],sizes:[["70cl", 8.99], ["35cl", 4.99]],flavors:["Beirão", "Ginja", "Amêndoa Amarga"]},
+    {cat:'bebidas',emoji:'🍹',name:'Sangria {brand}',brands:["Continente", "Pingo Doce"],sizes:[["1L", 3.49], ["1.5L", 4.99]],flavors:["Tradicional", "De Limão", "Frutas Vermelhas"]},
+    {cat:'padaria',emoji:'🍞',name:'Broa de Milho {brand}',brands:["Continente", "Pingo Doce", "Auchan"],sizes:[["750g", 2.19], ["1.5kg", 3.99]]},
+    {cat:'padaria',emoji:'🍞',name:'Pão de Centeio {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["500g", 1.49], ["1kg", 2.69]]},
+    {cat:'congelados',emoji:'🍞',name:'Pão Congelado {brand}',brands:["Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["1kg", 2.99]],flavors:["Pão de Forma", "Baguetes", "Carcaças", "Papo-secos"]},
+    {cat:'congelados',emoji:'🍟',name:'Batata Doce Frita {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["600g", 2.99], ["1kg", 4.49]],flavors:["Palitos", "Gomos"]},
+    {cat:'mercearia',emoji:'🍮',name:'Gelatina {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["80g", 0.79], ["180g", 1.49]],flavors:["Morango", "Limão", "Laranja", "Ananás", "Zero"]},
+    {cat:'mercearia',emoji:'🥣',name:'Fermento {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["20g", 0.59], ["80g", 1.29]],flavors:["Padeiro", "Químico"]},
+    {cat:'mercearia',emoji:'🍫',name:'Chocolate em Pó {brand}',brands:["Nesquik", "Continente", "Pingo Doce", "Lidl"],sizes:[["500g", 3.29], ["1kg", 5.99]],flavors:["Chocolate", "Chocolate Branco", "Sem Açúcar"]},
+    {cat:'mercearia',emoji:'🥫',name:'Grão-de-bico Cozido {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["400g", 0.79], ["570g", 1.09]]},
+    {cat:'mercearia',emoji:'🥫',name:'Feijão Cozido {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["400g", 0.79], ["570g", 1.09]],flavors:["Manteiga", "Frade", "Vermelho", "Preto"]},
+    {cat:'mercearia',emoji:'🥫',name:'Lentilhas Cozidas {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["400g", 0.89], ["570g", 1.19]]},
+    {cat:'snacks',emoji:'🥜',name:'Tremoços {brand}',brands:["Continente", "Pingo Doce"],sizes:[["400g", 1.29], ["800g", 2.29]],flavors:["Temperados", "Em Escabeche"]},
+    {cat:'bebés',emoji:'🍼',name:'Biberões {brand}',brands:["Avent", "Philips", "Continente", "Pingo Doce"],sizes:[["150ml", 5.99], ["260ml", 7.99]],flavors:["Clássico", "Anti-cólica"]},
+    {cat:'bebés',emoji:'👶',name:'Chupetas {brand}',brands:["Continente", "Pingo Doce"],sizes:[["2 un.", 2.49]],flavors:["0-6M", "6-18M", "18M+"]},
+    {cat:'animais',emoji:'🐦',name:'Sementes para Pássaros {brand}',brands:["Continente", "Pingo Doce"],sizes:[["1kg", 2.49], ["3kg", 5.99]]},
+    {cat:'fruta',emoji:'🍉',name:'Melancia {brand}',brands:["Continente", "Pingo Doce", "Auchan"],sizes:[["1kg", 0.89], ["2kg", 1.69]]},
+    {cat:'fruta',emoji:'🍓',name:'Morango {brand}',brands:["Continente", "Pingo Doce", "Auchan"],sizes:[["500g", 2.49], ["1kg", 4.49]]},
+    {cat:'fruta',emoji:'🍈',name:'Melão {brand}',brands:["Continente", "Pingo Doce"],sizes:[["1 un.", 1.99], ["1kg", 0.99]]},
+    {cat:'fruta',emoji:'🍍',name:'Ananás {brand}',brands:["Continente", "Pingo Doce"],sizes:[["1 un.", 1.79], ["1kg", 1.49]]},
+    {cat:'fruta',emoji:'🍋',name:'Limão {brand}',brands:["Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["500g", 1.19], ["1kg", 1.99]]},
+    {cat:'legumes',emoji:'🧄',name:'Alho {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["100g", 0.79], ["200g", 1.29]]},
+    {cat:'legumes',emoji:'🥕',name:'Cenoura {brand}',brands:["Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["1kg", 0.99], ["2kg", 1.79]]},
+    {cat:'legumes',emoji:'🥬',name:'Alface {brand}',brands:["Continente", "Pingo Doce", "Auchan"],sizes:[["1 un.", 0.89], ["2 un.", 1.49]],flavors:["Frisada", "Iceberg", "Roxa"]},
+    {cat:'legumes',emoji:'🥦',name:'Brócolos Frescos {brand}',brands:["Continente", "Pingo Doce"],sizes:[["500g", 1.99]]},
   ];
 
 (function(){
@@ -3742,7 +3799,7 @@ function switchTab(t){
   activateTab(t);
   document.getElementById('footer-bar').style.display = t==='lista' ? 'block' : 'none';
   if(t==='inicio') renderHome();
-  if(t==='pesquisa') renderFeatured();
+  if(t==='pesquisa'){ renderFeatured(); renderSearchChips(); }
   if(t==='supermercados') renderSupermercados();
   if(t==='campanhas') renderCampCalendar();
   if(t==='perfil') renderPerfil();
@@ -3862,6 +3919,13 @@ function suggestFromIndex(q){
 }
 
 // ── Featured section: mostrar logo quando abres a aba ──
+const SEARCH_CHIPS = ['Leite','Pão','Champô','Azeite','Café','Gel de banho','Fiambre','Creme de barbear','Papel de cozinha','Gelado','Sumo de laranja','Coca-Cola'];
+function renderSearchChips(){
+  const el = document.getElementById('search-chips');
+  if(!el) return;
+  el.innerHTML = SEARCH_CHIPS.map(q=>`
+    <button class="qchip" onclick="doSearchQ('${q.replace(/'/g,'')}')">${q}</button>`).join('');
+}
 const FEATURED_CATALOG_PICKS = [
   // Mix de categorias populares para o destaque padrão
   'Leite UHT Meio Gordo Mimosa 1L','Azeite Virgem Extra Gallo 75cl','Arroz Agulha Cigala 1kg',
@@ -5599,24 +5663,41 @@ function storeAssortmentCount(k){
   for(let i=0;i<CATALOG.length;i++){ if(CATALOG[i].stores && CATALOG[i].stores[k]!=null) c++; }
   return c;
 }
+// Lista ordenada (categoria + nome) de produtos de uma loja, com cache
+function getStoreSorted(k){
+  const cache = window.__storeSorted;
+  if(cache && cache.k===k) return cache.list;
+  const arr = [];
+  for(let i=0;i<CATALOG.length;i++){
+    const p = CATALOG[i];
+    if(p.stores && p.stores[k]!=null) arr.push(i);
+  }
+  arr.sort((a,b)=>{
+    const pa=CATALOG[a], pb=CATALOG[b];
+    const ca=pa.cat||'', cb=pb.cat||'';
+    if(ca!==cb) return ca<cb?-1:1;
+    return pa.name<pb.name?-1:(pa.name>pb.name?1:0);
+  });
+  window.__storeSorted = {k, list:arr};
+  return arr;
+}
 function storeAssortment(k, query, cat, start, limit){
   const out = [];
   const q = (query||'').trim().toLowerCase();
-  for(let i=0;i<CATALOG.length;i++){
-    const p = CATALOG[i];
-    if(!(p.stores && p.stores[k]!=null)) continue;
+  const qw = q ? q.split(/\s+/).filter(w=>w.length>=2) : [];
+  const list = getStoreSorted(k);
+  for(let i=0;i<list.length;i++){
+    const p = CATALOG[list[i]];
     if(cat && p.cat!==cat) continue;
     if(q){
       const n = p.name.toLowerCase();
-      const qw = q.split(/\s+/).filter(w=>w.length>=2);
       const ok = qw.length ? qw.every(w=>n.includes(w)) : n.includes(q);
       if(!ok) continue;
     }
-    if(out.length < start) { start--; continue; }
-    if(out.length >= limit) break;
     out.push(p);
+    if(out.length>=start+limit) break;
   }
-  return out;
+  return out.slice(start);
 }
 function openStoreCatalog(k){
   currentStoreTab = k;
@@ -5652,9 +5733,12 @@ function renderStoreCatalog(append){
   const start = st.page * PAGE;
   const prods = storeAssortment(st.k, st.query, st.cat, start, PAGE);
   if(!append) el.innerHTML='';
-  const listHtml = prods.map((p,idx)=>{
+  let lastCat = null;
+  const grouped = prods.map((p,idx)=>{
     const price = p.stores[st.k];
-    return `<div class="prod-card">
+    const catHeader = (!st.cat && p.cat && p.cat!==lastCat) ? `<div class="card-title" style="margin:10px 0 5px;text-transform:capitalize">🗂️ ${p.cat}</div>` : '';
+    if(p.cat) lastCat = p.cat;
+    return catHeader + `<div class="prod-card">
       <div style="cursor:pointer" onclick='openProductModal(${JSON.stringify(p).replace(/'/g,'&#39;')})'>${productPhotoHtml(p,false)}</div>
       <div class="prod-info">
         <div class="prod-name">${p.name}${unitPriceHtml(p, price)}</div>
@@ -5668,7 +5752,7 @@ function renderStoreCatalog(append){
       </div>
     </div>`;
   }).join('');
-  el.innerHTML += listHtml + (prods.length===PAGE ? `<button class="btn-dark" style="margin-top:8px;margin-bottom:0" onclick="storeCatMore()">Carregar mais produtos →</button>` : '');
+  el.innerHTML += grouped + (prods.length===PAGE ? `<button class="btn-dark" style="margin-top:8px;margin-bottom:0" onclick="storeCatMore()">Carregar mais produtos →</button>` : '');
 }
 function storeCatalogBody(k){
   const meta = STORE_META[k];
@@ -6301,9 +6385,15 @@ function renderTabSettings(){
   renderHome();
   renderFeatured();
   renderCampCalendar();
+  renderSearchChips();
   addManifest();
   checkForUpdate();
   document.getElementById('footer-bar').style.display='none';
+  const _splash = document.getElementById('boot-splash');
+  if(_splash){
+    _splash.style.opacity='0';
+    setTimeout(function(){ _splash.parentNode && _splash.parentNode.removeChild(_splash); }, 350);
+  }
 })();
 </script>
 </body>
