@@ -1,0 +1,17 @@
+{
+  "name": "Poupa Fácil",
+  "short_name": "Poupa Fácil",
+  "description": "Compara preços de supermercado em Portugal e poupa nas tuas compras.",
+  "lang": "pt-PT",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f2f7f3",
+  "theme_color": "#16a34a",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -10,6 +10,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Poupa Fácil">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2064%2064%27%3E%3Crect%20width=%2764%27%20height=%2764%27%20rx=%2715%27%20fill=%27%2316a34a%27/%3E%3Cpath%20d=%27M12%2017h6l6%2026a3%203%200%200%200%203%202.6h19a3%203%200%200%200%202.9-2.3l4-14H19%27%20fill=%27none%27%20stroke=%27white%27%20stroke-width=%274.6%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27/%3E%3Ccircle%20cx=%2727%27%20cy=%2752%27%20r=%273.4%27%20fill=%27white%27/%3E%3Ccircle%20cx=%2746%27%20cy=%2752%27%20r=%273.4%27%20fill=%27white%27/%3E%3Ccircle%20cx=%2751%27%20cy=%2712%27%20r=%279%27%20fill=%27%23f59e0b%27/%3E%3Ctext%20x=%2751%27%20y=%2716.5%27%20text-anchor=%27middle%27%20font-size=%2711%27%20font-weight=%27900%27%20fill=%27white%27%20font-family=%27Arial%27%3E€%3C/text%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
 <title>Poupa Fácil</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
@@ -2313,7 +2315,7 @@ function priceHistory(productName, store, currentPrice){
       sizes:[['4 rolos',1.99],['12 rolos',4.99]]},
     {cat:'higiene',emoji:'🧴',name:'Fio Dental {brand}',brands:['Oral-B','Colgate','Continente','Pingo Doce'],
       sizes:[['50m',1.49]]},
-    {cat:'higiene',emoji:'🧴',name:'Espuma de Barbear {brand}',brands:['Gillette','Nivea','Continente','Pingo Doce'],
+    {cat:'higiene',emoji:'🧴',name:'Espuma de Barbear {brand}',brands:['Gillette','Nivea','Palmolive','Continente','Pingo Doce'],
       sizes:[['200ml',2.49]]},
     {cat:'higiene',emoji:'🧴',name:'Cotonetes {brand}',brands:['Johnson\'s','Continente','Pingo Doce','Lidl'],
       sizes:[['120 un.',1.19]]},
@@ -2675,7 +2677,7 @@ function priceHistory(productName, store, currentPrice){
       sizes:[['250ml',2.29]]},
     {cat:'higiene',emoji:'🧴',name:'Protetor Solar {brand}',brands:['Nivea','Garnier','Continente','Pingo Doce'],
       sizes:[['200ml',9.99]]},
-    {cat:'higiene',emoji:'🧴',name:'Gel de Barbear {brand}',brands:['Gillette','Nivea','Continente','Pingo Doce'],
+    {cat:'higiene',emoji:'🧴',name:'Gel de Barbear {brand}',brands:['Gillette','Nivea','Palmolive','Continente','Pingo Doce'],
       sizes:[['200ml',3.49]]},
     {cat:'limpeza',emoji:'🧹',name:'Lava-loiça {brand}',brands:['Cif','Continente','Pingo Doce','Lidl'],
       sizes:[['750ml',2.99]]},
@@ -3080,7 +3082,7 @@ function priceHistory(productName, store, currentPrice){
     {cat:'pronta',emoji:'🍲',name:'Sopa {brand}',brands:["Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["500ml", 1.29], ["1L", 2.29]],flavors:["Legumes","Feijão","Creme de Legumes","Peixe","Galinha","Cenoura e Alho-Francês","Tomate","Abóbora","Legumes com Massa","Caldo Verde"]},
     {cat:'pronta',emoji:'🍗',name:'Frango Assado {brand}',brands:["Continente", "Pingo Doce", "Auchan"],sizes:[["1 un.", 4.99], ["1/2 un.", 2.99]],flavors:["Inteiro", "Churrasco"]},
     {cat:'pronta',emoji:'🥗',name:'Salada Pronta {brand}',brands:["Continente", "Pingo Doce", "Lidl"],sizes:[["300g", 2.49], ["600g", 4.49]],flavors:["Grega","César","de Atum","de Massa","de Frango","de Cogumelos","Niçoise"]},
-    {cat:'higiene',emoji:'🧔',name:'Creme de Barbear {brand}',brands:["Nivea", "Gillette", "L'Oréal Men Expert", "Auchan", "Continente", "Pingo Doce", "Lidl", "Aldi"],sizes:[["100ml", 2.49], ["150ml", 3.29], ["200ml", 3.99]],flavors:["Clássico", "Sensível", "Com Aloe Vera"]},
+    {cat:'higiene',emoji:'🧔',name:'Creme de Barbear {brand}',brands:["Nivea", "Gillette", "Palmolive", "L'Oréal Men Expert", "Auchan", "Continente", "Pingo Doce", "Lidl", "Aldi"],sizes:[["100ml", 2.49], ["150ml", 3.29], ["200ml", 3.99]],flavors:["Clássico", "Sensível", "Com Aloe Vera"]},
     {cat:'higiene',emoji:'🧔',name:'Pós-Barba {brand}',brands:["Nivea", "Gillette", "Auchan", "Continente", "Pingo Doce", "Lidl"],sizes:[["100ml", 3.49], ["200ml", 5.49]],flavors:["Sensível", "Clássico", "Sem Álcool"]},
     {cat:'higiene',emoji:'🪥',name:'Fio Dentário {brand}',brands:["Oral-B", "Colgate", "Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["50m", 1.99], ["25m", 1.29], ["75m", 2.79]],flavors:["Menta", "Sem Cera", "Com Cera"]},
     {cat:'higiene',emoji:'🪥',name:'Elixir Bucal {brand}',brands:["Listerine", "Colgate", "Continente", "Pingo Doce", "Lidl", "Auchan"],sizes:[["500ml", 3.49], ["1L", 5.99]],flavors:["Menta", "Sem Álcool", "Carvão Ativo", "Hortelã"]},
@@ -6081,7 +6083,10 @@ self.addEventListener('fetch', e => {
 // PWA MANIFEST (gerado inline, funciona em qualquer caminho)
 // ══════════════════════════════════════════════════════
  function addManifest(){
+  // O manifest e os ícones PWA estão agora como ficheiros estáticos
+  // (manifest.json + icons/) — mantém apenas compatibilidade antiga.
   try{
+    if(document.querySelector('link[rel="manifest"]')) return;
     if(typeof URL === 'undefined' || typeof URL.createObjectURL !== 'function') return;
     const icon = 'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512"><rect width="512" height="512" rx="112" fill="#16a34a"/><text x="256" y="292" font-size="290" text-anchor="middle" dominant-baseline="middle">🛒</text></svg>');
     const manifest = {
