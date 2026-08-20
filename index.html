@@ -710,10 +710,14 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
       <div style="font-size:.7rem;color:var(--muted)">Adiciona produtos com preços por loja na tua lista para veres onde poupas mais.</div>
     </div>
   </div>
+  <div class="card" id="account-card">
+    <div class="card-title">🔐 Conta e sincronização</div>
+    <div id="account-root"><div style="font-size:.7rem;color:var(--muted)">A carregar...</div></div>
+  </div>
   <div class="card">
     <div class="card-title">ℹ️ Sobre a app</div>
     <div style="font-size:.74rem;line-height:1.6;color:var(--muted)">
-      <div><strong style="color:var(--text)">Poupa Fácil</strong> · v2.0</div>
+      <div><strong style="color:var(--text)">Poupa Fácil</strong> · <span id="about-version">v3.1.0</span></div>
       <div style="margin-top:4px">Preços de referência de Jun 2026 recolhidos dos folhetos e apps das lojas. Produtos ilustrados com emojis.</div>
       <div style="margin-top:4px">Disponível offline via service worker. Instala a app a partir do menu do navegador.</div>
     </div>
@@ -949,7 +953,7 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
     <div class="settings-row" style="display:block">
       <div style="margin-bottom:9px">
         <div class="settings-lbl">🔄 Atualização da app</div>
-        <div class="settings-desc">Verifica se existe uma versão mais recente e recarrega</div>
+        <div class="settings-desc">Versão atual: <strong id="settings-version">v3.1.0</strong> · verifica se existe uma versão mais recente e recarrega</div>
       </div>
       <button class="btn-green" style="width:100%" onclick="checkNowAndUpdate()">⬆️ Verificar e atualizar</button>
     </div>
@@ -974,6 +978,22 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
       </div>
       <input type="file" id="backup-file" accept="application/json" style="display:none" onchange="if(this.files&&this.files[0])importData(this.files[0])">
     </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     MODAL: CONTA / SINCRONIZAÇÃO
+══════════════════════════════════════ -->
+<div class="modal-overlay" id="account-modal" onclick="closeModalBg(event,'account-modal')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">🔐 Conta Poupa Fácil</div>
+        <div class="modal-sub">Sincroniza listas, favoritos e definições entre dispositivos</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('account-modal')">✕</button>
+    </div>
+    <div id="account-modal-body"></div>
   </div>
 </div>
 
@@ -3667,6 +3687,7 @@ let shoppingMode = (localStorage.getItem('pf_shopping_mode')==='1');
 function save(){
   allLists[activeListName] = listItems;
   localStorage.setItem('pf_lists', JSON.stringify(allLists));
+  scheduleSync();
 }
 function getListNames(){ return Object.keys(allLists); }
 function switchList(name){
@@ -5366,6 +5387,7 @@ function saveBudget(){
   else { localStorage.removeItem('pf_budget'); }
   loadBudget();
   calcTotal();
+  scheduleSync();
   showNotif(v>0 ? `💶 Orçamento definido: ${fmtEur(v)}` : '💶 Orçamento removido.');
 }
 function clearBudget(){ localStorage.removeItem('pf_budget'); loadBudget(); calcTotal(); showNotif('💶 Orçamento removido.'); }
@@ -5785,8 +5807,8 @@ function storeCatalogBody(k){
 // ══════════════════════════════════════════════════════
 // PERFIL — lojas preferidas + produtos favoritos
 // ══════════════════════════════════════════════════════
-function saveFavStores(){ localStorage.setItem('pf_fav_stores', JSON.stringify(favStores)); }
-function saveFavProds(){ localStorage.setItem('pf_fav_prods', JSON.stringify(favProducts)); }
+function saveFavStores(){ localStorage.setItem('pf_fav_stores', JSON.stringify(favStores)); scheduleSync(); }
+function saveFavProds(){ localStorage.setItem('pf_fav_prods', JSON.stringify(favProducts)); scheduleSync(); }
 function toggleFavStore(k){
   const i = favStores.indexOf(k);
   if(i>=0) favStores.splice(i,1); else favStores.push(k);
@@ -5832,6 +5854,7 @@ function removeFav(i){
 }
  function renderPerfil(){
   renderSavingsDash();
+  renderAccount();
   const ps = document.getElementById('perfil-stats');
   if(ps){
     const market = document.getElementById('list-market') ? document.getElementById('list-market').value : null;
@@ -6372,6 +6395,303 @@ function renderTabSettings(){
   }
 }
 
+
+// ══════════════════════════════════════════════════════
+// CONTA E SINCRONIZAÇÃO NA NUVEM — dados cifrados (AES-GCM)
+// A conta permite usar os mesmos dados em vários dispositivos
+// sem transferir ficheiros: os dados são cifrados com a tua
+// palavra-passe e guardados na nuvem (só tu consegues ler).
+// ══════════════════════════════════════════════════════
+const APP_VERSION = '3.1.0';
+const SYNC_ENDPOINT = 'https://api.restful-api.dev/objects';
+
+let _account = null;      // {username, blobId, salt, authSalt, authHash, lastSync}
+let _sessionKey = null;   // CryptoKey em memória
+let _syncTimer = null;
+
+function _b64ab(buf){
+  const bytes = new Uint8Array(buf);
+  let s = '';
+  for(let i=0;i<bytes.length;i+=0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i, i+0x8000));
+  return btoa(s);
+}
+function _abb64(s){ const bin=atob(s); const u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i); return u.buffer; }
+function _newSalt(){ const u=new Uint8Array(16); crypto.getRandomValues(u); return _b64ab(u.buffer); }
+async function _deriveKey(password, saltB64){
+  const enc = new TextEncoder();
+  const km = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey(
+    {name:'PBKDF2', salt:_abb64(saltB64), iterations:120000, hash:'SHA-256'},
+    km, {name:'AES-GCM', length:256}, true, ['encrypt','decrypt']
+  );
+}
+async function _hashPassword(password, saltB64){
+  const enc = new TextEncoder();
+  const km = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits({name:'PBKDF2', salt:_abb64(saltB64), iterations:120000, hash:'SHA-256'}, km, 256);
+  return _b64ab(bits);
+}
+async function _exportKey(key){ const raw = await crypto.subtle.exportKey('raw', key); return _b64ab(raw); }
+async function _importKey(b64){ const raw = _abb64(b64); return crypto.subtle.importKey('raw', raw, {name:'AES-GCM'}, true, ['encrypt','decrypt']); }
+async function _encryptData(obj, key){
+  const iv = new Uint8Array(12); crypto.getRandomValues(iv);
+  const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, key, new TextEncoder().encode(JSON.stringify(obj)));
+  return {iv:_b64ab(iv.buffer), data:_b64ab(ct)};
+}
+async function _decryptData(payload, key){
+  const pt = await crypto.subtle.decrypt({name:'AES-GCM', iv:_abb64(payload.iv)}, key, _abb64(payload.data));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+function _loadAccounts(){ try{ return JSON.parse(localStorage.getItem('pf_accounts')||'{}'); }catch(e){ return {}; } }
+function _saveAccounts(a){ localStorage.setItem('pf_accounts', JSON.stringify(a)); }
+function _loadAccount(){ try{ return JSON.parse(localStorage.getItem('pf_account')||'null'); }catch(e){ return null; } }
+function _persistAccount(){
+  if(_account){
+    localStorage.setItem('pf_account', JSON.stringify({username:_account.username, blobId:_account.blobId, salt:_account.salt, authSalt:_account.authSalt, authHash:_account.authHash, lastSync:_account.lastSync||null}));
+  } else {
+    localStorage.removeItem('pf_account');
+  }
+}
+function _collectData(){
+  const out = {};
+  for(let i=0;i<localStorage.length;i++){
+    const k = localStorage.key(i);
+    if(k && k.indexOf('pf_')===0 && k!=='pf_account' && k!=='pf_accounts') out[k] = localStorage.getItem(k);
+  }
+  return out;
+}
+function _restoreData(obj){
+  const current = _collectData();
+  Object.keys(current).forEach(k=>localStorage.removeItem(k));
+  Object.keys(obj).forEach(k=>{ try{ localStorage.setItem(k, obj[k]); }catch(e){} });
+  try{
+    renderList(); calcTotal(); loadBudget(); updatePredefPrices(); renderHome(); renderFeatured(); renderPerfil(); renderTabs();
+  }catch(e){}
+}
+async function _cloudCreate(payload){
+  const r = await fetch(SYNC_ENDPOINT, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name:'pf', data:payload})});
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  return r.json();
+}
+async function _cloudGet(id){
+  const r = await fetch(SYNC_ENDPOINT+'/'+id, {cache:'no-store'});
+  if(r.status===404) return null;
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  const j = await r.json();
+  return (j && j.data) ? j.data : null;
+}
+async function _cloudPut(id, payload){
+  const r = await fetch(SYNC_ENDPOINT+'/'+id, {method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name:'pf', data:payload})});
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  return r.json();
+}
+async function pushToCloud(showMsg){
+  if(!_account || !_sessionKey) return false;
+  try{
+    const data = _collectData();
+    const enc = await _encryptData(data, _sessionKey);
+    const payload = {app:'poupa-facil', v:1, authSalt:_account.authSalt, authHash:_account.authHash, salt:_account.salt, lastSync:new Date().toISOString(), iv:enc.iv, data:enc.data};
+    await _cloudPut(_account.blobId, payload);
+    _account.lastSync = payload.lastSync;
+    _persistAccount();
+    if(showMsg) showNotif('☁️ Dados sincronizados com a nuvem.');
+    renderAccount();
+    return true;
+  }catch(e){
+    if(showMsg) showNotif('⚠️ Não foi possível sincronizar agora. Tenta mais tarde.');
+    return false;
+  }
+}
+async function pullFromCloud(showMsg, password){
+  if(!_account) return false;
+  try{
+    const payload = await _cloudGet(_account.blobId);
+    if(!payload) return false;
+    if(password){
+      const hash = await _hashPassword(password, payload.authSalt);
+      if(hash !== payload.authHash) return false;
+      _sessionKey = await _deriveKey(password, payload.salt);
+    }
+    if(!_sessionKey) return false;
+    const data = await _decryptData(payload, _sessionKey);
+    _account.salt = payload.salt; _account.authSalt = payload.authSalt; _account.authHash = payload.authHash; _account.lastSync = payload.lastSync||null;
+    _persistAccount();
+    _restoreData(data);
+    if(showMsg) showNotif('☁️ Dados carregados da nuvem.');
+    renderAccount();
+    return true;
+  }catch(e){
+    if(showMsg) showNotif('⚠️ Não foi possível carregar os dados da nuvem.');
+    return false;
+  }
+}
+function scheduleSync(){
+  clearTimeout(_syncTimer);
+  if(!_account || !_sessionKey) return;
+  _syncTimer = setTimeout(()=>{ pushToCloud(false); }, 2000);
+}
+function renderAccount(){
+  const root = document.getElementById('account-root');
+  if(!root) return;
+  const v = document.getElementById('about-version');
+  if(v) v.textContent = 'v'+APP_VERSION;
+  const v2 = document.getElementById('settings-version');
+  if(v2) v2.textContent = 'v'+APP_VERSION;
+  if(!_account){
+    root.innerHTML = `<div style="font-size:.72rem;color:var(--muted);line-height:1.5;margin-bottom:9px">Cria uma conta para usares as mesmas listas, favoritos e definições em todos os teus dispositivos — sem transferir ficheiros.</div>
+      <button class="btn-green" style="width:100%" onclick="accountOpenModal()">🔐 Criar conta / Iniciar sessão</button>`;
+    return;
+  }
+  const last = _account.lastSync ? new Date(_account.lastSync).toLocaleString('pt-PT') : '—';
+  root.innerHTML = `<div style="display:flex;align-items:center;gap:9px;margin-bottom:9px">
+      <div style="width:38px;height:38px;border-radius:99px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;flex-shrink:0">${_account.username.charAt(0).toUpperCase()}</div>
+      <div style="min-width:0"><div style="font-weight:700;color:var(--text);font-size:.85rem">${_account.username}</div>
+      <div style="font-size:.6rem;color:var(--muted)">Última sincronização: ${last}</div></div>
+      <span class="tag tag-g" style="margin-left:auto">☁️ ativo</span>
+    </div>
+    <div class="search-row">
+      <button class="btn-green" style="flex:1;white-space:nowrap" onclick="pushToCloud(true)">⬆️ Sincronizar agora</button>
+      <button class="btn-dark" style="flex:1;margin-bottom:0" onclick="accountLogout()">Sair</button>
+    </div>
+    <div style="font-size:.6rem;color:var(--muted);margin-top:8px">Código de sincronização (para novos dispositivos):<br><code id="sync-code" style="word-break:break-all;font-size:.62rem;color:var(--green)">${_account.blobId}</code><br><button class="mini-btn" style="margin-top:4px" onclick="accountCopyCode()">📋 Copiar código</button></div>`;
+}
+function accountCopyCode(){
+  if(!_account) return;
+  const el = document.getElementById('sync-code');
+  const text = _account.blobId + ' | ' + _account.username;
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(()=>showNotif('📋 Código copiado.')).catch(()=>{});
+  } else {
+    const ta = document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); showNotif('📋 Código copiado.'); }catch(e){}
+    document.body.removeChild(ta);
+  }
+}
+function accountOpenModal(){
+  document.getElementById('account-modal').classList.add('show');
+  accountShowLogin();
+}
+function _acVal(id){ const el=document.getElementById(id); return el ? el.value.trim() : ''; }
+function accountShowLogin(){
+  const el = document.getElementById('account-modal-body');
+  if(!el) return;
+  el.innerHTML = `<div style="display:flex;gap:6px;margin-bottom:12px">
+      <button class="mini-btn" style="flex:1;background:var(--green);color:#fff;border-color:var(--green)" onclick="accountShowLogin()">Entrar</button>
+      <button class="mini-btn" style="flex:1" onclick="accountShowRegister()">Criar conta</button>
+    </div>
+    <div class="settings-lbl">👤 Utilizador</div>
+    <input class="inp" id="ac-user" placeholder="O teu nome de utilizador" style="margin-bottom:8px" value="${_acVal('ac-user')}">
+    <div class="settings-lbl">🔒 Palavra-passe</div>
+    <input class="inp" id="ac-pass" type="password" placeholder="••••••••" style="margin-bottom:8px" onkeydown="if(event.key==='Enter')accountDoLogin()">
+    <div class="settings-lbl">🔑 Código de sincronização <span style="font-weight:400;color:var(--muted)">(apenas em dispositivo novo — cola o código que viste no outro PC)</span></div>
+    <input class="inp" id="ac-code" placeholder="ID de sincronização (opcional neste PC)" style="margin-bottom:4px">
+    <div style="font-size:.58rem;color:var(--muted);margin-bottom:9px">No primeiro dispositivo o código aparece na tua conta. Sem ele, só consegues entrar neste mesmo aparelho.</div>
+    <button class="btn-green" style="width:100%" onclick="accountDoLogin()">Entrar</button>`;
+  setTimeout(()=>{ const i=document.getElementById('ac-pass'); if(i) i.focus(); }, 60);
+}
+function accountShowRegister(){
+  const el = document.getElementById('account-modal-body');
+  if(!el) return;
+  el.innerHTML = `<div style="display:flex;gap:6px;margin-bottom:12px">
+      <button class="mini-btn" style="flex:1" onclick="accountShowLogin()">Entrar</button>
+      <button class="mini-btn" style="flex:1;background:var(--green);color:#fff;border-color:var(--green)" onclick="accountShowRegister()">Criar conta</button>
+    </div>
+    <div class="settings-lbl">👤 Utilizador</div>
+    <input class="inp" id="ac-user" placeholder="Mín. 3 caracteres" style="margin-bottom:8px" value="${_acVal('ac-user')}">
+    <div class="settings-lbl">🔒 Palavra-passe</div>
+    <input class="inp" id="ac-pass" type="password" placeholder="Mín. 6 caracteres" style="margin-bottom:8px">
+    <div class="settings-lbl">🔒 Repetir palavra-passe</div>
+    <input class="inp" id="ac-pass2" type="password" placeholder="Repete a palavra-passe" style="margin-bottom:9px" onkeydown="if(event.key==='Enter')accountDoRegister()">
+    <div style="font-size:.58rem;color:var(--muted);margin-bottom:9px">Os teus dados são cifrados com a palavra-passe antes de ir para a nuvem — ninguém (nem a app) consegue ler sem ela.</div>
+    <button class="btn-green" style="width:100%" onclick="accountDoRegister()">Criar conta e sincronizar</button>`;
+}
+async function accountDoRegister(){
+  const u = _acVal('ac-user'), p = _acVal('ac-pass'), p2 = _acVal('ac-pass2');
+  if(u.length<3){ showNotif('⚠️ Utilizador com pelo menos 3 caracteres.'); return; }
+  if(p.length<6){ showNotif('⚠️ Palavra-passe com pelo menos 6 caracteres.'); return; }
+  if(p!==p2){ showNotif('⚠️ As palavras-passe não coincidem.'); return; }
+  if(_loadAccounts()[u]){ showNotif('⚠️ Esse utilizador já existe neste dispositivo. Entra com Entrar.'); return; }
+  const btn = document.querySelector('#account-modal-body .btn-green');
+  if(btn){ btn.disabled=true; btn.textContent='A criar conta...'; }
+  try{
+    const salt = _newSalt(), authSalt = _newSalt();
+    const authHash = await _hashPassword(p, authSalt);
+    const key = await _deriveKey(p, salt);
+    const data = _collectData();
+    const enc = await _encryptData(data, key);
+    const payload = {app:'poupa-facil', v:1, authSalt, authHash, salt, lastSync:new Date().toISOString(), iv:enc.iv, data:enc.data};
+    const res = await _cloudCreate(payload);
+    if(!res || !res.id) throw new Error('sem id');
+    const accounts = _loadAccounts();
+    accounts[u] = res.id;
+    _saveAccounts(accounts);
+    _account = {username:u, blobId:res.id, salt, authSalt, authHash, lastSync:payload.lastSync};
+    _sessionKey = key;
+    _persistAccount();
+    try{ sessionStorage.setItem('pf_session', JSON.stringify({username:u, key:await _exportKey(key)})); }catch(e){}
+    closeModal('account-modal');
+    renderAccount();
+    showNotif('✅ Conta criada! Os teus dados estão sincronizados.');
+  }catch(e){
+    showNotif('⚠️ Não foi possível criar a conta. Verifica a ligação e tenta de novo.');
+    if(btn){ btn.disabled=false; btn.textContent='Criar conta e sincronizar'; }
+  }
+}
+async function accountDoLogin(){
+  const u = _acVal('ac-user'), p = _acVal('ac-pass'), code = _acVal('ac-code');
+  if(!u || !p){ showNotif('⚠️ Preenche utilizador e palavra-passe.'); return; }
+  const btn = document.querySelector('#account-modal-body .btn-green');
+  if(btn){ btn.disabled=true; btn.textContent='A entrar...'; }
+  try{
+    const local = _loadAccounts();
+    const blobId = code || local[u] || null;
+    if(!blobId){
+      showNotif('🔑 Precisas do código de sincronização neste dispositivo novo (vê-o na tua conta noutro PC).');
+      if(btn){ btn.disabled=false; btn.textContent='Entrar'; }
+      return;
+    }
+    const payload = await _cloudGet(blobId);
+    if(!payload){ showNotif('⚠️ Código de sincronização inválido ou conta não encontrada.'); if(btn){btn.disabled=false;btn.textContent='Entrar';} return; }
+    const hash = await _hashPassword(p, payload.authSalt);
+    if(hash !== payload.authHash){ showNotif('❌ Palavra-passe incorreta.'); if(btn){btn.disabled=false;btn.textContent='Entrar';} return; }
+    const key = await _deriveKey(p, payload.salt);
+    const data = await _decryptData(payload, key);
+    const accounts = _loadAccounts(); accounts[u] = blobId; _saveAccounts(accounts);
+    _account = {username:u, blobId, salt:payload.salt, authSalt:payload.authSalt, authHash:payload.authHash, lastSync:payload.lastSync||null};
+    _sessionKey = key;
+    _persistAccount();
+    try{ sessionStorage.setItem('pf_session', JSON.stringify({username:u, key:await _exportKey(key)})); }catch(e){}
+    _restoreData(data);
+    closeModal('account-modal');
+    renderAccount();
+    showNotif('✅ Sessão iniciada! Dados carregados da nuvem.');
+  }catch(e){
+    showNotif('⚠️ Erro ao entrar. Verifica a ligação.');
+    if(btn){ btn.disabled=false; btn.textContent='Entrar'; }
+  }
+}
+function accountLogout(){
+  pushToCloud(false).then(ok=>{
+    try{ sessionStorage.removeItem('pf_session'); }catch(e){}
+    _account = null; _sessionKey = null;
+    _persistAccount();
+    renderAccount();
+    showNotif('👋 Sessão terminada. Os dados ficam guardados na nuvem (cifrados).');
+  });
+}
+async function tryRestoreSession(){
+  try{
+    if(!window.crypto || !crypto.subtle) return;
+    const s = JSON.parse(sessionStorage.getItem('pf_session')||'null');
+    if(!s || !s.key) return;
+    const a = _loadAccount();
+    if(!a || a.blobId!==s.blobId || a.username!==s.username) return;
+    _account = a;
+    _sessionKey = await _importKey(s.key);
+    await pullFromCloud(false);
+  }catch(e){}
+}
+
  (function init(){
   loadDarkMode();
   loadFontSize();
@@ -6386,9 +6706,11 @@ function renderTabSettings(){
   renderFeatured();
   renderCampCalendar();
   renderSearchChips();
+  renderAccount();
   addManifest();
   checkForUpdate();
   document.getElementById('footer-bar').style.display='none';
+  tryRestoreSession();
   const _splash = document.getElementById('boot-splash');
   if(_splash){
     _splash.style.opacity='0';
