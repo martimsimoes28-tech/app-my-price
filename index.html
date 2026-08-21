@@ -998,6 +998,22 @@ header{background:linear-gradient(135deg,#0d3b22 0%,#15803d 55%,#16a34a 100%);co
 </div>
 
 <!-- ══════════════════════════════════════
+     MODAL: PROMOÇÕES DE UM DIA DO CALENDÁRIO
+══════════════════════════════════════ -->
+<div class="modal-overlay" id="camp-day-modal" onclick="closeModalBg(event,'camp-day-modal')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">📅 Promoções do dia</div>
+        <div class="modal-sub">Toca em "Ativar campanha" para a usares na tua lista</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('camp-day-modal')">✕</button>
+    </div>
+    <div id="camp-day-list"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
      MODAL: DETALHE DO PRODUTO / HISTÓRICO
 ══════════════════════════════════════ -->
  <div class="modal-overlay" id="scanner-modal" onclick="closeScanner()">
@@ -4910,20 +4926,22 @@ function renderCampCalendar(){
   const first = new Date(view.y, view.m-1, 1);
   const startDow = first.getDay(); // 0=dom
   const daysInMonth = new Date(view.y, view.m, 0).getDate();
-  // eventos por dia
-  const events = {};
+  // campanhas ativas por dia (intervalo completo)
+  const days = {};
   Object.keys(CAMPAIGNS).forEach(k=>{
     (CAMPAIGNS[k]||[]).forEach(c=>{
       if(c.id==='none') return;
       const d = parseCampaignDates(c);
       if(!d) return;
-      const mk = (dateStr)=>dateStr;
-      if(!events[mk(d.start)]) events[mk(d.start)] = [];
-      events[mk(d.start)].push({store:k, c, type:'start'});
-      if(!events[mk(d.end)]) events[mk(d.end)] = [];
-      events[mk(d.end)].push({store:k, c, type:'end'});
+      const s0 = new Date(d.start), e0 = new Date(d.end);
+      for(let t=new Date(s0); t<=e0; t.setDate(t.getDate()+1)){
+        const kk = t.getFullYear()+'-'+_p2(t.getMonth()+1)+'-'+_p2(t.getDate());
+        if(!days[kk]) days[kk] = [];
+        days[kk].push({store:k, c, start:(kk===d.start), end:(kk===d.end)});
+      }
     });
   });
+  window.__campDays = days;
   const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
   const key = (y,m,d)=> y+'-'+_p2(m)+'-'+_p2(d);
   // células
@@ -4932,16 +4950,20 @@ function renderCampCalendar(){
   for(let i=0;i<startDow;i++) cells += '<div></div>';
   for(let d=1; d<=daysInMonth; d++){
     const k = key(view.y, view.m, d);
-    const evs = events[k] || [];
+    const evs = days[k] || [];
     const isToday = (view.y===2026 && view.m===6 && d>=26 && d<=29);
-    const marks = evs.slice(0,2).map(e=>{
+    const hasCamp = evs.length>0;
+    const marks = evs.slice(0,3).map(e=>{
       const meta = STORE_META[e.store]||{};
-      const col = e.type==='end' ? '#ef4444' : (meta.color||'#16a34a');
+      const col = e.end ? '#ef4444' : (meta.color||'#16a34a');
       return `<div style="width:9px;height:9px;border-radius:99px;background:${col};margin:1px auto" title="${e.c.name}"></div>`;
     }).join('');
-    cells += `<div style="min-height:40px;background:${isToday?'var(--green-l)':'transparent'};border:${isToday?'1px solid var(--green)':'1px solid var(--border)'};border-radius:8px;padding:2px;text-align:center">
-      <div style="font-size:.62rem;font-weight:700;color:${isToday?'var(--green)':'var(--text)'}">${d}${evs.some(e=>e.type==='end')?'<span style="color:#ef4444;font-weight:900"> fim</span>':''}</div>
+    const bg = isToday ? 'var(--green-l)' : (hasCamp ? '#ecfdf5' : 'transparent');
+    const border = isToday ? '1px solid var(--green)' : (hasCamp ? '1px solid #86efac' : '1px solid var(--border)');
+    cells += `<div style="min-height:42px;background:${bg};border:${border};border-radius:8px;padding:2px;text-align:center;cursor:${hasCamp?'pointer':'default'}" ${hasCamp?`onclick="campDayClick('${k}')"`:''} title="${hasCamp?evs.length+' campanha(s) neste dia — toca para ver':'Sem campanhas'}">
+      <div style="font-size:.62rem;font-weight:700;color:${isToday?'var(--green)':'var(--text)'}">${d}</div>
       ${marks}
+      ${evs.some(e=>e.end)?'<div style="font-size:.48rem;color:#ef4444;font-weight:800">fim</div>':''}
     </div>`;
   }
   const nav = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
@@ -4965,7 +4987,7 @@ function renderCampCalendar(){
   });
   root.innerHTML = nav +
     `<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:6px">${cells}</div>` +
-    `<div style="font-size:.58rem;color:var(--muted);margin-bottom:9px">● início de campanha · ● fim de campanha · fundo verde = campanhas desta semana (26–29 Jun)</div>` +
+    `<div style="font-size:.58rem;color:var(--muted);margin-bottom:9px">● início de campanha · ● fim de campanha · fundo verde = campanhas desta semana · <b>toca num dia assinalado para ver as promoções</b></div>` +
     `<div class="card-title" style="margin-top:4px">🏁 Fins de campanha</div>` + list;
 }
 function campMonth(d){
@@ -4976,6 +4998,30 @@ function campMonth(d){
   if(m>12){ m=1; y++; }
   window.__campView = {y, m};
   renderCampCalendar();
+}
+
+// Janela com as promoções de um dia do calendário
+function campDayClick(date){
+  const days = window.__campDays || {};
+  const evs = days[date] || [];
+  const el = document.getElementById('camp-day-list');
+  if(!el) return;
+  if(!evs.length){ showNotif('📅 Sem campanhas nesse dia.'); return; }
+  const parts = date.split('-').map(Number);
+  const label = new Date(parts[0], parts[1]-1, parts[2]).toLocaleDateString('pt-PT', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  el.innerHTML = `<div style="font-size:.8rem;font-weight:800;color:var(--text);margin-bottom:9px;text-transform:capitalize">📅 ${label} · ${evs.length} campanha${evs.length>1?'s':''}</div>` +
+    evs.map(e=>{
+      const meta = STORE_META[e.store]||{};
+      return `<div class="camp-banner ${storeCbClass(e.store)}" style="margin-bottom:8px;padding:10px;cursor:default">
+        <div class="cb-header" style="margin-bottom:4px">
+          <div class="cb-logo" style="background:${meta.bg||'#e2e8f0'};width:32px;height:32px;font-size:1rem">${storeLogoSvg(e.store)}</div>
+          <div><div class="cb-store">${meta.name||e.store}</div><div class="cb-title" style="font-size:.8rem">${e.c.name}</div></div>
+        </div>
+        <div style="font-size:.62rem;color:var(--muted);margin-bottom:7px">${e.start?'🟢 <b>Começa neste dia</b>':''} ${e.end?'🔴 <b>Termina neste dia</b>':''} ${e.c.reward?' · 🏆 '+e.c.reward:''} ${e.c.valid?' · 📆 '+e.c.valid:''}</div>
+        <button class="cb-btn" style="background:${meta.color||'#16a34a'};color:#fff" onclick="event.stopPropagation();activateCampaign('${e.store}','${e.c.id}')">Ativar campanha →</button>
+      </div>`;
+    }).join('');
+  document.getElementById('camp-day-modal').classList.add('show');
 }
 
 // ══════════════════════════════════════════════════════
